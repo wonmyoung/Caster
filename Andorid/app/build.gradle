@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "27.0.1"
+
+    defaultConfig {
+        applicationId "com.casting"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 21
+        versionName "2.0.3"
+        multiDexEnabled true
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile project(':Model')
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_layoutFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_transparent">
+
+    <LinearLayout
+        android:id="@+id/bean_dialog_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_popup_bg"
+        android:gravity="start"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/bean_dialog_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40"
+            android:layout_margin="@dimen/dp15"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/bean_dialog_title"
+                style="@style/Common.TextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="90" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="10">
+
+                <ImageView
+                    android:id="@+id/bean_dialog_close"
+                    android:layout_width="@dimen/dp33"
+                    android:layout_height="@dimen/dp33"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_btn_close_n" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bean_dialog_message"
+                style="@style/Common.TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:gravity="center"
+                android:padding="@dimen/dp5"
+                android:textStyle="normal"
+                android:visibility="gone" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

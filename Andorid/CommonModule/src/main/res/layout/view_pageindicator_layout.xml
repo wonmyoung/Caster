@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_themecolorStart">
+
+    <LinearLayout
+        android:id="@+id/pageindicator_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/pagetitle0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp10"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/dp16"
+                android:textColor="@color/color_white"
+                android:text="@string/subject_conversation"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/pagetitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/dp16"
+                android:textColor="@color/color_white"
+                android:text="@string/subject_toeic"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/pagetitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/dp10"
+                android:gravity="center"
+                android:textSize="@dimen/dp16"
+                android:textStyle="bold"
+                android:textColor="@color/color_white"
+                android:text="@string/subject_toefle"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/pageindicator"
+        android:layout_width="@dimen/dp68"
+        android:layout_height="@dimen/dp31"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:background="@drawable/shape_roundbox_transparent"/>
+
+</FrameLayout>

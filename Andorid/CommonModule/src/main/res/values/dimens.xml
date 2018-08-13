@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+		<dimen name="cpb_stroke_width">4dp</dimen>
+    <dimen name="default_stack_spacing">12dp</dimen>
+	
+    <!-- lineSpacingExtra -->
+    <dimen name="lineSpacingExtra_3">@dimen/dp1.5</dimen>
+    <dimen name="lineSpacingExtra_4">@dimen/dp2</dimen>
+    <dimen name="lineSpacingExtra_5">@dimen/dp2.5</dimen>
+    <dimen name="lineSpacingExtra_6">@dimen/dp3</dimen>
+    <dimen name="lineSpacingExtra_8">@dimen/dp4</dimen>
+    <dimen name="lineSpacingExtra_10">@dimen/dp5</dimen>
+
+    <!-- ACTIONBAR -->
+    <dimen name="actionbar_height">@dimen/dp50</dimen>
+
+    <!-- DIALOG -->
+    <dimen name="popup_width">@dimen/dp280</dimen>
+    <dimen name="popup_title_minheight">@dimen/dp15</dimen>
+    <dimen name="popup_title_height">@dimen/dp54</dimen>
+    <dimen name="popup_padding_leftright">@dimen/dp15</dimen>
+    <dimen name="popup_middle_margin_top">@dimen/dp19</dimen>
+    <dimen name="popup_middle_minHeight">@dimen/dp79</dimen>
+    <dimen name="popup_bottom_btn_height">@dimen/dp37</dimen>
+    <dimen name="popup_bottom_btn_space_mergin">@dimen/dp10</dimen>
+    <dimen name="popup_bottom_padding">@dimen/dp15</dimen>
+    <dimen name="popup_list_vertical_padding">@dimen/dp3</dimen>
+    <dimen name="popup_function_marginLeft">@dimen/dp3</dimen>
+
+    <!-- MAIN -->
+    <dimen name="movie_thumbnail_width">@dimen/dp66</dimen>
+    <dimen name="movie_thumbnail_height">@dimen/dp94</dimen>
+    <dimen name="tv_thumbnail_width">@dimen/dp117</dimen>
+    <dimen name="tv_thumbnail_height">@dimen/dp94</dimen>
+    <dimen name="content_item_height">@dimen/dp125</dimen>
+    <dimen name="series_item_height">@dimen/dp128</dimen>
+    <dimen name="main_delete_bottom_menu_height">@dimen/dp85</dimen>
+    <dimen name="main_delete_bottom_menu_btn_height">@dimen/dp50</dimen>
+    <dimen name="main_default_height">@dimen/dp67</dimen>
+    <dimen name="checkbox_paddingleft">@dimen/dp19</dimen>
+
+    <!-- SEARCH -->
+    <dimen name="rank_view_text_height">@dimen/dp13</dimen>
+    <dimen name="rank_view_text_margin">@dimen/dp2</dimen>
+    <dimen name="rank_view_text_font_size">@dimen/dp11</dimen>
+    <dimen name="rank_view_image_width">@dimen/dp12</dimen>
+    <dimen name="rank_view_image_height">@dimen/dp13</dimen>
+    <dimen name="contactus_row_height">@dimen/dp40</dimen>
+    <dimen name="contactus_label_width">@dimen/dp60</dimen>
+    
+    <!-- SEARCH dimens_guideline 사용하지 않음 -->
+    <dimen name="notification_text_size">14dp</dimen>
+    <dimen name="notification_title_text_size">18dp</dimen>
+    <dimen name="notification_subtext_size">12dp</dimen>
+
+</resources>

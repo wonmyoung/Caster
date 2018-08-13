@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp130"
+    android:paddingLeft="@dimen/dp24"
+    android:paddingRight="@dimen/dp24"
+    android:paddingTop="@dimen/dp10"
+    android:background="@color/color_white">
+
+    <TextView
+        android:id="@+id/subject_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/dp18"
+        android:text="----"
+        android:textColor="@color/color_464c64"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/subject_name"
+        android:layout_marginTop="@dimen/dp5" >
+
+        <FrameLayout
+            android:id="@+id/subject_notFound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:background="@color/color_white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp53"
+                android:textSize="@dimen/dp16"
+                android:text="@string/member_score_guide_nofound"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/color_999999"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/subject_rankingFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp53"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/subject_ranking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp53"
+                    android:textSize="@dimen/dp32"
+                    android:text="00"
+                    android:gravity="center"
+                    android:textColor="@color/color_ff3173"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp53"
+                    android:textSize="@dimen/dp14"
+                    android:layout_marginLeft="@dimen/dp5"
+                    android:text="위"
+                    android:gravity="center"
+                    android:textColor="@color/color_b1b1b1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dp14"
+                android:text="@string/member_score_guide_prefix0"
+                android:gravity="center"
+                android:textColor="@color/color_464c64"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/subject_scoreFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp53"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/subject_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp53"
+                    android:textSize="@dimen/dp32"
+                    android:text="00"
+                    android:gravity="center"
+                    android:textColor="@color/color_1bc694"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp53"
+                    android:textSize="@dimen/dp14"
+                    android:layout_marginLeft="@dimen/dp5"
+                    android:text="개"
+                    android:gravity="center"
+                    android:textColor="@color/color_b1b1b1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dp14"
+                android:text="@string/member_score_guide_prefix1"
+                android:gravity="center"
+                android:textColor="@color/color_464c64"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 재생 오류 팝업 관련 -->
+    <string name="string_play_error_guide_text">"안내"</string>
+    <!-- SCID 누락 -->
+    <string name="string_miss_scid_err">네트워크 상태가 좋지 않습니다.\n지속 될 경우 서버에 문의하세요.\n[SCID누락]</string>
+    <!-- 로밍 안내 -->
+    <string name="string_roaming">콘텐츠 제공자와의 계약에 의해 로밍 중에는 VOD 콘텐츠 이용이 제한됩니다.\n이용에 불편드려 죄송합니다.</string>
+    <!-- 재생정보누락 -->
+    <string name="string_play_info_miss">재생 정보 누락\n콘텐츠 재생을 위한 경로 정보를 확인해 주세요.</string>
+    <!-- 항공모드 -->
+    <!--
+    <string name="string_airline_mode_1">"요청하신 콘텐츠는"</string>
+    <string name="string_airline_mode_2">"항공 모드에서는 이용이 불가합니다"</string>
+    -->
+    <string name="string_airline_drm_playback_error">"사용자 인증이 필요한 컨텐츠 입니다. 비행모드에서 이용하실 수 없습니다."</string>
+    <string name="string_airline_not_same_min_drm_playback_error">"휴대폰 번호와 콘텐츠의 암호화 키가 일치하지 않습니다. 삭제 후 T store에서 재 다운로드 해주세요."</string>
+    <string name="string_airline_not_same_min_drm_agent_error">"DRM Agent가 초기화 되지 않았습니다."</string>
+    <string name="string_airline_not_same_min_drm_client_error">"DRM Agent에 Client ID가 설정되지 않았습니다."</string>
+    <string name="string_airline_not_same_min_drm_parameter_error">"DRM 파라미터가 잘못되었습니다."</string>
+    <string name="string_airline_not_same_min_drm_etc_error">"재생이 유효하지 않은 콘텐츠입니다."</string>
+    <string name="string_drm_content_not_service_usim">"사용자 확인이 되지 않습니다.\nUSIM칩을 장착해주세요."</string>
+    <!-- 기타 -->
+    <string name="string_login_error_default_1">"T store 미등록 회원입니다"</string>
+    <string name="string_login_error_default_2">"회원가입 후 다시 시도해 주세요"</string>
+    <string name="string_network_state_not_good">"네트워크 상태가 좋지 않습니다"</string>
+    <string name="string_retry">"잠시 후 다시 시도해주세요"</string>
+    <string name="string_not_exist_login_data">"[ 회원인증 실패 ]"</string>
+    <string name="string_not_exist_otp_data">"[ OTP인증 실패 ]"</string>
+
+    <!-- 재생불가 -->
+    <string name="string_palyback_error_not_enough_file_size">"재생을 위해 조금 더 다운로드 받아주세요."</string>
+
+    <!-- 이어폰 연결/해제 시 안내 문구 -->
+
+
+    <!-- 플레이어 환경설정 문구 -->
+    <string name="string_player_setting_properties">Properties</string>
+    <string name="string_player_setting_movie_name">Title</string>
+    <string name="string_player_setting_movie_format">Type</string>
+    <string name="string_player_setting_movie_resolution">Resolution</string>
+    <string name="string_player_setting_movie_size">Size</string>
+    <string name="string_player_top_time_am">AM</string>
+    <string name="string_player_top_time_pm">PM</string>
+    <!-- <string name="string_none">None</string> lint error by hdsohn 20131012 -->
+    <string name="string_brightness_auto">Auto</string>
+    <string name="string_brightness_weak">Weak</string>
+    <string name="string_brightness_middle">Middle</string>
+    <string name="string_brightness_strong">Strong</string>
+    <string name="string_waitaminute_plase">Wait a minute, please</string>
+
+    <!--
+         기타
+    <string name="string_complete">완료</string>
+    <string name="string_notice">알림</string>
+    <string name="string_confirm">확인</string>
+    <string name="string_cancel">취소</string>
+    <string name="string_yes">예</string>
+    <string name="string_no">아니오</string>
+    <string name="string_unit_won">원</string>
+    <string name="string_vertical_bar"> | </string>
+    <string name="string_left_bracket">(</string>
+    <string name="string_right_bracket">)</string>
+    <string name="string_slash"> / </string>
+    -->
+
+
+    <!-- 플레이어 오퍼링 팝업 -->
+    <string name="string_offering_title_next">Next</string>
+    <string name="string_offering_continue_title">이어보기</string>
+    <string name="string_offering_continue_first">처음부터 보기</string>
+    <string name="string_offering_continue_contents">이전 재생 위치부터 이어서 보시겠습니까?</string>
+    <string name="string_offering_popup_movie_title">추천 영화</string>
+    <string name="string_offering_popup_tv_title">추천 TV방송</string>
+    <string name="string_offering_popup_director">Director</string>
+    <string name="string_offering_popup_actors">Actor</string>
+
+</resources>

@@ -1,0 +1,221 @@
+<resources>
+    <string name="app_copyright">Copyright(c) VoltSoftware.co.LTD All rights reserved. </string>
+    <string name="app_name">영어의꼼수</string>
+    <string name="app_name_blank">영어의 꼼수</string>
+    <string name="app_licenseKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqBtgfVkWdJCkViWexY/aKwRQEnnyWUdDeiL0+mBaZ+kU9IzOtnUO4j8fPuWub7YD+ExIY4nK91x2P4YKEz+o4nva7hFpOBxr9liSgPABrc3682n2I8SwZpqIkez2YvaVrkk0/i3cadMZCIArmQrdWTyUVmi6Ej9k+WxSmK08Y3Yr4cOmGfgIoGMan4Xecmxo4SXLZ770m+byo3uYqyCzKt4Y4SHIfYhpxIf8kcDS69icyAT+PynUQszFQEFG7ib7OKqscor6kbWjtBKIwtBglhWVzk/e6nGjB8JVlAG/l8UqzrgWM/a/125EtvoXY3DfMCMm8Ecd3XM/+vwVu6osqQIDAQAB</string>
+
+    <string name="kakaoApiKey">bff7254f2f43ff0eb846d7378d575a9d</string>
+    <string name="kakaoSchema">kakaobff7254f2f43ff0eb846d7378d575a9d</string>
+    <string name="kakaoLinkApi">kakaolink</string>
+    <string name="kakaoShareText">영단어 암기의 꼼수!</string>
+
+    <string name="FacebookApiKey">479111609112666</string>
+    <string name="NaverClientKey">NKtY0ySpLzzhqy1xw57k</string>
+    <string name="NaverSecretKey">7A6VHQEfwh</string>
+
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+
+    <string name="waitingProcessText">잠시만 기다려주세요</string>
+    <string name="wordListLoadCompleted">모든 단어 정보를 불러왔습니다</string>
+
+    <string name="register_agreeButton">개인정보 취급에 동의합니다</string>
+    <string name="register_agreeGuide">개인정보 취급에 동의하셔야 가입할수 있습니다</string>
+
+    <string name="main_actionbar_menu">내정보</string>
+    <string name="main_actionbar_paypoint">포인트충전</string>
+    <string name="main_actionbar_importantWords">내가 등록한 중요단어</string>
+    <string name="main_floatingbutton">더보기</string>
+    <string name="main_wordListbutton">단어 모두 보기</string>
+    <string name="main_quizButton">퀴즈풀기</string>
+
+    <string name="exam_kind0">수능\n영단어</string>
+    <string name="exam_kind1">토익\n영단어</string>
+    <string name="exam_kind2">공무원입시\n영단어</string>
+
+    <string name="sortTypeAll">전체 보기</string>
+    <string name="sortType1">스토리 연상 암기</string>
+    <string name="sortType2">통암기</string>
+    <string name="sortType3">기초단어</string>
+    <string name="sortType4">회화패턴</string>
+    <string name="sortType5">문법패턴</string>
+
+    <string name="sortedResultFormat">총 %d 개의 일차가 검색되었습니다</string>
+
+    <string name="webViewBackButton">←</string>
+    <string name="viewFrontSideCard">뒤집기</string>
+    <string name="viewBackSideCard">자세히</string>
+
+    <string name="login_popup_title">로그인</string>
+
+    <string name="error_popup_title0">네트워크 접속 오류</string>
+    <string name="error_popup_message0">인터넷 연결을 확인해주세요</string>
+
+    <string name="error_popup_title1">최신버전으로 업데이트 필요</string>
+    <string name="error_popup_message1">사용하고 계신 앱 버전이 낮아서\n업데이트가 필요합니다</string>
+
+    <string name="error_popup_title2">서버 긴급공지</string>
+    <string name="error_popup_message2">현재 서버 긴급점검 중입니다\n잠시후에 다시 로그인해주세요</string>
+
+    <string name="error_popup_title3">서버 응답에러</string>
+    <string name="error_popup_message3">서버 통신중에 에러가 발생했습니다.\n잠시후에 다시 시도해주세요</string>
+
+    <string name="error_popup_title4">서버 응답에러</string>
+    <string name="error_popup_message4">인터넷 연결을 확인해주세요</string>
+
+    <string name="error_popup_title5">SNS 계정 연동 오류</string>
+    <string name="error_popup_message5">SNS 계정 연동중에 에러가 발생했습니다.\n잠시후에 다시 시도해주세요</string>
+
+    <string name="error_popup_title6">에러</string>
+    <string name="error_popup_message6">잠시후에 다시 시도해주세요</string>
+
+    <string name="error_popup_title7">에러</string>
+    <string name="error_popup_message7">확인되는 오답문제 정보가 없습니다</string>
+
+    <string name="error_popup_title8">에러</string>
+    <string name="error_popup_message8">등록된 중요단어 정보가 없습니다</string>
+
+    <string name="error_popup_title9">권한이 거부됨</string>
+    <string name="error_popup_message9">영어의 꼼수를 정상적으로 사용하기 위해서는\n권한이 허용되어져야 합니다\n확인을 누르면 앱이 종료됩니다</string>
+
+    <string name="error_toast_message1">확인되는 오답문제 정보가 없습니다</string>
+
+    <string name="error_nodata_message1">네트워크 연결을 확인해주세요</string>
+    <string name="error_nodata_message2">확인되는 리스트 정보가 없습니다</string>
+
+    <string name="subject_conversation">기초 · 회화</string>
+    <string name="subject_toeic">토익</string>
+    <string name="subject_toefle">공무원 · 편입</string>
+
+    <string name="md__drawerOpenIndicatorDesc">Close drawer</string>
+    <string name="md__drawerClosedIndicatorDesc">Open drawer</string>
+
+    <string name="title_activity_activity_splash">splash</string>
+
+    <string name="member_login_title">로그인</string>
+    <string name="member_login_guide">계정정보가 확인되지 않습니다\n간편 로그인을 통해 접속 바랍니다</string>
+
+    <string name="member_kakao_login_error">카카오 로그인 시도중 에러가 발생했습니다.</string>
+
+    <string name="member_register_button_gmail">구글로 간편가입</string>
+    <string name="member_login_button_gmail">구글로 로그인</string>
+    <string name="member_register_button_kakao">카카오톡으로 간편가입</string>
+    <string name="member_login_button_kakao">카카오톡으로 로그인</string>
+    <string name="member_register_button_facebook">페이스북으로 간편가입</string>
+    <string name="member_login_button_facebook">페이스북으로 로그인</string>
+
+    <string name="settingPageButton1Title">잠금화면 해제시 학습설정</string>
+    <string name="settingPageButton1Text">핸드폰 잠금화면이 해제될때마다\n학습 중 등록한 중요단어 리스트를\n볼수 있도록 해줍니다</string>
+    <string name="settingPageButton1">영어의꼼수 잠금화면 활성화</string>
+
+    <string name="settingPageButton2Title">고품질 목소리 설정</string>
+    <string name="settingPageButton2Text">영어의 꼼수 고품질 인공지능 목소리 파일을\n서버로 부터 다운로드 해서\n재생할수 있도록 설정합니다\n해제시 에는 단말기에 내장된 TTS를\n사용하도록 됩니다</string>
+    <string name="settingPageButton2">영어의꼼수 고품질 목소리 활성화</string>
+
+    <string name="settingPageBottomText">· · · · \n\n이 앱을 만들기 까지\n나를 위해 많은것을 희생한\n나의 아버지 신관순\n나의 어머니 민영순\n에게 감사함을 돌립니다\n\n· · · ·</string>
+
+    <string name="odpapNote_title">오답노트 보기</string>
+    <string name="odpapNote">오답노트 보기</string>
+    <string name="odpapNote_message">확인하고자 하는 오답노트 과목을 선택해주세요</string>
+
+    <string name="odpapNote_selectOption1">토익 영단어</string>
+    <string name="odpapNote_selectOption2">편입 영단어</string>
+    <string name="odpapNote_selectOption3">공무원 입시 영단어</string>
+    <string name="odpapNote_selectOptionConfrim">선택된 오답문제 확인</string>
+    <string name="odpapNote_selectOptionCancel">취소</string>
+
+    <string name="speechGuidePrefix">나의 영문답안</string>
+
+    <string name="recognizeTextTranslate">번역해서 정답확인</string>
+    <string name="recognizeTextEdit">수정하기</string>
+    <string name="recognizeTextDelete">삭제</string>
+
+    <string name="lockScreenTitle">켜자마자 영어의꼼수!</string>
+    <string name="lockScreenOffButton">켜자마자 보는 꼼수는 안할래요</string>
+
+    <string name="viewRegisteredWord">내가 등록한 중요단어</string>
+    <string name="viewRegisteredWord_title">내가 등록한 중요단어 보기</string>
+    <string name="viewRegisteredWord_message">확인하고자 하는 중요단어 과목을 선택해주세요</string>
+
+    <string name="viewRegisteredWord_selectOption1">토익 영단어</string>
+    <string name="viewRegisteredWord_selectOption2">편입 영단어</string>
+    <string name="viewRegisteredWord_selectOption3">공무원 입시 영단어</string>
+    <string name="viewRegisteredWord_selectOptionConfrim">선택된 중요단어 확인</string>
+    <string name="viewRegisteredWord_selectOptionCancel">취소</string>
+
+    <string name="termAgreement_title">개인정보 보호방침</string>
+    <string name="termAgreement_button">보호방침 동의하기</string>
+
+    <string name="payPoint_title">포인트 충전하기</string>
+    <string name="payPoint_message">꼼수시리즈에서 사용가능한\n포인트를 충전합니다!\n포인트 충전후 환불은 불가하오니\n이점 유의바랍니다.</string>
+
+    <string name="payPoint_button0_discout">5000원 > 3000원</string>
+    <string name="payPoint_button1_discout">8000원 > 5000원</string>
+    <string name="payPoint_button0">5000 포인트 충전하기</string>
+    <string name="payPoint_button1">8000 포인트 충전하기</string>
+    <string name="payPoint_button2">1000 포인트 충전하기</string>
+
+    <string name="wordListHeaderButton0">단어 전체 가리기</string>
+    <string name="wordListHeaderRelease0">단어 가림막 해제</string>
+    <string name="wordListHeaderButton1">뜻 전체 가리기</string>
+    <string name="wordListHeaderRelease1">뜻 가림막 해제</string>
+    <string name="wordListPageTitle" formatted="false">%s 단어 리스트</string>
+
+    <string name="dayselection_card_purchase">구매 필요</string>
+    <string name="dayselection_card_downloadError">네트워크 상태 확인 필요</string>
+    <string name="dayselection_card_downloadComplete">꺼내 보기</string>
+
+    <string name="dayselection_day_prefix" formatted="false">%s %d 일차</string>
+
+    <string name="cardstack_footer_guide">카드 암기를 모두 마쳤습니다.</string>
+    <string name="cardstack_footer_menuButton0">시험보기</string>
+    <string name="cardstack_footer_menuButton1">나가기</string>
+    <string name="cardstack_footer_menuButton2">다시 학습하기</string>
+
+    <string name="engword_Quiz">Quiz</string>
+    <string name="engword_QuizWroingNote">오답노트</string>
+    <string name="engword_QuizDescription0">풀어본적이 없는 문제 입니다.</string>
+    <string name="engword_QuizDescription1">틀렸던 문제 입니다.</string>
+    <string name="engword_QuizDescription2">맞췄던 문제 입니다.</string>
+
+    <string name="engword_QuizType0">제시된 한글뜻을 보고 맞는 영단어를 맞춰주세요</string>
+    <string name="engword_QuizType1">영단어를 보고 뜻을 맞춰주세요</string>
+    <string name="engword_QuizNetworkErrorGuide">네트워크가 연결되어야 퀴즈 성적을 등록할수 있습니다</string>
+    <string name="engword_PurchaseNetworkErrorGuide">네트워크가 연결되어야 카드 워드를 구매할수 있습니다.</string>
+
+    <string name="member_point_nofound">---</string>
+
+    <string name="member_score_guide0">토익영단어</string>
+    <string name="member_score_guide1">편입영단어</string>
+    <string name="member_score_guide2">공무원입시영단어</string>
+
+    <string name="member_score_guide_prefix0">전체랭킹</string>
+    <string name="member_score_guide_prefix1">맞춘영단어수</string>
+    <string name="member_score_guide_prefix2">현재등급</string>
+
+    <string name="member_score_guide_nofound">성적 정보가 확인 되지 않습니다.</string>
+    <string name="member_score_guide_noNetwork">네트워크를 확인 해주세요</string>
+
+    <string name="member_share">공유하기</string>
+    <string name="member_share_with_kakao">카카오톡으로 친구에게 공유</string>
+    <!--
+    <string name="member_share_reward">지금 친구에게 \'영어의꼼수\'를 공유하면\n500 포인트를 드립니다</string>
+    -->
+    <string name="member_share_reward">지금 친구에게 \'영어의꼼수\'를 공유하세요!</string>
+
+    <string name="member_register">간편 회원가입</string>
+    <string name="member_logout">로그아웃</string>
+    <string name="exitapp_ToastGuide">한번 더 누르면 종료됩니다.</string>
+    <string name="exitapp_message0" formatted="false">%s 동안\n 암기 한 단어가 없습니다</string>
+    <string name="exitapp_message1" formatted="false">%s 동안\n %s 개의 단어를\n암기 하였습니다</string>
+    <string name="close">창닫기</string>
+
+    <string name="googleImageResult">구글 실시간 이미지 검색 결과 입니다.</string>
+
+    <string name="purchase_textGuide" formatted="false">%s %d 일차 카드 학습을\n50포인트로 구매합니다</string>
+    <string name="purchase_cashDeficient">구매할수 있는 포인트가 부족 합니다.</string>
+    <string name="show_payPointDialog">총전하기</string>
+    <string name="purchase">구매하기</string>
+    <string name="purchase_cancel">취소</string>
+    <string name="purchase_error">구매 시도중 에러가 발생하였습니다. 다시 시도 바랍니다</string>
+</resources>

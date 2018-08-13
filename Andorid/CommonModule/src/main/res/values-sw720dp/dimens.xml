@@ -1,0 +1,8 @@
+<resources>
+
+    <!-- SEARCH dimens_guideline 사용하지 않음 -->
+    <dimen name="notification_text_size">18dp</dimen>
+    <dimen name="notification_title_text_size">22dp</dimen>
+    <dimen name="notification_subtext_size">16dp</dimen>
+
+</resources>
