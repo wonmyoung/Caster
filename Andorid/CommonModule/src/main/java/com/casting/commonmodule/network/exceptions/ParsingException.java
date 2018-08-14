@@ -1,8 +1,8 @@
 package com.casting.commonmodule.network.exceptions;
 
-public class ParsingException extends BaseNetworkException {
+public class ParsingException extends NetworkException {
 
     public ParsingException() {
-        super(ENetworkExceptions.PARSING_ERROR);
+        super(NetworkExceptionEnum.PARSING_ERROR);
     }
 }

@@ -133,4 +133,12 @@ public class NetworkThreadManager implements INetworkResponseListener, NetworkPr
             NetworkStatus.getInstance().enqueuePreservedNetworkTask(networkTask);
         }
     }
+
+    public URLGeneratorStrategy getURLGeneratorStrategy() {
+        return mURLGeneratorStrategy;
+    }
+
+    public void setURLGeneratorStrategy(URLGeneratorStrategy strategy) {
+        this.mURLGeneratorStrategy = strategy;
+    }
 }

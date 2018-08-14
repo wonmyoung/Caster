@@ -1,8 +1,8 @@
 package com.casting.commonmodule.network.exceptions;
 
-public class ServerResponseError extends BaseNetworkException {
+public class ServerResponseError extends NetworkException {
 
     public ServerResponseError() {
-        super(ENetworkExceptions.SERVER_REPONSE_ERROR);
+        super(NetworkExceptionEnum.SERVER_REPONSE_ERROR);
     }
 }

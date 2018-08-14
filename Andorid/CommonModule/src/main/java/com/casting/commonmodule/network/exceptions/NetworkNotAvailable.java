@@ -1,8 +1,8 @@
 package com.casting.commonmodule.network.exceptions;
 
-public class NetworkNotAvailable extends BaseNetworkException {
+public class NetworkNotAvailable extends NetworkException {
 
     public NetworkNotAvailable() {
-        super(ENetworkExceptions.NETWORK_NOT_AVAILABLE);
+        super(NetworkExceptionEnum.NETWORK_NOT_AVAILABLE);
     }
 }

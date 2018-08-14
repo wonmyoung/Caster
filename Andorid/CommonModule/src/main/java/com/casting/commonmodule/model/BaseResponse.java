@@ -1,6 +1,6 @@
 package com.casting.commonmodule.model;
 
-public class BaseResponse<M extends BaseModel> {
+public abstract class BaseResponse<M extends BaseModel> {
 
     private int mResponseCode;
 

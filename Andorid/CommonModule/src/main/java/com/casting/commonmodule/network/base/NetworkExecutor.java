@@ -3,10 +3,9 @@ package com.casting.commonmodule.network.base;
 import android.os.AsyncTask;
 
 import com.casting.commonmodule.model.BaseModel;
-import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.NetworkStatus;
-import com.casting.commonmodule.network.exceptions.BaseNetworkException;
-import com.casting.commonmodule.network.exceptions.ENetworkExceptions;
+import com.casting.commonmodule.network.exceptions.NetworkException;
+import com.casting.commonmodule.network.exceptions.NetworkExceptionEnum;
 import com.casting.commonmodule.network.exceptions.NetworkNotAvailable;
 import com.casting.commonmodule.network.exceptions.ParsingException;
 import com.casting.commonmodule.network.exceptions.ServerResponseError;
@@ -17,7 +16,7 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
     private static final String NETWORK_ERROR_MESSAGE = "네트워크가 상태 확인 필요";
 
     private BaseHttpRequester<M>    mNetworkRequester;
-    private BaseNetworkException    mWorkerException = null;
+    private NetworkException mWorkerException = null;
 
     private INetworkProgressView mProgressView;
     private INetworkResponseListener mNetworkResponseListener;
@@ -81,9 +80,9 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
         }
     }
 
-    private void onResponseError(BaseNetworkException workerException) {
+    private void onResponseError(NetworkException workerException) {
 
-        ENetworkExceptions networkExceptions = workerException.getNetworkExceptions();
+        NetworkExceptionEnum networkExceptions = workerException.getNetworkExceptions();
 
         NetworkResponse networkResponse = new NetworkResponse();
         networkResponse.setSourceRequest(mNetworkRequester.getRequestCommand());
@@ -111,11 +110,11 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
         this.mNetworkResponseListener = mNetworkResponseListener;
     }
 
-    public BaseNetworkException getWorkerException() {
+    public NetworkException getWorkerException() {
         return mWorkerException;
     }
 
-    public void setWorkerException(BaseNetworkException workerException) {
+    public void setWorkerException(NetworkException workerException) {
         this.mWorkerException = workerException;
     }
 

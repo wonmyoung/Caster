@@ -15,4 +15,8 @@ public abstract class BaseRequest<M extends BaseModel> {
     public void setResponseListener(ThreadResponseListener responseListener) {
         this.mResponseListener = responseListener;
     }
+
+    public <R extends BaseRequest> boolean isRight(Class<R> rClass) {
+        return getClass().equals(rClass);
+    }
 }

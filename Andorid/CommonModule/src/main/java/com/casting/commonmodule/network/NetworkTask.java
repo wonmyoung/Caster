@@ -3,10 +3,10 @@ package com.casting.commonmodule.network;
 import android.text.TextUtils;
 
 import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.thread.ExceptionSafeThread;
+import com.casting.commonmodule.thread.SafeThread;
 import com.casting.commonmodule.thread.ThreadType;
 
-public class NetworkTask<R extends BaseRequest> extends ExceptionSafeThread {
+public class NetworkTask<R extends BaseRequest> extends SafeThread {
 
     private R mBaseRequest;
 

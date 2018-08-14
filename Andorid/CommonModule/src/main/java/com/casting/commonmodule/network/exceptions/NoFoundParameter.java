@@ -1,8 +1,8 @@
 package com.casting.commonmodule.network.exceptions;
 
-public class NoFoundParameter extends BaseNetworkException {
+public class NoFoundParameter extends NetworkException {
 
     public NoFoundParameter() {
-        super(ENetworkExceptions.NOFOUND_PARAMETER);
+        super(NetworkExceptionEnum.NOFOUND_PARAMETER);
     }
 }

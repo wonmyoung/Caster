@@ -10,7 +10,7 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
     private static final int MAX_THREAD_COUNT = 100;
     private static final int THREAD_TIMEOUT = 30;
 
-    private LinkedBlockingQueue<ExceptionSafeThread> preservedTasks = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<SafeThread> preservedTasks = new LinkedBlockingQueue<>();
 
     public MultiThreadExecutor(int concurrentThreadCount) {
         super(concurrentThreadCount , MAX_THREAD_COUNT , THREAD_TIMEOUT , TimeUnit.SECONDS , new LinkedBlockingQueue<Runnable>());
@@ -18,15 +18,15 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
 
     public void executeMultiThread(Runnable... runnables) {
         for (Runnable task : runnables) {
-            if (task instanceof ExceptionSafeThread) {
-                preservedTasks.add((ExceptionSafeThread) task);
+            if (task instanceof SafeThread) {
+                preservedTasks.add((SafeThread) task);
             }
             execute(task);
         }
     }
 
     public void dequeuePreservedTask(String taskIdentifier) {
-        for (ExceptionSafeThread thread : preservedTasks) {
+        for (SafeThread thread : preservedTasks) {
             if (thread.isEqual(taskIdentifier)) {
                 preservedTasks.remove(thread);
             }
@@ -36,7 +36,7 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
     public boolean isRequestUnderProcess(int commandId) {
         String strIdentifier = "command"+commandId;
 
-        for (ExceptionSafeThread thread : preservedTasks) {
+        for (SafeThread thread : preservedTasks) {
             if (thread.isEqual(strIdentifier)) {
                 return true;
             }
@@ -45,7 +45,7 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
     }
 
     public boolean isRequestUnderProcess(String taskIdentifier) {
-        for (ExceptionSafeThread thread : preservedTasks) {
+        for (SafeThread thread : preservedTasks) {
             if (thread.isEqual(taskIdentifier)) {
                 return true;
             }
