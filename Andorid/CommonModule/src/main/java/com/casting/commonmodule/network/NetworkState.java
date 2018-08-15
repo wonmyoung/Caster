@@ -14,27 +14,26 @@ import com.casting.commonmodule.view.BaseObservable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class NetworkStatus extends BaseObservable {
+public class NetworkState extends BaseObservable {
 
     public static final int NETWORK_STATE = -9999;
 
-    private static NetworkStatus mInstance;
+    private static NetworkState mInstance;
 
     private boolean NetworkAvailable;
 
-    private NetworkEnum mNetworkState;
+    private NetworkStateEnum        mNetworkState;
+    private NetworkStatusReceiver   mNetworkStatusReceiver;
 
-    private NetworkStatusReceiver mNetworkStatusReceiver;
-
-    public NetworkStatus() {
+    public NetworkState() {
         super(NETWORK_STATE);
     }
 
-    private Queue<NetworkTask> mPreservedTasks = new LinkedList<>();
+    private Queue<NetworkRequest> mPreservedTasks = new LinkedList<>();
 
-    public static NetworkStatus getInstance() {
+    public static NetworkState getInstance() {
         if (mInstance == null) {
-            mInstance = new NetworkStatus();
+            mInstance = new NetworkState();
         }
         return mInstance;
     }
@@ -79,20 +78,23 @@ public class NetworkStatus extends BaseObservable {
         return NetworkAvailable;
     }
 
-    public NetworkEnum getNetworkState() {
+    public NetworkStateEnum getNetworkState() {
         return mNetworkState;
     }
 
-    public boolean enqueuePreservedNetworkTask(NetworkTask networkTask) {
+    public boolean enqueuePreservedNetworkTask(NetworkRequest networkRequest) {
         try {
-            String enqueueIdentifer = networkTask.getThreadName();
+            String name = networkRequest.getClass().getSimpleName();
 
-            for (NetworkTask preservedTask : mPreservedTasks) {
-                if (preservedTask.getThreadName().equalsIgnoreCase(enqueueIdentifer)) {
+            for (NetworkRequest request : mPreservedTasks) {
+
+                String comp = request.getClass().getSimpleName();
+
+                if (comp.equalsIgnoreCase(name)) {
                     return false;
                 }
             }
-            mPreservedTasks.add(networkTask);
+            mPreservedTasks.add(networkRequest);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +132,7 @@ public class NetworkStatus extends BaseObservable {
                     setChanged();
                 }
 
-                mNetworkState = NetworkEnum.NO_NETWORK;
+                mNetworkState = NetworkStateEnum.NO_NETWORK;
 
             } else {
 
@@ -140,7 +142,7 @@ public class NetworkStatus extends BaseObservable {
                     setChanged();
                 }
 
-                mNetworkState = (wifiNetworkInfo.isAvailable() ? NetworkEnum.WIFI : NetworkEnum.LTE);
+                mNetworkState = (wifiNetworkInfo.isAvailable() ? NetworkStateEnum.WIFI : NetworkStateEnum.LTE);
 
                 if (NetworkAvailable) {
                     dequeuePreservedNetworkTask();

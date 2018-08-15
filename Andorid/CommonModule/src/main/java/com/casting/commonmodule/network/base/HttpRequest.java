@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.network.exceptions.ParsingException;
-import com.casting.commonmodule.network.exceptions.ServerResponseError;
+import com.casting.commonmodule.network.exception.NetworkException;
+import com.casting.commonmodule.network.exception.NetworkExceptionEnum;
 import com.casting.commonmodule.utility.EasyLog;
 
 import org.json.JSONObject;
@@ -25,28 +25,29 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
-public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
+public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
 
     private final static int DEFAULT_TIMEOUT = 5 * 1000;
 
-    private BaseRequest mRequestCommand;
+    private BaseRequest     mRequestCommand;
 
-    private String      mUrlData;
-    private String      mHttpMethod;
-    private String      mDownloadPath;
-    private ContentValues mRequestHeader;
-    private ContentValues mParameterValues;
+    private String          mUrlData;
+    private String          mHttpMethod;
+    private String          mDownloadPath;
+    private ContentValues   mRequestHeader;
+    private ContentValues   mParameterValues;
 
     @SuppressWarnings("unchecked")
     @WorkerThread
-    public M execute() throws ParsingException, ServerResponseError, NullPointerException
+    public M execute() throws NetworkException, NullPointerException
     {
 
         M instance = null;
 
         HttpURLConnection connection = null;
 
-        try {
+        try
+        {
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append(mUrlData);
             if (HttpGet.equalsIgnoreCase(mHttpMethod)) urlBuilder.append(convertParameter());
@@ -58,10 +59,12 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("charset", "utf-8");
 
-            if (getRequestHttpHeader() != null) {
-
-                for (String key : getRequestHttpHeader().keySet()) {
+            if (getRequestHttpHeader() != null)
+            {
+                for (String key : getRequestHttpHeader().keySet())
+                {
                     String value = getRequestHttpHeader().getAsString(key);
+
                     connection.setRequestProperty(key , value);
                 }
             }
@@ -79,7 +82,8 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
                 outputStream.close();
             }
 
-            if (isValidHttpConnection(connection.getResponseCode())){
+            if (isValidHttpConnection(connection.getResponseCode()))
+            {
 
                 if (TextUtils.isEmpty(mDownloadPath)) {
 
@@ -109,8 +113,8 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
 
                         JSONObject jsonObject = new JSONObject(stringBuilder.toString());
 
-                        INetworkJSONParcelable iNetworkJSONParcelable = (INetworkJSONParcelable) instance;
-                        iNetworkJSONParcelable.parseJSON2Data(jsonObject);
+                        JSONParcelable JSONParcelable = (JSONParcelable) instance;
+                        JSONParcelable.parse(jsonObject);
                     }
 
                 }
@@ -140,28 +144,31 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
                 EasyLog.LogMessage("-- ServerResponseError [http error code] " + connection.getResponseCode());
                 EasyLog.LogMessage("-- ServerResponseError [http error Message] " + connection.getResponseMessage());
 
-                String responseData = "";
-                BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(connection.getErrorStream()));
+                StringBuilder responseBuilder = new StringBuilder();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
                 while (true) {
+
                     String stringLine = bufferedReader.readLine();
+
                     if (stringLine == null) break;
 
-                    responseData += (stringLine + '\n');
+                    responseBuilder.append(stringLine).append('\n');
                 }
 
-                convertRawServerData2Log(responseData);
+                convertRawServerData2Log(responseBuilder.toString());
 
                 bufferedReader.close();
                 connection.getErrorStream().close();
 
-                EasyLog.LogMessage("-- ServerResponseError [http error Message] " + responseData);
+                EasyLog.LogMessage("-- ServerResponseError [http error Message] " + responseBuilder.toString());
 
-                ServerResponseError serverResponseError = new ServerResponseError();
-                serverResponseError.setErrorMessage(HttpConnectionError);
+                NetworkException networkException = new NetworkException();
+                networkException.setExceptionEnum(NetworkExceptionEnum.NOFOUND_PARAMETER);
+                networkException.setErrorMessage(HttpConnectionError);
 
-                throw serverResponseError;
+                throw networkException;
             }
 
         }
@@ -169,10 +176,11 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
         {
             e.printStackTrace();
 
-            ParsingException parsingException = new ParsingException();
-            parsingException.setErrorMessage(ParsingError);
+            NetworkException networkException = new NetworkException();
+            networkException.setExceptionEnum(NetworkExceptionEnum.PARSING_ERROR);
+            networkException.setErrorMessage(ParsingError);
 
-            throw parsingException;
+            throw networkException;
 
         } finally {
 
@@ -233,20 +241,30 @@ public class BaseHttpRequester<M extends BaseModel> implements NetworkProtocol {
     }
 
     private String convertParameter() throws UnsupportedEncodingException {
+
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (mParameterValues != null) {
-            for (Map.Entry<String , Object> entry : mParameterValues.valueSet()) {
+        if (mParameterValues != null)
+        {
+
+            for (Map.Entry<String , Object> entry : mParameterValues.valueSet())
+            {
+
                 String parameterName = URLEncoder.encode(entry.getKey() , "UTF-8");
 
-                if (entry.getValue() != null) {
+                if (entry.getValue() != null)
+                {
                     String parameterValue = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
                     String parameter = parameterName + "=" + parameterValue;
 
-                    if (TextUtils.isEmpty(stringBuilder.toString())) {
+                    if (TextUtils.isEmpty(stringBuilder.toString()))
+                    {
                         stringBuilder.append(parameter);
-                    } else {
-                        stringBuilder.append("&"+parameter);
+                    }
+                    else
+                    {
+                        stringBuilder.append("&");
+                        stringBuilder.append(parameter);
                     }
                 }
             }

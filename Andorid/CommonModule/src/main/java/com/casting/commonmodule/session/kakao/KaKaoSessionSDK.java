@@ -1,11 +1,13 @@
-package com.casting.commonmodule.sns.kakao;
+package com.casting.commonmodule.session.kakao;
 
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
-import com.casting.commonmodule.WorkerThreadManager;
-import com.casting.commonmodule.sns.SNSLogin;
+import com.casting.commonmodule.session.ISessionLoginListener;
+import com.casting.commonmodule.session.ISessionLogoutListener;
+import com.casting.commonmodule.session.ISessionSDK;
 import com.casting.commonmodule.utility.EasyLog;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -23,21 +25,16 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 
-public class KaKaoLoginSDK extends KakaoAdapter {
+public class KaKaoSessionSDK extends KakaoAdapter implements ISessionSDK<UserProfile> {
 
     private static class LazyHolder {
-        private static KaKaoLoginSDK mInstance = new KaKaoLoginSDK();
+        private static KaKaoSessionSDK mInstance = new KaKaoSessionSDK();
     }
 
-    private Application mApplication;
+    private Application             mApplication;
+    private AppCompatActivity       mTopActivity;
 
-    private Activity mTopActivity;
-
-    private SessionSyncCallback mSessionSyncCallback;
-
-    public static KaKaoLoginSDK getInstance() {
-        return LazyHolder.mInstance;
-    }
+    private SessionSyncCallback     mSessionSyncCallback;
 
     public void init(Application application) {
 
@@ -46,6 +43,10 @@ public class KaKaoLoginSDK extends KakaoAdapter {
         mSessionSyncCallback = new SessionSyncCallback();
 
         KakaoSDK.init(LazyHolder.mInstance);
+    }
+
+    public static KaKaoSessionSDK getInstance() {
+        return LazyHolder.mInstance;
     }
 
     @Override
@@ -89,109 +90,125 @@ public class KaKaoLoginSDK extends KakaoAdapter {
         };
     }
 
-    public void doSyncKaKaoAccount(final Activity activity , final SNSLogin SNSLogin) {
-        EasyLog.LogMessage(">> KaKao doSyncKaKaoAccount");
+    @Override
+    public void login(final AppCompatActivity activity , final ISessionLoginListener<UserProfile> loginListener)
+    {
+        EasyLog.LogMessage(">> KaKao login");
+
         mTopActivity = activity;
 
         UserManagement.requestMe(new MeResponseCallback() {
             @Override
-            public void onSessionClosed(ErrorResult errorResult) {
+            public void onSessionClosed(ErrorResult errorResult)
+            {
                 EasyLog.LogMessage(">> KaKao onSessionClosed");
 
                 ErrorCode errorCode = ErrorCode.valueOf(errorResult.getErrorCode());
 
-                if (errorCode == ErrorCode.CLIENT_ERROR_CODE) {
+                if (errorCode == ErrorCode.CLIENT_ERROR_CODE)
+                {
                     EasyLog.LogMessage("-- KaKao onSessionClosed ErrorCode.CLIENT_ERROR_CODE");
 
-                    if (SNSLogin != null) {
-                        SNSLogin.onLoginError();
+                    if (loginListener != null) {
+                        loginListener.onError();
                     }
-                } else {
+                }
+                else
+                {
                     EasyLog.LogMessage("-- KaKao onSessionClosed showLoginDialog");
 
-                    doPrepareKaKaoAccountSession(activity , SNSLogin);
+                    waitSession(activity , loginListener);
                 }
             }
 
             @Override
-            public void onNotSignedUp() {
+            public void onNotSignedUp()
+            {
                 EasyLog.LogMessage(">> KaKao onNotSignedUp");
 
-                if (SNSLogin != null) {
-                    SNSLogin.onLoginError();
+                if (loginListener != null) {
+                    loginListener.onError();
                 }
             }
 
             @Override
-            public void onSuccess(UserProfile userProfile) {
+            public void onSuccess(UserProfile userProfile)
+            {
                 EasyLog.LogMessage(">> KaKao onSuccess");
+
                 Session.getCurrentSession().removeCallback(mSessionSyncCallback);
 
-                if (SNSLogin != null) {
-                    SNSLogin.setLoginResponseData(userProfile);
-
-                    WorkerThreadManager.getInstance().runThread(SNSLogin);
+                if (loginListener != null) {
+                    loginListener.onLogin(userProfile);
                 }
             }
 
             @Override
-            public void onFailure(ErrorResult errorResult) {
+            public void onFailure(ErrorResult errorResult)
+            {
                 super.onFailure(errorResult);
 
-                if (SNSLogin != null) {
-                    SNSLogin.onLoginError();
+                if (loginListener != null) {
+                    loginListener.onError();
                 }
             }
         });
     }
 
-    public void doCloseKaKaoAccountSession(final Runnable ... runnables) {
-        EasyLog.LogMessage(">> KaKao doCloseKaKaoAccountSession");
+    @Override
+    public void logout(AppCompatActivity a, ISessionLogoutListener listener)
+    {
+        EasyLog.LogMessage(">> KaKao logout");
 
         UserManagement.requestLogout(new LogoutResponseCallback() {
             @Override
-            public void onCompleteLogout() {
-                EasyLog.LogMessage(">> KaKao doCloseKaKaoAccountSession success");
+            public void onCompleteLogout()
+            {
+                EasyLog.LogMessage(">> KaKao logout success");
 
-                for (Runnable runnable : runnables) {
-                    runnable.run();
-                }
             }
         });
     }
 
-    public void doPrepareKaKaoAccountSession(final Activity activity , final SNSLogin SNSLogin) {
+    @Override
+    public void waitSession
+            (final AppCompatActivity activity ,
+             final ISessionLoginListener<UserProfile> loginListener)
+    {
         mTopActivity = activity;
 
-        mSessionSyncCallback.setSyncLoginTask(SNSLogin);
+        mSessionSyncCallback.setSyncLoginTask(loginListener);
+
         Session.getCurrentSession().addCallback(mSessionSyncCallback);
         Session.getCurrentSession().checkAndImplicitOpen();
     }
 
     private class SessionSyncCallback implements ISessionCallback {
 
-        private SNSLogin mSNSLogin;
+        private ISessionLoginListener<UserProfile> mLoginListener;
 
         @Override
-        public void onSessionOpened() {
+        public void onSessionOpened()
+        {
             EasyLog.LogMessage(">> sessionCallback .. onSessionOpened");
 
-            if (mSNSLogin != null) {
-                doSyncKaKaoAccount(mTopActivity , mSNSLogin);
+            if (mLoginListener != null) {
+                login(mTopActivity , mLoginListener);
             }
         }
 
         @Override
-        public void onSessionOpenFailed(KakaoException exception) {
+        public void onSessionOpenFailed(KakaoException exception)
+        {
             EasyLog.LogMessage(">> sessionCallback .. onSessionOpenFailed");
 
-            if (mSNSLogin != null) {
-                mSNSLogin.onLoginError();
+            if (mLoginListener != null) {
+                mLoginListener.onError();
             }
         }
 
-        public void setSyncLoginTask(SNSLogin syncLoginTask) {
-            mSNSLogin = syncLoginTask;
+        private void setSyncLoginTask(ISessionLoginListener<UserProfile> loginListener) {
+            mLoginListener = loginListener;
         }
     }
 }

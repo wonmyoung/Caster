@@ -3,7 +3,7 @@ package com.casting;
 import android.app.Application;
 
 import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.network.NetworkThreadManager;
+import com.casting.commonmodule.network.NetworkRequestHandler;
 import com.casting.commonmodule.network.base.URLGeneratorStrategy;
 import com.casting.model.request.Login;
 import com.casting.model.request.RegisterMember;
@@ -14,7 +14,7 @@ public class FutureCasting extends Application implements URLGeneratorStrategy {
     public void onCreate() {
         super.onCreate();
 
-        NetworkThreadManager.getInstance().setURLGeneratorStrategy(this);
+        NetworkRequestHandler.getInstance().setURLGeneratorStrategy(this);
     }
 
     @Override

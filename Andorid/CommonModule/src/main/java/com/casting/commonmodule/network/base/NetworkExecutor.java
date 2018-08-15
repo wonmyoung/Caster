@@ -3,29 +3,26 @@ package com.casting.commonmodule.network.base;
 import android.os.AsyncTask;
 
 import com.casting.commonmodule.model.BaseModel;
-import com.casting.commonmodule.network.NetworkStatus;
-import com.casting.commonmodule.network.exceptions.NetworkException;
-import com.casting.commonmodule.network.exceptions.NetworkExceptionEnum;
-import com.casting.commonmodule.network.exceptions.NetworkNotAvailable;
-import com.casting.commonmodule.network.exceptions.ParsingException;
-import com.casting.commonmodule.network.exceptions.ServerResponseError;
+import com.casting.commonmodule.network.NetworkState;
+import com.casting.commonmodule.network.exception.NetworkException;
+import com.casting.commonmodule.network.exception.NetworkExceptionEnum;
+import com.casting.commonmodule.network.NetworkRequestHandler;
 
 
 public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Integer , M> {
 
     private static final String NETWORK_ERROR_MESSAGE = "네트워크가 상태 확인 필요";
 
-    private BaseHttpRequester<M>    mNetworkRequester;
-    private NetworkException mWorkerException = null;
+    private HttpRequest<M>      mNetworkRequester;
+    private NetworkException    mException = null;
 
     private INetworkProgressView mProgressView;
-    private INetworkResponseListener mNetworkResponseListener;
 
     @Override
     protected M doInBackground(Object ... os) {
         try {
 
-            if (NetworkStatus.getInstance().isNetworkAvailable())
+            if (NetworkState.getInstance().isNetworkAvailable())
             {
                 publishProgress();
 
@@ -33,14 +30,15 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
             }
             else
             {
-                NetworkNotAvailable networkNotAvailable = new NetworkNotAvailable();
-                networkNotAvailable.setErrorMessage(NETWORK_ERROR_MESSAGE);
+                NetworkException networkException = new NetworkException();
+                networkException.setExceptionEnum(NetworkExceptionEnum.NETWORK_NOT_AVAILABLE);
+                networkException.setErrorMessage(NETWORK_ERROR_MESSAGE);
 
-                throw networkNotAvailable;
+                throw networkException;
             }
 
         }
-        catch (NetworkNotAvailable | ServerResponseError | ParsingException e)
+        catch (NetworkException e)
         {
             setWorkerException(e);
 
@@ -63,59 +61,37 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
     @Override
     protected void onPostExecute(M m) {
 
-        if (mWorkerException == null)
+        NetworkResponse networkResponse = new NetworkResponse();
+        networkResponse.setSourceRequest(mNetworkRequester.getRequestCommand());
+
+        if (mException == null)
         {
-            NetworkResponse networkResponse = new NetworkResponse();
-            networkResponse.setSourceRequest(mNetworkRequester.getRequestCommand());
             networkResponse.setResponseCode(1);
             networkResponse.setResponseModel(m);
-
-            if (mNetworkResponseListener != null) {
-                mNetworkResponseListener.onNetworkResponse(networkResponse);
-            }
         }
         else
         {
-            onResponseError(mWorkerException);
+            networkResponse.setResponseCode(mException.getErrorCode());
+            networkResponse.setNetworkException(mException);
         }
+
+        NetworkRequestHandler.getInstance().receiveResponse(networkResponse);
     }
 
-    private void onResponseError(NetworkException workerException) {
-
-        NetworkExceptionEnum networkExceptions = workerException.getNetworkExceptions();
-
-        NetworkResponse networkResponse = new NetworkResponse();
-        networkResponse.setSourceRequest(mNetworkRequester.getRequestCommand());
-        networkResponse.setResponseCode(networkExceptions.getErrorCode());
-        networkResponse.setResponseMessage(networkExceptions.getErrorMessage());
-
-        if (mNetworkResponseListener != null) {
-            mNetworkResponseListener.onNetworkResponse(networkResponse);
-        }
-    }
-
-    public BaseHttpRequester getNetworkRequestor() {
+    public HttpRequest getNetworkRequestor() {
         return mNetworkRequester;
     }
 
-    public void setNetworkRequestor(BaseHttpRequester httpRequester) {
-        this.mNetworkRequester = httpRequester;
-    }
-
-    public INetworkResponseListener getNetworkResponseListener() {
-        return mNetworkResponseListener;
-    }
-
-    public void setNetworkResponseListener(INetworkResponseListener mNetworkResponseListener) {
-        this.mNetworkResponseListener = mNetworkResponseListener;
+    public void setNetworkRequester(HttpRequest<M> r) {
+        this.mNetworkRequester = r;
     }
 
     public NetworkException getWorkerException() {
-        return mWorkerException;
+        return mException;
     }
 
-    public void setWorkerException(NetworkException workerException) {
-        this.mWorkerException = workerException;
+    public void setWorkerException(NetworkException e) {
+        this.mException = e;
     }
 
     public void setProgressView(INetworkProgressView progressView) {

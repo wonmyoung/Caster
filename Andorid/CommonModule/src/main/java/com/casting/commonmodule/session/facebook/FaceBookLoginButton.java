@@ -1,4 +1,4 @@
-package com.casting.commonmodule.sns.facebook;
+package com.casting.commonmodule.session.facebook;
 
 import android.content.Context;
 import android.util.AttributeSet;

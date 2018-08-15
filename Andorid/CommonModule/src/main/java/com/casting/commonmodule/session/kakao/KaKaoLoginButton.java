@@ -1,4 +1,4 @@
-package com.casting.commonmodule.sns.kakao;
+package com.casting.commonmodule.session.kakao;
 
 import android.content.Context;
 import android.util.AttributeSet;

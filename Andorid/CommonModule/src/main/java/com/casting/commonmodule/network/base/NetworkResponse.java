@@ -1,16 +1,18 @@
 package com.casting.commonmodule.network.base;
 
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.network.exception.NetworkException;
 
 public class NetworkResponse extends BaseResponse {
 
-    private String mResponseMessage;
+    private NetworkException    mNetworkException;
 
-    public String getResponseMessage() {
-        return mResponseMessage;
+    public NetworkException getNetworkException() {
+        return mNetworkException;
     }
 
-    public void setResponseMessage(String responseMessage) {
-        mResponseMessage = responseMessage;
+    public void setNetworkException(NetworkException e) {
+        this.mNetworkException = e;
     }
+
 }

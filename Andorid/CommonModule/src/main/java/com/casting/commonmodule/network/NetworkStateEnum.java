@@ -1,6 +1,6 @@
 package com.casting.commonmodule.network;
 
-public enum NetworkEnum {
+public enum NetworkStateEnum {
 
     WIFI,
     LTE,

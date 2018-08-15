@@ -4,48 +4,33 @@ import android.text.TextUtils;
 
 public abstract class ThreadUnit implements Runnable {
 
-    private String      mThreadName;
-
-    private ThreadType  mThreadUnitKind;
-
-    public ThreadUnit() {
-    }
-
-    public ThreadUnit(String threadName) {
-    }
-
-    public ThreadUnit(ThreadType threadUnit) {
-        mThreadUnitKind = threadUnit;
-    }
-
     @Override
-    public void run() {
-        try {
-            runTask();
-        } catch (Exception e) {
+    public final void run() {
+        try
+        {
+            runSafely();
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
+
+            onError(e);
         }
     }
 
-    public abstract void runTask() throws Exception;
+    protected void onError(Exception e)
+    {
 
-    public String getThreadName() {
-        return mThreadName;
     }
 
-    public void setThreadName(String idetifier) {
-        this.mThreadName = idetifier;
-    }
+    protected abstract void runSafely() throws Exception;
 
-    public boolean isEqual(String idetifier) {
-        if (!TextUtils.isEmpty(idetifier)) {
-            return idetifier.equalsIgnoreCase(mThreadName);
-        } else {
-            return false;
-        }
-    }
+    public abstract String getName();
 
-    public ThreadType getThreadUnitKind() {
-        return mThreadUnitKind;
+    public boolean isEqual(String s)
+    {
+        String name = getName();
+
+        return (!TextUtils.isEmpty(s) && s.equalsIgnoreCase(name));
     }
 }

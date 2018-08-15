@@ -1,8 +1,8 @@
-package com.casting.commonmodule.thread;
+package com.casting.commonmodule;
 
 import com.casting.commonmodule.model.BaseResponse;
 
-public interface ThreadResponseListener {
+public interface IResponseListener {
 
     void onThreadResponseListen(BaseResponse response);
 }
