@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.casting.commonmodule.thread.MultiThreadExecutor;
+import com.casting.commonmodule.thread.ThreadExecutor;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.commonmodule.view.BaseObservable;
 
@@ -103,7 +103,7 @@ public class NetworkStatus extends BaseObservable {
 
     public void dequeuePreservedNetworkTask() {
         try {
-            MultiThreadExecutor threadExecutor = new MultiThreadExecutor(1);
+            ThreadExecutor threadExecutor = new ThreadExecutor(1);
 
             while (mPreservedTasks.peek() != null) {
                 Runnable runnable = mPreservedTasks.poll();

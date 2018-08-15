@@ -4,5 +4,6 @@ public class ServerResponseError extends NetworkException {
 
     public ServerResponseError() {
         super(NetworkExceptionEnum.SERVER_REPONSE_ERROR);
+
     }
 }

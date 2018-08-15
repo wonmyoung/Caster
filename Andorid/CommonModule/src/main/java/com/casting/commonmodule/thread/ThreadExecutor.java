@@ -5,28 +5,28 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MultiThreadExecutor extends ThreadPoolExecutor {
+public class ThreadExecutor extends ThreadPoolExecutor {
 
     private static final int MAX_THREAD_COUNT = 100;
     private static final int THREAD_TIMEOUT = 30;
 
-    private LinkedBlockingQueue<SafeThread> preservedTasks = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<ThreadUnit> preservedTasks = new LinkedBlockingQueue<>();
 
-    public MultiThreadExecutor(int concurrentThreadCount) {
+    public ThreadExecutor(int concurrentThreadCount) {
         super(concurrentThreadCount , MAX_THREAD_COUNT , THREAD_TIMEOUT , TimeUnit.SECONDS , new LinkedBlockingQueue<Runnable>());
     }
 
     public void executeMultiThread(Runnable... runnables) {
         for (Runnable task : runnables) {
-            if (task instanceof SafeThread) {
-                preservedTasks.add((SafeThread) task);
+            if (task instanceof ThreadUnit) {
+                preservedTasks.add((ThreadUnit) task);
             }
             execute(task);
         }
     }
 
     public void dequeuePreservedTask(String taskIdentifier) {
-        for (SafeThread thread : preservedTasks) {
+        for (ThreadUnit thread : preservedTasks) {
             if (thread.isEqual(taskIdentifier)) {
                 preservedTasks.remove(thread);
             }
@@ -36,7 +36,7 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
     public boolean isRequestUnderProcess(int commandId) {
         String strIdentifier = "command"+commandId;
 
-        for (SafeThread thread : preservedTasks) {
+        for (ThreadUnit thread : preservedTasks) {
             if (thread.isEqual(strIdentifier)) {
                 return true;
             }
@@ -45,7 +45,7 @@ public class MultiThreadExecutor extends ThreadPoolExecutor {
     }
 
     public boolean isRequestUnderProcess(String taskIdentifier) {
-        for (SafeThread thread : preservedTasks) {
+        for (ThreadUnit thread : preservedTasks) {
             if (thread.isEqual(taskIdentifier)) {
                 return true;
             }

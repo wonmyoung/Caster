@@ -1,11 +1,11 @@
 package com.casting.commonmodule;
 
 import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.thread.MultiThreadExecutor;
+import com.casting.commonmodule.thread.ThreadExecutor;
 
 public class WorkerThreadManager {
 
-    private MultiThreadExecutor mMultiThreadExecutor;
+    private ThreadExecutor mThreadExecutor;
 
     private static class LazyHolder {
         private static WorkerThreadManager mInstance = new WorkerThreadManager();
@@ -16,7 +16,7 @@ public class WorkerThreadManager {
     }
 
     public WorkerThreadManager() {
-        mMultiThreadExecutor = new MultiThreadExecutor(10);
+        mThreadExecutor = new ThreadExecutor(10);
     }
 
     @SuppressWarnings("unchecked")
