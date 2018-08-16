@@ -1,6 +1,6 @@
 package com.casting.component.activity;
 
-public class IntroActivity extends BaseFCActivity {
+public class MainActivity extends BaseFCActivity {
 
     @Override
     protected void init() throws Exception {
