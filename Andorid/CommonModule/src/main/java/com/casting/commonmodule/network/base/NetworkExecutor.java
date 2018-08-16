@@ -62,7 +62,7 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
     protected void onPostExecute(M m) {
 
         NetworkResponse networkResponse = new NetworkResponse();
-        networkResponse.setSourceRequest(mNetworkRequester.getRequestCommand());
+        networkResponse.setSourceRequest(mNetworkRequester.getNetworkRequest());
 
         if (mException == null)
         {

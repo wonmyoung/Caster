@@ -2,10 +2,11 @@ package com.casting.commonmodule.network;
 
 import android.support.annotation.MainThread;
 
+import com.casting.commonmodule.IRequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.base.HttpRequest;
 import com.casting.commonmodule.network.base.NetworkExecutor;
-import com.casting.commonmodule.network.base.NetworkProtocol;
+import com.casting.commonmodule.network.base.NetworkConstant;
 import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.network.base.URLGeneratorStrategy;
 import com.casting.commonmodule.IResponseListener;
@@ -14,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkRequestHandler implements NetworkProtocol {
+public class NetworkRequestHandler<R extends NetworkRequest> implements NetworkConstant, IRequestHandler<R> {
 
     private static class LazyHolder {
 
@@ -47,15 +48,48 @@ public class NetworkRequestHandler implements NetworkProtocol {
         return networkInProgress;
     }
 
-    public <R extends BaseRequest> boolean isNetworkThreadProcess(R r) {
+    public boolean isNetworkThreadProcess(R r) {
 
         Queue<IResponseListener> queue = protocolsQueueHashMap.get(r);
 
         return (queue != null && queue.size() > 0);
     }
 
-    public <R extends BaseRequest> boolean isNetworkThreadIdle(R r) {
+    public boolean isNetworkThreadIdle(R r) {
         return !isNetworkThreadProcess(r);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void request(R r)
+    {
+
+        if (NetworkState.getInstance().isNetworkAvailable())
+        {
+
+            if (isNetworkThreadIdle(r))
+            {
+                if (protocolsQueueHashMap.get(r) == null) {
+                    protocolsQueueHashMap.put(r , new LinkedList<IResponseListener>());
+                }
+                protocolsQueueHashMap.get(r).add(r.getResponseListener());
+
+                HttpRequest httpRequest = new HttpRequest();
+                httpRequest.setNetworkRequest(r);
+                httpRequest.setUrlData(mURLGeneratorStrategy.create(r));
+                httpRequest.setHttpMethod(r.getHttpMethod());
+                httpRequest.setRequestHttpHeader(r.getHttpRequestHeader());
+                httpRequest.setParameterValues(r.getHttpRequestParameter());
+
+                NetworkExecutor networkExecutor = new NetworkExecutor();
+                networkExecutor.setNetworkRequester(httpRequest);
+                networkExecutor.execute();
+            }
+        }
+        else
+        {
+            NetworkState.getInstance().enqueuePreservedNetworkTask(r);
+        }
     }
 
     /**
@@ -85,43 +119,6 @@ public class NetworkRequestHandler implements NetworkProtocol {
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <R extends BaseRequest> void requestHttpExecute(R r)
-    {
-
-        if (NetworkState.getInstance().isNetworkAvailable())
-        {
-
-            if (isNetworkThreadIdle(r))
-            {
-                if (protocolsQueueHashMap.get(r) == null) {
-                    protocolsQueueHashMap.put(r , new LinkedList<IResponseListener>());
-                }
-                protocolsQueueHashMap.get(r).add(r.getResponseListener());
-
-                INetworkRequest networkRequest = (INetworkRequest) r;
-
-                HttpRequest httpRequest = new HttpRequest();
-                httpRequest.setRequestCommandTag(r);
-                httpRequest.setUrlData(mURLGeneratorStrategy.create(r));
-                httpRequest.setHttpMethod(networkRequest.getHttpMethod());
-                httpRequest.setDownloadPath(networkRequest.getDownloadPath());
-                httpRequest.setRequestHttpHeader(networkRequest.getHttpRequestHeader());
-                httpRequest.setParameterValues(networkRequest.getHttpRequestParameter());
-
-                NetworkExecutor networkExecutor = new NetworkExecutor();
-                networkExecutor.setNetworkRequester(httpRequest);
-                networkExecutor.execute();
-            }
-        }
-        else
-        {
-            NetworkRequest networkRequest = new NetworkRequest(r);
-
-            NetworkState.getInstance().enqueuePreservedNetworkTask(networkRequest);
         }
     }
 

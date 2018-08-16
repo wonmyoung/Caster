@@ -5,17 +5,18 @@ import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import com.casting.commonmodule.model.BaseModel;
-import com.casting.commonmodule.model.BaseRequest;
+import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.exception.NetworkException;
 import com.casting.commonmodule.network.exception.NetworkExceptionEnum;
+import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.network.parse.XMLParcelable;
 import com.casting.commonmodule.utility.EasyLog;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -25,15 +26,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
-public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
+public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
     private final static int DEFAULT_TIMEOUT = 5 * 1000;
 
-    private BaseRequest     mRequestCommand;
+    private NetworkRequest<M>  mNetworkRequest;
 
     private String          mUrlData;
     private String          mHttpMethod;
-    private String          mDownloadPath;
     private ContentValues   mRequestHeader;
     private ContentValues   mParameterValues;
 
@@ -48,11 +48,15 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
 
         try
         {
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append(mUrlData);
-            if (HttpGet.equalsIgnoreCase(mHttpMethod)) urlBuilder.append(convertParameter());
+            StringBuilder strUrlBuilder = new StringBuilder();
+            strUrlBuilder.append(mUrlData);
 
-            URL url = new URL(urlBuilder.toString());
+            if (HttpGet.equalsIgnoreCase(mHttpMethod)) {
+                strUrlBuilder.append(convertParameter());
+            }
+
+            URL url = new URL(strUrlBuilder.toString());
+
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(DEFAULT_TIMEOUT);
             connection.setRequestMethod(mHttpMethod);
@@ -79,64 +83,48 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
                 bufferedWriter.write(convertParameter());
                 bufferedWriter.flush();
                 bufferedWriter.close();
+
                 outputStream.close();
             }
 
             if (isValidHttpConnection(connection.getResponseCode()))
             {
 
-                if (TextUtils.isEmpty(mDownloadPath)) {
+                InputStream inputStream = connection.getInputStream();
 
-                    Class c = mRequestCommand.getTargetClass();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-                    Object o = (c != null ? c.newInstance() : null);
+                StringBuilder stringBuilder = new StringBuilder();
 
-                    if (o != null && o instanceof BaseModel)
-                    {
-                        instance = (M) o;
+                while (true) {
 
-                        StringBuilder stringBuilder = new StringBuilder();
+                    String stringLine = bufferedReader.readLine();
 
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    if (stringLine == null) break;
 
-                        while (true) {
-
-                            String stringLine = bufferedReader.readLine();
-
-                            if (stringLine == null) break;
-
-                            stringBuilder.append(stringLine).append('\n');
-                        }
-
-                        bufferedReader.close();
-                        connection.getInputStream().close();
-
-                        JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-
-                        JSONParcelable JSONParcelable = (JSONParcelable) instance;
-                        JSONParcelable.parse(jsonObject);
-                    }
-
+                    stringBuilder.append(stringLine).append('\n');
                 }
-                else
+
+                bufferedReader.close();
+
+                inputStream.close();
+
+                NetworkParcelable np = mNetworkRequest.getNetworkParcelable();
+
+                if (np instanceof JSONParcelable)
                 {
-                    int read = 0;
+                    JSONParcelable<M> jsonParcelable = (JSONParcelable) np;
 
-                    byte[] bytes = new byte[1024];
+                    JSONObject jsonObject = new JSONObject(stringBuilder.toString());
 
-                    File file = new File(mDownloadPath);
-
-                    if (file.createNewFile())
-                    {
-                        OutputStream outputStream = new FileOutputStream(file);
-
-                        while ((read = connection.getInputStream().read(bytes)) != -1) {
-                            outputStream.write(bytes, 0, read);
-                        }
-                        connection.getInputStream().close();
-                    }
+                    instance = jsonParcelable.parse(jsonObject);
                 }
+                else if (np instanceof XMLParcelable)
+                {
+                    XMLParcelable<M> xmlParcelable = (XMLParcelable) np;
 
+                    instance = xmlParcelable.parse(stringBuilder.toString());
+                }
             }
             else
             {
@@ -166,7 +154,7 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
 
                 NetworkException networkException = new NetworkException();
                 networkException.setExceptionEnum(NetworkExceptionEnum.NOFOUND_PARAMETER);
-                networkException.setErrorMessage(HttpConnectionError);
+                networkException.setErrorMessage(responseBuilder.toString());
 
                 throw networkException;
             }
@@ -224,20 +212,12 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
         this.mParameterValues = parameterValues;
     }
 
-    public BaseRequest getRequestCommand() {
-        return mRequestCommand;
+    public NetworkRequest<M> getNetworkRequest() {
+        return mNetworkRequest;
     }
 
-    public void setRequestCommandTag(BaseRequest request) {
-        this.mRequestCommand = request;
-    }
-
-    public String getDownloadPath() {
-        return mDownloadPath;
-    }
-
-    public void setDownloadPath(String downloadPath) {
-        this.mDownloadPath = downloadPath;
+    public void setNetworkRequest(NetworkRequest<M> networkRequest) {
+        mNetworkRequest = networkRequest;
     }
 
     private String convertParameter() throws UnsupportedEncodingException {
@@ -268,9 +248,10 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
                     }
                 }
             }
+
             EasyLog.LogMessage("*********************************************************************");
-            EasyLog.LogMessage(">> URL :" + mUrlData);
-            EasyLog.LogMessage(">> parameter :"+stringBuilder.toString());
+            EasyLog.LogMessage(">> URL :" ,mUrlData);
+            EasyLog.LogMessage(">> parameter :", stringBuilder.toString());
             EasyLog.LogMessage("*********************************************************************");
         }
         return stringBuilder.toString();
@@ -278,17 +259,9 @@ public class HttpRequest<M extends BaseModel> implements NetworkProtocol {
 
     private void convertRawServerData2Log(String responseData) {
         EasyLog.LogMessage("*********************************************************************");
-        EasyLog.LogMessage(">> URL :"+mUrlData);
-        EasyLog.LogMessage(">> responseData :"+responseData);
+        EasyLog.LogMessage(">> URL :", mUrlData);
+        EasyLog.LogMessage(">> responseData :", responseData);
         EasyLog.LogMessage("*********************************************************************");
-    }
-
-    private String convertStringFromJSON(JSONObject jsonObject , String jsonField) {
-        try {
-            return jsonObject.getString(jsonField);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private boolean isValidHttpConnection(int httpResponseCode) {

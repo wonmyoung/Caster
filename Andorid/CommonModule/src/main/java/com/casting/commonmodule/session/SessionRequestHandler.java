@@ -3,12 +3,13 @@ package com.casting.commonmodule.session;
 import android.app.Application;
 import android.support.v7.app.AppCompatActivity;
 
+import com.casting.commonmodule.IRequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.session.facebook.FacebookSessionSDK;
 import com.casting.commonmodule.session.google.GoogleSessionSDK;
 import com.casting.commonmodule.session.kakao.KaKaoSessionSDK;
 
-public class SessionRequestHandler {
+public class SessionRequestHandler<R extends BaseRequest> implements IRequestHandler<R> {
 
     private static class LazyHolder {
         private static SessionRequestHandler mInstance = new SessionRequestHandler();
@@ -23,8 +24,9 @@ public class SessionRequestHandler {
         KaKaoSessionSDK.getInstance().init(application);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public <R extends BaseRequest> void request(R r)
+    public void request(R r)
     {
         if (r instanceof ISessionLogin)
         {

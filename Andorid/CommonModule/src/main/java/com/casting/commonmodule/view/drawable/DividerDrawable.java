@@ -1,4 +1,4 @@
-package com.casting.commonmodule.view;
+package com.casting.commonmodule.view.drawable;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

@@ -1,6 +1,6 @@
 package com.casting.commonmodule.network.base;
 
-public interface NetworkProtocol {
+public interface NetworkConstant {
 
     String ResponseCode = "ResponseCode";
     String ResponseMessage = "ResponseMessage";

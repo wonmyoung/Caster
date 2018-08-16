@@ -9,12 +9,12 @@ import android.net.NetworkInfo;
 
 import com.casting.commonmodule.thread.ThreadExecutor;
 import com.casting.commonmodule.utility.UtilityData;
-import com.casting.commonmodule.view.BaseObservable;
 
 import java.util.LinkedList;
+import java.util.Observable;
 import java.util.Queue;
 
-public class NetworkState extends BaseObservable {
+public class NetworkState extends Observable {
 
     public static final int NETWORK_STATE = -9999;
 
@@ -24,10 +24,6 @@ public class NetworkState extends BaseObservable {
 
     private NetworkStateEnum        mNetworkState;
     private NetworkStatusReceiver   mNetworkStatusReceiver;
-
-    public NetworkState() {
-        super(NETWORK_STATE);
-    }
 
     private Queue<NetworkRequest> mPreservedTasks = new LinkedList<>();
 

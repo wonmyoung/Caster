@@ -2,6 +2,7 @@ package com.casting.commonmodule;
 
 import android.app.Application;
 
+import com.casting.commonmodule.db.LocalDBRequest;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.session.ISessionLogin;
@@ -10,7 +11,9 @@ import com.casting.commonmodule.session.SessionRequestHandler;
 import com.casting.commonmodule.session.SessionWait;
 import com.casting.commonmodule.thread.ThreadExecutor;
 
-public class RequestHandler {
+import java.util.concurrent.Executors;
+
+public class RequestHandler<R extends BaseRequest> implements IRequestHandler<R> {
 
     private ThreadExecutor mThreadExecutor;
 
@@ -31,8 +34,9 @@ public class RequestHandler {
         SessionRequestHandler.getInstance().init(a);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public <R extends BaseRequest> void request(R r)
+    public void request(R r)
     {
         if (r != null)
         {
@@ -51,7 +55,12 @@ public class RequestHandler {
                     mThreadExecutor.execute(networkRequest);
                 }
             }
+            else if (r instanceof LocalDBRequest)
+            {
+                LocalDBRequest localDBRequest = (LocalDBRequest) r;
 
+                Executors.newSingleThreadExecutor().execute(localDBRequest);
+            }
         }
     }
 }
