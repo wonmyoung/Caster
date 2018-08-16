@@ -17,6 +17,7 @@ public abstract class NetworkRequest<M extends BaseModel> extends BaseRequest<M>
 
     public abstract NetworkParcelable getNetworkParcelable();
 
+    @SuppressWarnings("unchecked")
     @Override
     public void run() {
 

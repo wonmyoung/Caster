@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
+import com.casting.commonmodule.R;
 
 public abstract class CommonActivity extends AppCompatActivity {
 
@@ -36,4 +39,10 @@ public abstract class CommonActivity extends AppCompatActivity {
     }
 
     protected abstract void init() throws Exception;
+
+    @SuppressWarnings("unchecked")
+    protected <V extends View> V find(int id)
+    {
+        return (V) findViewById(id);
+    }
 }
