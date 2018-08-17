@@ -69,8 +69,14 @@ public class InsertForm extends LinearLayout {
         return InsertView;
     }
 
+    public String getInsertedText()
+    {
+        return (InsertView != null ? InsertView.getText().toString() : null);
+    }
+
+    @SuppressWarnings("unchecked")
     protected <V extends View> V find(int id)
     {
-        return findViewById(id);
+        return (V) findViewById(id);
     }
 }
