@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "27.0.1"
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.casting"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 21
         versionName "2.0.3"
