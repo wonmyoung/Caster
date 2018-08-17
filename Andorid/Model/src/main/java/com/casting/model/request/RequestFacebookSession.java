@@ -6,10 +6,11 @@ import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.session.ISessionLogin;
 import com.casting.commonmodule.session.ISessionLoginListener;
 import com.casting.commonmodule.session.SessionType;
+import com.facebook.GraphResponse;
 
 import java.lang.ref.WeakReference;
 
-public class RequestFacebookSession extends BaseRequest implements ISessionLogin {
+public class RequestFacebookSession extends BaseRequest implements ISessionLogin<GraphResponse> {
 
     WeakReference<AppCompatActivity> ActivityReference;
 
@@ -19,11 +20,11 @@ public class RequestFacebookSession extends BaseRequest implements ISessionLogin
     }
 
     @Override
-    public ISessionLoginListener getSessionLoginListener() {
-
-        return new ISessionLoginListener() {
+    public ISessionLoginListener<GraphResponse> getSessionLoginListener()
+    {
+        return new ISessionLoginListener<GraphResponse>() {
             @Override
-            public void onLogin(Object o)
+            public void onLogin(GraphResponse graphResponse)
             {
 
             }
@@ -35,6 +36,7 @@ public class RequestFacebookSession extends BaseRequest implements ISessionLogin
             }
         };
     }
+
 
     @Override
     public AppCompatActivity getAppCompatActivity()

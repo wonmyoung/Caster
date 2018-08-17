@@ -2,11 +2,11 @@ package com.casting.commonmodule.session;
 
 import android.support.v7.app.AppCompatActivity;
 
-public interface ISessionLogin {
+public interface ISessionLogin<R> {
 
     SessionType getTargetSessionType();
 
-    ISessionLoginListener getSessionLoginListener();
+    ISessionLoginListener<R> getSessionLoginListener();
 
     AppCompatActivity getAppCompatActivity();
 }
