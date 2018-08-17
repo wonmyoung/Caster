@@ -4,4 +4,6 @@ import com.casting.commonmodule.model.BaseModel;
 
 public class Reply extends BaseModel {
 
+    private Member member;
+
 }

@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 public class Login extends NetworkRequest<Member> implements JSONParcelable<Member> {
 
+    private String EmailAddress;
+    private String Password;
+
     private SessionType mSessionType;
 
     @Override
@@ -45,5 +48,21 @@ public class Login extends NetworkRequest<Member> implements JSONParcelable<Memb
 
     public void setSessionType(SessionType sessionType) {
         this.mSessionType = sessionType;
+    }
+
+    public String getEmailAddress() {
+        return EmailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        EmailAddress = emailAddress;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
     }
 }
