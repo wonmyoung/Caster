@@ -3,10 +3,7 @@ package com.casting.commonmodule.view.expandableview;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-/**
- * @author JJShin
- */
-public class ExpandableItem extends BaseExpandable {
+public abstract class ExpandableItem extends BaseExpandable {
 
     private Object mRootObject;
     private boolean mExpanded = false;

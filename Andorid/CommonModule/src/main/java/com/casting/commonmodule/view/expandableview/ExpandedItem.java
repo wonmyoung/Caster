@@ -3,7 +3,7 @@ package com.casting.commonmodule.view.expandableview;
 /**
  * @author JJShin
  */
-public class ExpandedItem extends BaseExpandable {
+public abstract class ExpandedItem extends BaseExpandable {
 
     private Object mRootObject;
 

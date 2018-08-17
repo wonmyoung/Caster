@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="main_themecolor">#2679B7</color>
+    <color name="main_themecolorStart">#14d3cf</color>
+    <color name="main_themecolorMiddle">#1eddc1</color>
+    <color name="main_themecolorEnd">#29e8b1</color>
+    <color name="main_registerPageBack">#464c64</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!-- The default background of the menu. -->
+    <color name="md__defaultBackground">#FF555555</color>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+
+    <drawable name="drawable_f0f0f0">#f0f0f0</drawable>
+    <drawable name="drawable_6b2fb1">#6b2fb1</drawable>
+    <drawable name="drawable_401b6c">#401b6c</drawable>
+    <drawable name="drawable_666666">#666666</drawable>
+    <drawable name="drawable_999999">#999999</drawable>
+    <drawable name="drawable_1a888888">#1A888888</drawable>
+
+    <!-- PROGRESS DRAWABLE CONST START -->
+    <color name="cpb_grey">#ffdedede</color>
+    <color name="cpb_blue">#ff0099cc</color>
+    <color name="cpb_blue_dark">#ff00719b</color>
+    <color name="cpb_red">#ffff4444</color>
+    <color name="cpb_red_dark">#ffcd3a3a</color>
+    <color name="cpb_green">#ff99cc00</color>
+    <color name="cpb_green_dark">#ff6d9b00</color>
+    <color name="cpb_white">@android:color/white</color>
+    <!-- PROGRESS DRAWABLE CONST END -->
+
+</resources>

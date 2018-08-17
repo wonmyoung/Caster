@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="main_themecolor">#2679B7</color>
-    <color name="main_themecolorStart">#14d3cf</color>
-    <color name="main_themecolorMiddle">#1eddc1</color>
-    <color name="main_themecolorEnd">#29e8b1</color>
-    <color name="main_registerPageBack">#464c64</color>
-
     <color name="color_gmail_theme">#FF6464</color>
     <color name="color_kakao_theme">#FFEB00</color>
     <color name="color_facebook_theme">#415DAE</color>
@@ -77,7 +71,6 @@
     <color name="color_f6f6f6">#f6f6f6</color>
     <color name="color_33cfa6ff">#33cfa6ff</color>
     <color name="color_5D68A7">#5D68A7</color>
-
     <color name="color_cccccc">#cccccc</color>
     <color name="color_line">#dcdcdc</color>
     <color name="color_dedede">#dedede</color>
@@ -87,24 +80,5 @@
     <color name="color_fff56c">#fff56c</color>
     <color name="color_ECDA00">#ECDA00</color>
     <color name="color_cc333333">#CC333333</color>
-	
-    <color name="background_tab_pressed">#6633B5E5</color>
-    
-    <drawable name="drawable_f0f0f0">#f0f0f0</drawable>
-    <drawable name="drawable_6b2fb1">#6b2fb1</drawable>
-    <drawable name="drawable_401b6c">#401b6c</drawable>
-    <drawable name="drawable_666666">#666666</drawable>
-    <drawable name="drawable_999999">#999999</drawable>
-    <drawable name="drawable_1a888888">#1A888888</drawable>
 
-    <!-- PROGRESS DRAWABLE CONST START -->
-    <color name="cpb_grey">#ffdedede</color>
-    <color name="cpb_blue">#ff0099cc</color>
-    <color name="cpb_blue_dark">#ff00719b</color>
-    <color name="cpb_red">#ffff4444</color>
-    <color name="cpb_red_dark">#ffcd3a3a</color>
-    <color name="cpb_green">#ff99cc00</color>
-    <color name="cpb_green_dark">#ff6d9b00</color>
-    <color name="cpb_white">@android:color/white</color>
-    <!-- PROGRESS DRAWABLE CONST END -->
 </resources>

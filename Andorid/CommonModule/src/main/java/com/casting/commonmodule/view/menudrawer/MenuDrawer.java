@@ -23,8 +23,9 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 
-import com.voltsoft.edu.engword.base.R;
-import com.voltsoft.edu.engword.base.commonview.menudrawer.compat.ActionBarHelper;
+import com.casting.commonmodule.R;
+import com.casting.commonmodule.view.menudrawer.compat.ActionBarHelper;
+
 
 public abstract class MenuDrawer extends ViewGroup {
 
@@ -1309,8 +1310,6 @@ public abstract class MenuDrawer extends ViewGroup {
 
     /**
      * Sets the drawable used as the drawer indicator.
-     *
-     * @param drawable The drawable used as the drawer indicator.
      */
     public void setSlideDrawable(int drawableRes) {
         setSlideDrawable(getResources().getDrawable(drawableRes));
