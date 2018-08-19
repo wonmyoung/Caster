@@ -10,7 +10,7 @@ import com.casting.model.CastList;
 
 import org.json.JSONObject;
 
-public class RequestCastList extends NetworkRequest<CastList> implements JSONParcelable<CastList> {
+public class RequestCastList extends NetworkRequest implements JSONParcelable<CastList> {
 
     @Override
     public String getHttpMethod() {

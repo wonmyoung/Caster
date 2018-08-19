@@ -10,7 +10,7 @@ import com.casting.model.Member;
 
 import org.json.JSONObject;
 
-public class RegisterMember extends NetworkRequest<Member> implements JSONParcelable<Member> {
+public class RegisterMember extends NetworkRequest implements JSONParcelable<Member> {
 
     private SessionType     mSessionType;
 

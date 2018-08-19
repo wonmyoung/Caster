@@ -2,19 +2,19 @@ package com.casting.commonmodule.model;
 
 import com.casting.commonmodule.IResponseListener;
 
-public abstract class BaseRequest<M extends BaseModel> {
+public abstract class BaseRequest<R extends BaseResponse> {
 
-    private IResponseListener mResponseListener;
+    private IResponseListener<R> mResponseListener;
 
-    public IResponseListener getResponseListener() {
+    public IResponseListener<R> getResponseListener() {
         return mResponseListener;
     }
 
-    public void setResponseListener(IResponseListener responseListener) {
+    public void setResponseListener(IResponseListener<R> responseListener) {
         this.mResponseListener = responseListener;
     }
 
-    public <R extends BaseRequest> boolean isRight(Class<R> rClass) {
+    public <B extends BaseRequest> boolean isRight(Class<B> rClass) {
         return getClass().equals(rClass);
     }
 }

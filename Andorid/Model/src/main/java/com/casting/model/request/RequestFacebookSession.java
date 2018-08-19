@@ -2,17 +2,19 @@ package com.casting.model.request;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.session.ISessionLogin;
+import com.casting.commonmodule.IResponseListener;
+import com.casting.commonmodule.session.SessionLogin;
 import com.casting.commonmodule.session.ISessionLoginListener;
+import com.casting.commonmodule.session.SessionResponse;
 import com.casting.commonmodule.session.SessionType;
+import com.casting.model.Member;
 import com.facebook.GraphResponse;
 
 import java.lang.ref.WeakReference;
 
-public class RequestFacebookSession extends BaseRequest implements ISessionLogin<GraphResponse> {
+public class RequestFacebookSession extends SessionLogin<GraphResponse> {
 
-    WeakReference<AppCompatActivity> ActivityReference;
+    private WeakReference<AppCompatActivity> ActivityReference;
 
     @Override
     public SessionType getTargetSessionType() {
@@ -27,6 +29,18 @@ public class RequestFacebookSession extends BaseRequest implements ISessionLogin
             public void onLogin(GraphResponse graphResponse)
             {
 
+                Member member = new Member();
+
+                SessionResponse<Member> sessionResponse = new SessionResponse<>();
+                sessionResponse.setResponseCode(1);
+                sessionResponse.setSessionType(SessionType.FACEBOOK);
+                sessionResponse.setResponseModel(member);
+
+                IResponseListener<SessionResponse> responseListener = getResponseListener();
+
+                if (responseListener != null) {
+                    responseListener.onThreadResponseListen(sessionResponse);
+                }
             }
 
             @Override

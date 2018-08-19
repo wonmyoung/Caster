@@ -10,7 +10,7 @@ import com.casting.model.Member;
 
 import org.json.JSONObject;
 
-public class Login extends NetworkRequest<Member> implements JSONParcelable<Member> {
+public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     private String EmailAddress;
     private String Password;
@@ -32,8 +32,9 @@ public class Login extends NetworkRequest<Member> implements JSONParcelable<Memb
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public NetworkParcelable getNetworkParcelable() {
+    public JSONParcelable<Member> getNetworkParcelable() {
         return this;
     }
 

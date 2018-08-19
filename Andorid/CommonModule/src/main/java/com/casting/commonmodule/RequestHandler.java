@@ -5,8 +5,8 @@ import android.app.Application;
 import com.casting.commonmodule.db.LocalDBRequest;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.NetworkRequest;
-import com.casting.commonmodule.session.ISessionLogin;
-import com.casting.commonmodule.session.ISessionLogout;
+import com.casting.commonmodule.session.SessionLogin;
+import com.casting.commonmodule.session.SessionLogout;
 import com.casting.commonmodule.session.SessionRequestHandler;
 import com.casting.commonmodule.session.SessionWait;
 import com.casting.commonmodule.thread.ThreadExecutor;
@@ -41,8 +41,8 @@ public class RequestHandler<R extends BaseRequest> implements IRequestHandler<R>
         if (r != null)
         {
 
-            if (r instanceof ISessionLogin ||
-                r instanceof ISessionLogout ||
+            if (r instanceof SessionLogin ||
+                r instanceof SessionLogout ||
                 r instanceof SessionWait)
             {
                 SessionRequestHandler.getInstance().request(r);

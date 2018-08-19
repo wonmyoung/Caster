@@ -30,7 +30,7 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
     private final static int DEFAULT_TIMEOUT = 5 * 1000;
 
-    private NetworkRequest<M>  mNetworkRequest;
+    private NetworkRequest  mNetworkRequest;
 
     private String          mUrlData;
     private String          mHttpMethod;
@@ -212,11 +212,11 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
         this.mParameterValues = parameterValues;
     }
 
-    public NetworkRequest<M> getNetworkRequest() {
+    public NetworkRequest getNetworkRequest() {
         return mNetworkRequest;
     }
 
-    public void setNetworkRequest(NetworkRequest<M> networkRequest) {
+    public void setNetworkRequest(NetworkRequest networkRequest) {
         mNetworkRequest = networkRequest;
     }
 

@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkRequestHandler<R extends NetworkRequest> implements NetworkConstant, IRequestHandler<R> {
+public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<NetworkRequest> {
 
     private static class LazyHolder {
 
@@ -48,20 +48,20 @@ public class NetworkRequestHandler<R extends NetworkRequest> implements NetworkC
         return networkInProgress;
     }
 
-    public boolean isNetworkThreadProcess(R r) {
+    public boolean isNetworkThreadProcess(NetworkRequest r) {
 
         Queue<IResponseListener> queue = protocolsQueueHashMap.get(r);
 
         return (queue != null && queue.size() > 0);
     }
 
-    public boolean isNetworkThreadIdle(R r) {
+    public boolean isNetworkThreadIdle(NetworkRequest r) {
         return !isNetworkThreadProcess(r);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void request(R r)
+    public void request(NetworkRequest r)
     {
 
         if (NetworkState.getInstance().isNetworkAvailable())
@@ -98,6 +98,7 @@ public class NetworkRequestHandler<R extends NetworkRequest> implements NetworkC
      *
      * @param response {@link NetworkResponse}
      */
+    @SuppressWarnings("unchecked")
     @MainThread
     public void receiveResponse(NetworkResponse response)
     {
@@ -107,8 +108,8 @@ public class NetworkRequestHandler<R extends NetworkRequest> implements NetworkC
 
             Queue<IResponseListener> queue = protocolsQueueHashMap.get(request);
 
-            if (queue != null) {
-
+            if (queue != null)
+            {
                 IResponseListener responseListener = queue.poll();
 
                 if (responseListener != null) {

@@ -9,7 +9,7 @@ import com.casting.commonmodule.session.facebook.FacebookSessionSDK;
 import com.casting.commonmodule.session.google.GoogleSessionSDK;
 import com.casting.commonmodule.session.kakao.KaKaoSessionSDK;
 
-public class SessionRequestHandler<R extends BaseRequest> implements IRequestHandler<R> {
+public class SessionRequestHandler implements IRequestHandler {
 
     private static class LazyHolder {
         private static SessionRequestHandler mInstance = new SessionRequestHandler();
@@ -26,20 +26,20 @@ public class SessionRequestHandler<R extends BaseRequest> implements IRequestHan
 
     @Override
     @SuppressWarnings("unchecked")
-    public void request(R r)
+    public void request(BaseRequest r)
     {
-        if (r instanceof ISessionLogin)
+        if (r instanceof SessionLogin)
         {
-            ISessionLogin s = (ISessionLogin) r;
+            SessionLogin s = (SessionLogin) r;
 
             SessionType sessionType = s.getTargetSessionType();
 
             ISessionSDK iSessionSDK = sessionType.getSessionLoginSDK();
             iSessionSDK.login(s.getAppCompatActivity(), s.getSessionLoginListener());
         }
-        else if (r instanceof ISessionLogout)
+        else if (r instanceof SessionLogout)
         {
-            ISessionLogout s = (ISessionLogout) r;
+            SessionLogout s = (SessionLogout) r;
 
             SessionType sessionType = s.getTargetSessionType();
 
