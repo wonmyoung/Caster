@@ -1,8 +1,9 @@
 package com.casting.model;
 
 import com.casting.commonmodule.model.BaseModel;
+import com.casting.commonmodule.view.list.ICommonItem;
 
-public class Cast extends BaseModel {
+public class Cast extends BaseModel implements ICommonItem {
 
     private double      RemainingTime;
     private String      Title;
@@ -48,5 +49,10 @@ public class Cast extends BaseModel {
 
     public void setThumbnails(String ... thumbnails) {
         Thumbnails = thumbnails;
+    }
+
+    @Override
+    public int getItemType() {
+        return 0;
     }
 }

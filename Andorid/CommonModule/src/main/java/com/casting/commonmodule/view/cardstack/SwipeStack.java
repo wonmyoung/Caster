@@ -81,6 +81,9 @@ public class SwipeStack extends ViewGroup {
 
     public SwipeStack(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+
+        readAttributes(attrs);
+        initialize();
     }
 
     public SwipeStack(Context context, AttributeSet attrs, int defStyleAttr) {

@@ -1,7 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp120"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60">
+
+            <Button
+                android:id="@+id/main_TopMenuButton1"
+                android:layout_width="@dimen/dp30"
+                android:layout_height="@dimen/dp30"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp10"
+                android:background="@drawable/main_color_round10_shape" />
+
+            <Button
+                android:layout_width="@dimen/dp30"
+                android:layout_height="@dimen/dp30"
+                android:layout_gravity="center"
+                android:background="@drawable/main_color_round10_shape" />
+
+            <Button
+                android:id="@+id/main_TopMenuButton2"
+                android:layout_width="@dimen/dp30"
+                android:layout_height="@dimen/dp30"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="@dimen/dp10"
+                android:background="@drawable/main_color_round10_shape" />
+
+
+        </FrameLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/main_TabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60" />
+
+    </LinearLayout>
+
+    <com.casting.commonmodule.view.cardstack.SwipeStack
+        android:id="@+id/main_SwipeCardStack"
+        android:layout_width="@dimen/dp250"
+        android:layout_height="@dimen/dp300"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp135"/>
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/main_seekBarController"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp50"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/dp10"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15" />
 
 </FrameLayout>
