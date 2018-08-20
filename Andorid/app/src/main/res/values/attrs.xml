@@ -4,6 +4,13 @@
 
     <declare-styleable name="InsertForm">
         <attr name="title" format="string" />
+        <attr name="titleSize" format="dimension" />
+        <attr name="insertTextSize" format="dimension" />
+        <attr name="insertTextType" format="enum">
+            <enum name="email" value="0"/>
+            <enum name="password" value="1"/>
+            <enum name="text" value="2"/>
+        </attr>
     </declare-styleable>
 
 </resources>

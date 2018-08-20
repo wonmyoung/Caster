@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +20,11 @@ public class InsertForm extends LinearLayout {
     private EditText    InsertView;
 
     private String      mTitle;
+    private float       mTitleSize;
+    private float       mTextSize;
+    private int         mTextType;
+
+    private TextView.OnEditorActionListener     mEditorActionListener;
 
     public InsertForm(Context context) {
         super(context);
@@ -49,6 +55,13 @@ public class InsertForm extends LinearLayout {
 
         mTitle = a.getString(R.styleable.InsertForm_title);
 
+        float defaultTitleSize = c.getResources().getDimension(R.dimen.dp20);
+        float defaultTextSize = c.getResources().getDimension(R.dimen.dp18);
+        mTitleSize = a.getDimension(R.styleable.InsertForm_titleSize, defaultTitleSize);
+        mTextSize = a.getDimension(R.styleable.InsertForm_insertTextSize, defaultTextSize);
+
+        mTextType = a.getInt(R.styleable.InsertForm_insertTextType, 0);
+
         a.recycle();
 
         setWillNotDraw(false);
@@ -59,6 +72,10 @@ public class InsertForm extends LinearLayout {
         super.onDraw(canvas);
 
         TitleView.setText(mTitle);
+
+        TitleView.setTextSize(mTitleSize);
+        InsertView.setTextSize(mTextSize);
+        InsertView.setOnEditorActionListener(mEditorActionListener);
     }
 
     public TextView getTitleView() {
@@ -78,5 +95,15 @@ public class InsertForm extends LinearLayout {
     protected <V extends View> V find(int id)
     {
         return (V) findViewById(id);
+    }
+
+    public TextView.OnEditorActionListener getEditorActionListener() {
+        return mEditorActionListener;
+    }
+
+    public void setEditorActionListener(TextView.OnEditorActionListener actionListener) {
+        this.mEditorActionListener = actionListener;
+
+        invalidate();
     }
 }

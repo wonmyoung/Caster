@@ -13,7 +13,7 @@ import com.casting.commonmodule.thread.ThreadExecutor;
 
 import java.util.concurrent.Executors;
 
-public class RequestHandler<R extends BaseRequest> implements IRequestHandler<R> {
+public class RequestHandler implements IRequestHandler<BaseRequest> {
 
     private ThreadExecutor mThreadExecutor;
 
@@ -36,7 +36,7 @@ public class RequestHandler<R extends BaseRequest> implements IRequestHandler<R>
 
     @Override
     @SuppressWarnings("unchecked")
-    public void request(R r)
+    public void request(BaseRequest r)
     {
         if (r != null)
         {
