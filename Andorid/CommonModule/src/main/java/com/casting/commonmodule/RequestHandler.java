@@ -32,6 +32,8 @@ public class RequestHandler implements IRequestHandler<BaseRequest> {
     public void init(Application a)
     {
         SessionRequestHandler.getInstance().init(a);
+
+
     }
 
     @Override

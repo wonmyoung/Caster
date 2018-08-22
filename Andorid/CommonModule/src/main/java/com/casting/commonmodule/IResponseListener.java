@@ -2,7 +2,7 @@ package com.casting.commonmodule;
 
 import com.casting.commonmodule.model.BaseResponse;
 
-public interface IResponseListener<R extends BaseResponse> {
+public interface IResponseListener {
 
-    void onThreadResponseListen(R response);
+    void onThreadResponseListen(BaseResponse response);
 }

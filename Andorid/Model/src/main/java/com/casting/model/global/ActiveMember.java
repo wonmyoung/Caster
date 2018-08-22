@@ -1,0 +1,35 @@
+package com.casting.model.global;
+
+import com.casting.model.Member;
+
+import java.util.Observable;
+
+public class ActiveMember extends Observable {
+
+    private static class LazyHolder {
+        private static ActiveMember mInstance = new ActiveMember();
+    }
+
+    public static ActiveMember getInstance()
+    {
+        return LazyHolder.mInstance;
+    }
+
+    private Member  mMember;
+
+    public Member getMember() {
+        return mMember;
+    }
+
+    public void setMember(Member member) {
+        this.mMember = mMember;
+
+        setChanged();
+        notifyObservers();
+    }
+
+    public String getEmailAddress()
+    {
+        return (mMember == null ? null : mMember.getEmail());
+    }
+}

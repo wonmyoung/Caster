@@ -10,6 +10,7 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 public abstract class SwipeStackAdapter<T extends ICommonItem> extends BaseAdapter {
@@ -92,4 +93,15 @@ public abstract class SwipeStackAdapter<T extends ICommonItem> extends BaseAdapt
 
     protected abstract void bindItemDataView(CompositeViewHolder viewHolder, int position , T item);
 
+    @SuppressWarnings("unchecked")
+    public void setItemList(ArrayList<T> itemList)
+    {
+        if (itemList != null)
+        {
+            if (tArrayList == null) {
+                tArrayList = new ArrayList<>();
+            }
+            tArrayList.addAll((Collection<? extends T>) itemList.clone());
+        }
+    }
 }

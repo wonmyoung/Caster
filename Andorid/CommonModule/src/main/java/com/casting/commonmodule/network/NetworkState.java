@@ -47,7 +47,9 @@ public class NetworkState extends Observable {
 
                 NetworkAvailable = UtilityData.confirmNetworkAccessable(context);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
 
             mNetworkStatusReceiver = null;
@@ -55,13 +57,19 @@ public class NetworkState extends Observable {
     }
 
     public void unregisterReceiver(Context context) {
-        try {
-            if (mNetworkStatusReceiver != null) {
+        try
+        {
+            if (mNetworkStatusReceiver != null)
+            {
                 context.unregisterReceiver(mNetworkStatusReceiver);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
-        } finally {
+        }
+        finally
+        {
             mNetworkStatusReceiver = null;
         }
     }
@@ -79,20 +87,26 @@ public class NetworkState extends Observable {
     }
 
     public boolean enqueuePreservedNetworkTask(NetworkRequest networkRequest) {
-        try {
+
+        try
+        {
             String name = networkRequest.getClass().getSimpleName();
 
-            for (NetworkRequest request : mPreservedTasks) {
-
+            for (NetworkRequest request : mPreservedTasks)
+            {
                 String comp = request.getClass().getSimpleName();
 
                 if (comp.equalsIgnoreCase(name)) {
                     return false;
                 }
             }
+
             mPreservedTasks.add(networkRequest);
+
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
 
             return false;

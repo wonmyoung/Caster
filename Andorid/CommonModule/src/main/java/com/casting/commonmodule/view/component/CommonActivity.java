@@ -6,10 +6,14 @@ import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.View;
+
+import java.util.List;
 
 public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -61,6 +65,29 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
     }
 
     protected abstract void onClickEvent(View v);
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+
+            Fragment fragment = getVisibleTopFragment();
+
+            if (fragment != null &&
+                fragment instanceof CommonFragment)
+            {
+                CommonFragment commonFragment = (CommonFragment) fragment;
+
+                if (!commonFragment.onBackPressed())
+                {
+                    return false;
+                }
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     protected abstract void init(Bundle savedInstanceState) throws Exception;
 
@@ -142,5 +169,41 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         {
             e.printStackTrace();
         }
+    }
+
+    public <F extends CommonFragment> void popBackFragmentStack(F f)
+    {
+        if (f != null)
+        {
+            popBackFragmentStack(f.getClass().getSimpleName());
+        }
+    }
+
+    protected void popBackFragmentStack()
+    {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    protected void popBackFragmentStack(String tag)
+    {
+        getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    protected Fragment getVisibleTopFragment()
+    {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+
+        if (fragmentList != null)
+        {
+            for (Fragment fragment: getSupportFragmentManager().getFragments())
+            {
+                if (fragment.isVisible())
+                {
+                    return fragment;
+                }
+            }
+        }
+
+        return null;
     }
 }

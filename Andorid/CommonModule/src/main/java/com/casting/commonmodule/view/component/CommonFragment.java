@@ -82,9 +82,29 @@ public abstract class CommonFragment extends Fragment implements View.OnClickLis
     protected abstract void init
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception;
 
+    protected abstract boolean onBackPressed();
+
     @SuppressWarnings("unchecked")
     protected <V extends View> V find(int id)
     {
         return (mFragmentRootLayout != null ? (V) mFragmentRootLayout.findViewById(id) : null);
+    }
+
+    protected void finish()
+    {
+        Activity a = getActivity();
+
+        if (a != null && !a.isFinishing())
+        {
+            if (a instanceof CommonActivity)
+            {
+                CommonActivity commonActivity = (CommonActivity) a;
+                commonActivity.popBackFragmentStack(this.getClass().getSimpleName());
+            }
+            else
+            {
+                a.onBackPressed();
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.casting.commonmodule.network;
 
 import android.support.annotation.MainThread;
+import android.text.TextUtils;
 
 import com.casting.commonmodule.IRequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
@@ -69,21 +70,29 @@ public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<N
 
             if (isNetworkThreadIdle(r))
             {
+                IResponseListener responseListener = r.getResponseListener();
+
                 if (protocolsQueueHashMap.get(r) == null) {
                     protocolsQueueHashMap.put(r , new LinkedList<IResponseListener>());
                 }
-                protocolsQueueHashMap.get(r).add(r.getResponseListener());
+                protocolsQueueHashMap.get(r).add(responseListener);
 
-                HttpRequest httpRequest = new HttpRequest();
-                httpRequest.setNetworkRequest(r);
-                httpRequest.setUrlData(mURLGeneratorStrategy.create(r));
-                httpRequest.setHttpMethod(r.getHttpMethod());
-                httpRequest.setRequestHttpHeader(r.getHttpRequestHeader());
-                httpRequest.setParameterValues(r.getHttpRequestParameter());
+                String url = (mURLGeneratorStrategy == null ? null :
+                              mURLGeneratorStrategy.create(r));
 
-                NetworkExecutor networkExecutor = new NetworkExecutor();
-                networkExecutor.setNetworkRequester(httpRequest);
-                networkExecutor.execute();
+                if (!TextUtils.isEmpty(url))
+                {
+                    HttpRequest httpRequest = new HttpRequest();
+                    httpRequest.setNetworkRequest(r);
+                    httpRequest.setUrlData(url);
+                    httpRequest.setHttpMethod(r.getHttpMethod());
+                    httpRequest.setRequestHttpHeader(r.getHttpRequestHeader());
+                    httpRequest.setParameterValues(r.getHttpRequestParameter());
+
+                    NetworkExecutor networkExecutor = new NetworkExecutor();
+                    networkExecutor.setNetworkRequester(httpRequest);
+                    networkExecutor.execute();
+                }
             }
         }
         else
