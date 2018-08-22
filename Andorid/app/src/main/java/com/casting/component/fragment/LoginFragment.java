@@ -61,13 +61,19 @@ public class LoginFragment extends CommonFragment implements IResponseListener {
         mLoginButton.setOnClickListener(this);
     }
 
+    @Override
+    protected boolean onBackPressed()
+    {
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void onClickEvent(View v)
     {
         if (v.equals(mButton0))
         {
-
+            
         }
         else if (v.equals(mButton1))
         {

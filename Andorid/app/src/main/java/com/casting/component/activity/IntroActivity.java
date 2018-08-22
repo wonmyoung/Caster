@@ -22,13 +22,14 @@ public class IntroActivity extends BaseFCActivity {
 
         mRegisterFragment = new RegisterFragment();
 
-        post(new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run()
             {
                 replaceFragment(R.id.intro_layoutFrame, mLoginFragment);
             }
-        }, 1000 * 3);
+        };
+        post(runnable, 1000 * 3);
     }
 
     @Override

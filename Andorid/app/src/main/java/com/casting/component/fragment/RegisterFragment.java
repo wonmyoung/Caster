@@ -51,6 +51,11 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
         mRegisterButton.setOnClickListener(this);
     }
 
+    @Override
+    protected boolean onBackPressed() {
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void onClickEvent(View v)
