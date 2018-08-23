@@ -36,7 +36,7 @@ public class RequestFacebookSession extends SessionLogin<GraphResponse> {
                 sessionResponse.setSessionType(SessionType.FACEBOOK);
                 sessionResponse.setResponseModel(member);
 
-                IResponseListener<SessionResponse> responseListener = getResponseListener();
+                IResponseListener responseListener = getResponseListener();
 
                 if (responseListener != null) {
                     responseListener.onThreadResponseListen(sessionResponse);

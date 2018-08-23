@@ -27,6 +27,11 @@ public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<N
         return LazyHolder.mInstance;
     }
 
+    public void init()
+    {
+
+    }
+
     private URLGeneratorStrategy    mURLGeneratorStrategy;
 
     private ConcurrentHashMap<BaseRequest, Queue<IResponseListener>> protocolsQueueHashMap = new ConcurrentHashMap<>();

@@ -23,6 +23,7 @@ import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -59,11 +60,48 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class UtilityUI {
+
+    public static InputFilter getEnglishFilter()
+    {
+        return new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int i, int i1, Spanned spanned, int i2, int i3) {
+
+                Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");
+
+                if (!ps.matcher(source).matches())
+                {
+                    return "";
+                }
+
+                return null;
+            }
+        };
+    }
+
+    public static InputFilter getKoreanFilter()
+    {
+        return new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int i, int i1, Spanned spanned, int i2, int i3) {
+
+                Pattern ps = Pattern.compile("^[ㄱ-가-힣]+$");
+
+                if (!ps.matcher(source).matches())
+                {
+                    return "";
+                }
+
+                return null;
+            }
+        };
+    }
 
     public static int getNavigationBarHeight(Context context) {
         Resources resources = context.getResources();
@@ -887,9 +925,20 @@ public class UtilityUI {
     }
 
     public static void setForceKeyboardDown(Context context, EditText editText) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-        inputMethodManager.hideSoftInputFromInputMethod(editText.getWindowToken(), 0);
+        try
+        {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            if (inputMethodManager != null)
+            {
+                inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                inputMethodManager.hideSoftInputFromInputMethod(editText.getWindowToken(), 0);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
