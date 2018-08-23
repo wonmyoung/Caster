@@ -20,14 +20,14 @@
             android:layout_width="@dimen/dp150"
             android:layout_height="@dimen/dp150"
             android:layout_marginBottom="@dimen/dp20"
-            android:background="@drawable/main_color_round15_shape" />
+            android:background="@drawable/shape_main_color_round15" />
 
         <Button
             android:id="@+id/registerFrameButton0"
             android:layout_width="@dimen/dp240"
             android:layout_height="@dimen/dp45"
             android:layout_marginTop="@dimen/dp8"
-            android:background="@drawable/google_color_round15_shape"
+            android:background="@drawable/shape_google_color_round15"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp70"
             android:text="이메일로 가입하기"
@@ -39,7 +39,7 @@
             android:layout_width="@dimen/dp240"
             android:layout_height="@dimen/dp45"
             android:layout_marginTop="@dimen/dp8"
-            android:background="@drawable/facebook_color_round15_shape"
+            android:background="@drawable/shape_facebook_color_round15"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp70"
             android:text="페이스북으로 시작하기"
@@ -83,7 +83,7 @@
             android:layout_marginBottom="@dimen/dp20"
             android:layout_marginLeft="@dimen/dp30"
             android:layout_marginRight="@dimen/dp30"
-            android:background="@drawable/main_color_round10_shape"
+            android:background="@drawable/shape_main_color_round10"
             android:text="로그인"
             android:textColor="@color/color_white"
             android:visibility="gone" />

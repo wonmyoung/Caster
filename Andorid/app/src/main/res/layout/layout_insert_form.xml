@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:weightSum="100"
     android:paddingTop="@dimen/dp5"
     android:paddingLeft="@dimen/dp20"
     android:paddingRight="@dimen/dp20"
@@ -11,8 +12,9 @@
     <TextView
         android:id="@+id/title_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/dp18"
+        android:layout_height="0dp"
+        android:layout_weight="33"
+        android:textSize="@dimen/dp12"
         android:textColor="@color/mainColor0"
         android:text="title"
         android:gravity="center_vertical"/>
@@ -20,8 +22,15 @@
     <EditText
         android:id="@+id/insert_form"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp70"
+        android:layout_height="0dp"
+        android:layout_weight="67"
+        android:paddingLeft="@dimen/dp10"
         android:gravity="center_vertical"
-        android:textSize="@dimen/dp26"/>
+        android:layout_marginTop="@dimen/dp5"
+        android:textSize="@dimen/dp20"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:background="@drawable/shape_main_color_nofill_round10"/>
 
 </LinearLayout>

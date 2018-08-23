@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -13,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.casting.R;
+
+import android.text.InputType;
 
 public class InsertForm extends LinearLayout {
 
@@ -26,19 +27,22 @@ public class InsertForm extends LinearLayout {
 
     private TextView.OnEditorActionListener     mEditorActionListener;
 
-    public InsertForm(Context context) {
+    public InsertForm(Context context)
+    {
         super(context);
 
         init(context, null, 0);
     }
 
-    public InsertForm(Context context, @Nullable AttributeSet attrs) {
+    public InsertForm(Context context, @Nullable AttributeSet attrs)
+    {
         super(context, attrs);
 
         init(context, attrs, 0);
     }
 
-    public InsertForm(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public InsertForm(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
+    {
         super(context, attrs, defStyleAttr);
 
         init(context, attrs, defStyleAttr);
@@ -55,7 +59,7 @@ public class InsertForm extends LinearLayout {
 
         mTitle = a.getString(R.styleable.InsertForm_title);
 
-        float defaultTitleSize = c.getResources().getDimension(R.dimen.dp20);
+        float defaultTitleSize = c.getResources().getDimension(R.dimen.dp7);
         float defaultTextSize = c.getResources().getDimension(R.dimen.dp18);
         mTitleSize = a.getDimension(R.styleable.InsertForm_titleSize, defaultTitleSize);
         mTextSize = a.getDimension(R.styleable.InsertForm_insertTextSize, defaultTextSize);
@@ -73,16 +77,35 @@ public class InsertForm extends LinearLayout {
 
         TitleView.setText(mTitle);
 
-        TitleView.setTextSize(mTitleSize);
-        InsertView.setTextSize(mTextSize);
         InsertView.setOnEditorActionListener(mEditorActionListener);
+
+        switch (mTextType)
+        {
+            case 0:
+                InsertView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                break;
+
+            case 1:
+                InsertView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                break;
+
+            case 2:
+                InsertView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
+                break;
+
+            case 3:
+                InsertView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE);
+                break;
+        }
     }
 
-    public TextView getTitleView() {
+    public TextView getTitleView()
+    {
         return TitleView;
     }
 
-    public EditText getInsertView() {
+    public EditText getInsertView()
+    {
         return InsertView;
     }
 
@@ -97,11 +120,13 @@ public class InsertForm extends LinearLayout {
         return (V) findViewById(id);
     }
 
-    public TextView.OnEditorActionListener getEditorActionListener() {
+    public TextView.OnEditorActionListener getEditorActionListener()
+    {
         return mEditorActionListener;
     }
 
-    public void setEditorActionListener(TextView.OnEditorActionListener actionListener) {
+    public void setEditorActionListener(TextView.OnEditorActionListener actionListener)
+    {
         this.mEditorActionListener = actionListener;
 
         invalidate();

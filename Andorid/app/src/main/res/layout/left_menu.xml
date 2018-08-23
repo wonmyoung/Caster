@@ -41,7 +41,7 @@
             android:paddingTop="@dimen/dp2"
             android:paddingBottom="@dimen/dp2"
             android:paddingRight="@dimen/dp10"
-            android:background="@drawable/main_color_round10_shape"/>
+            android:background="@drawable/shape_main_color_round10"/>
 
     </LinearLayout>
 
@@ -64,7 +64,7 @@
         <ImageView
             android:layout_width="@dimen/dp40"
             android:layout_height="@dimen/dp40"
-            android:background="@drawable/main_color_round15_shape"/>
+            android:background="@drawable/shape_main_color_round15"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
         <ImageView
             android:layout_width="@dimen/dp40"
             android:layout_height="@dimen/dp40"
-            android:background="@drawable/main_color_round15_shape"/>
+            android:background="@drawable/shape_main_color_round15"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
         <ImageView
             android:layout_width="@dimen/dp40"
             android:layout_height="@dimen/dp40"
-            android:background="@drawable/main_color_round15_shape"/>
+            android:background="@drawable/shape_main_color_round15"/>
 
         <TextView
             android:layout_width="wrap_content"

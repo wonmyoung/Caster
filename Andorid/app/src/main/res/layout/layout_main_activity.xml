@@ -21,13 +21,13 @@
                 android:layout_height="@dimen/dp30"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp10"
-                android:background="@drawable/main_color_round10_shape" />
+                android:background="@drawable/shape_main_color_round10" />
 
             <Button
                 android:layout_width="@dimen/dp30"
                 android:layout_height="@dimen/dp30"
                 android:layout_gravity="center"
-                android:background="@drawable/main_color_round10_shape" />
+                android:background="@drawable/shape_main_color_round10" />
 
             <Button
                 android:id="@+id/main_TopMenuButton2"
@@ -35,7 +35,7 @@
                 android:layout_height="@dimen/dp30"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="@dimen/dp10"
-                android:background="@drawable/main_color_round10_shape" />
+                android:background="@drawable/shape_main_color_round10" />
 
 
         </FrameLayout>

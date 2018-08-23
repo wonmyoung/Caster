@@ -1,75 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dp15"
+    android:paddingRight="@dimen/dp15"
+    android:weightSum="100"
     android:background="@color/color_white">
 
-    <ScrollView
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:text="회원가입"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dp30"
+        android:textSize="@dimen/dp20"
+        android:textColor="@color/mainColor0"/>
 
-        <LinearLayout
+    <com.casting.view.InsertForm
+        android:id="@+id/registrationForm1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:layout_marginTop="@dimen/dp15"
+        app:title="아이디"
+        app:insertTextType="shortMessage"/>
+
+    <com.casting.view.InsertForm
+        android:id="@+id/registrationForm2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:layout_marginTop="@dimen/dp15"
+        app:title="이메일"
+        app:insertTextType="email"/>
+
+    <com.casting.view.InsertForm
+        android:id="@+id/registrationForm3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:layout_marginTop="@dimen/dp15"
+        app:title="비밀번호를 입력해주세요"
+        app:insertTextType="password"/>
+
+    <com.casting.view.InsertForm
+        android:id="@+id/registrationForm4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:layout_marginTop="@dimen/dp15"
+        app:title="비밀번호를 다시 한번 입력해주세요"
+        app:insertTextType="password"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="32">
+
+        <Button
+            android:id="@+id/registerButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dp15"
-            android:paddingRight="@dimen/dp15">
+            android:layout_height="@dimen/dp50"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/dp15"
+            android:layout_marginRight="@dimen/dp15"
+            android:layout_marginBottom="@dimen/dp5"
+            android:textColor="@color/color_white"
+            android:text="로그인"
+            android:textSize="@dimen/dp20"
+            android:background="@drawable/shape_main_color_round15"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="회원가입"
-                android:textStyle="bold"
-                android:layout_marginTop="@dimen/dp50"
-                android:textSize="@dimen/dp20"
-                android:textColor="@color/mainColor0"/>
+    </FrameLayout>
 
-            <com.casting.view.InsertForm
-                android:id="@+id/registrationForm1"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp60"
-                android:layout_marginTop="@dimen/dp15"
-                app:title="아이디"/>
-
-            <com.casting.view.InsertForm
-                android:id="@+id/registrationForm2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp60"
-                android:layout_marginTop="@dimen/dp15"
-                app:title="이메일"/>
-
-            <com.casting.view.InsertForm
-                android:id="@+id/registrationForm3"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp60"
-                android:layout_marginTop="@dimen/dp15"
-                app:title="비밀번호를 입력해주세요"/>
-
-            <com.casting.view.InsertForm
-                android:id="@+id/registrationForm4"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp60"
-                android:layout_marginTop="@dimen/dp15"
-                app:title="비밀번호를 다시 한번 입력해주세요"/>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp50"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="@dimen/dp15"
-        android:layout_marginRight="@dimen/dp15"
-        android:layout_marginBottom="@dimen/dp5"
-        android:textColor="@color/color_white"
-        android:text="로그인"
-        android:textSize="@dimen/dp18"
-        android:background="@drawable/main_color_round15_shape"/>
-
-</FrameLayout>
+</LinearLayout>
