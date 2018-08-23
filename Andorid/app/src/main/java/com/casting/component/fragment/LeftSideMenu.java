@@ -10,7 +10,8 @@ import com.casting.commonmodule.view.component.CommonFragment;
 
 public class LeftSideMenu extends CommonFragment {
 
-    public LeftSideMenu() {
+    public LeftSideMenu()
+    {
         super(R.layout.left_menu);
     }
 
@@ -21,7 +22,8 @@ public class LeftSideMenu extends CommonFragment {
     }
 
     @Override
-    protected void init(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception {
+    protected void init(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception
+    {
 
     }
 

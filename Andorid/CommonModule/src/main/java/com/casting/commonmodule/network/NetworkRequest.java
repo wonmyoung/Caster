@@ -19,8 +19,8 @@ public abstract class NetworkRequest extends BaseRequest<NetworkResponse> implem
 
     @SuppressWarnings("unchecked")
     @Override
-    public void run() {
-
+    public void run()
+    {
         try
         {
             NetworkRequestHandler.getInstance().request(this);

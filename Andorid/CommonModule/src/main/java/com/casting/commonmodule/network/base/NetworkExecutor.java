@@ -78,23 +78,28 @@ public class NetworkExecutor<M extends BaseModel> extends AsyncTask<Object , Int
         NetworkRequestHandler.getInstance().receiveResponse(networkResponse);
     }
 
-    public HttpRequest getNetworkRequestor() {
+    public HttpRequest getNetworkRequestor()
+    {
         return mNetworkRequester;
     }
 
-    public void setNetworkRequester(HttpRequest<M> r) {
+    public void setNetworkRequester(HttpRequest<M> r)
+    {
         this.mNetworkRequester = r;
     }
 
-    public NetworkException getWorkerException() {
+    public NetworkException getWorkerException()
+    {
         return mException;
     }
 
-    public void setWorkerException(NetworkException e) {
+    public void setWorkerException(NetworkException e)
+    {
         this.mException = e;
     }
 
-    public void setProgressView(INetworkProgressView progressView) {
+    public void setProgressView(INetworkProgressView progressView)
+    {
         this.mProgressView = progressView;
     }
 }

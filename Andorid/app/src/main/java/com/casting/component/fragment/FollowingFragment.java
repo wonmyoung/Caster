@@ -5,14 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
 
-public class RightSideMenu extends CommonFragment {
+import java.util.Observable;
+import java.util.Observer;
 
-    public RightSideMenu()
+public class FollowingFragment extends CommonFragment implements Observer
+{
+
+    public FollowingFragment()
     {
-        super(R.layout.right_menu);
+        super(0);
     }
 
     @Override
@@ -23,6 +26,12 @@ public class RightSideMenu extends CommonFragment {
 
     @Override
     protected void init(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception
+    {
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
     {
 
     }

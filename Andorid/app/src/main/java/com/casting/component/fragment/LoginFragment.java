@@ -1,5 +1,7 @@
 package com.casting.component.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -15,12 +17,15 @@ import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.view.component.CommonFragment;
+import com.casting.component.activity.MainActivity;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
 import com.casting.view.InsertForm;
 
-public class LoginFragment extends CommonFragment implements IResponseListener {
+public class LoginFragment extends CommonFragment implements IResponseListener
+{
 
     private ViewGroup   mRegisterFrame;
     private Button      mButton0;
@@ -31,7 +36,8 @@ public class LoginFragment extends CommonFragment implements IResponseListener {
     private InsertForm  mLoginPWForm;
     private Button      mLoginButton;
 
-    public LoginFragment() {
+    public LoginFragment()
+    {
         super(R.layout.layout_login);
     }
 
@@ -73,7 +79,9 @@ public class LoginFragment extends CommonFragment implements IResponseListener {
     {
         if (v.equals(mButton0))
         {
-            
+            RegisterFragment registerFragment = new RegisterFragment();
+
+            replaceFragment(R.id.intro_layoutFrame, registerFragment);
         }
         else if (v.equals(mButton1))
         {
@@ -111,6 +119,17 @@ public class LoginFragment extends CommonFragment implements IResponseListener {
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
+        if (response instanceof NetworkResponse)
+        {
+            Intent intent = new Intent(getContext(), MainActivity.class);
 
+            Activity a = getActivity();
+
+            if (a != null && !a.isFinishing())
+            {
+                a.startActivity(intent);
+                a.finish();
+            }
+        }
     }
 }

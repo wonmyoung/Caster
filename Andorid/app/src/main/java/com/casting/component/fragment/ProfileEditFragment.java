@@ -5,19 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
 
-public class RightSideMenu extends CommonFragment {
+import java.util.Observable;
+import java.util.Observer;
 
-    public RightSideMenu()
-    {
-        super(R.layout.right_menu);
+public class ProfileEditFragment extends CommonFragment implements Observer {
+
+    public ProfileEditFragment() {
+        super(0);
     }
 
     @Override
-    protected void onClickEvent(View v)
-    {
+    protected void onClickEvent(View v) {
 
     }
 
@@ -28,8 +28,13 @@ public class RightSideMenu extends CommonFragment {
     }
 
     @Override
-    protected boolean onBackPressed()
+    public void update(Observable o, Object arg)
     {
+
+    }
+
+    @Override
+    protected boolean onBackPressed() {
         return false;
     }
 }

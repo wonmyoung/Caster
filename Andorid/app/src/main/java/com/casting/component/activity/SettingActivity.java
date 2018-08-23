@@ -1,14 +1,14 @@
 package com.casting.component.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 
-public class CastingActivity extends BaseFCActivity
-{
+import com.casting.commonmodule.view.component.CommonActivity;
+
+public class SettingActivity extends CommonActivity {
 
     @Override
-    protected void init(@Nullable Bundle savedInstanceState) throws Exception
+    protected void init(Bundle savedInstanceState) throws Exception
     {
 
     }

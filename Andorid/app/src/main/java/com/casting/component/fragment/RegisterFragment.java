@@ -108,9 +108,9 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
             else
             {
                 RegisterMember registerMember = new RegisterMember();
-                registerMember.setNickName(mInsertForm1.getInsertedText());
+                registerMember.setUserId(mInsertForm1.getInsertedText());
                 registerMember.setEmailAddress(mInsertForm2.getInsertedText());
-                registerMember.setPassword(mInsertForm3.getInsertedText());
+                registerMember.setPassword(password1);
                 registerMember.setResponseListener(this);
 
                 RequestHandler.getInstance().request(registerMember);
@@ -146,8 +146,6 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        Log.d("confirm" , ">> confirm onThreadResponseListen ");
-        Log.d("confirm" , ">> confirm onThreadResponseListen " + response.getResponseCode());
         if (response instanceof NetworkResponse)
         {
             Intent intent = new Intent(getContext(), MainActivity.class);

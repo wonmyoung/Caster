@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +85,93 @@ public abstract class CommonFragment extends Fragment implements View.OnClickLis
             (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception;
 
     protected abstract boolean onBackPressed();
+
+    protected void replaceFragment(int containerId, Fragment fragment)
+    {
+        try
+        {
+            String tag = fragment.getClass().getSimpleName();
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(containerId , fragment, tag);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    protected void replaceFragment(int containerId, Fragment fragment, String tag)
+    {
+        try
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(containerId , fragment, tag);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    protected void addFragmentStack(int containerId, Fragment fragment)
+    {
+        try
+        {
+            String tag = fragment.getClass().getSimpleName();
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(containerId, fragment, tag);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    protected void addFragmentStack(int containerId, Fragment fragment, String tag)
+    {
+        try
+        {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(containerId, fragment, tag);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public <F extends CommonFragment> void popBackFragmentStack(F f)
+    {
+        if (f != null)
+        {
+            popBackFragmentStack(f.getClass().getSimpleName());
+        }
+    }
+
+    protected void popBackFragmentStack()
+    {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    protected void popBackFragmentStack(String tag)
+    {
+        getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    protected FragmentManager getSupportFragmentManager()
+    {
+        return (getActivity() != null ? getActivity().getSupportFragmentManager() : null);
+    }
 
     @SuppressWarnings("unchecked")
     protected <V extends View> V find(int id)

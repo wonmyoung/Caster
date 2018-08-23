@@ -27,15 +27,16 @@ public class NetworkState extends Observable {
 
     private Queue<NetworkRequest> mPreservedTasks = new LinkedList<>();
 
-    public static NetworkState getInstance() {
+    public static NetworkState getInstance()
+    {
         if (mInstance == null) {
             mInstance = new NetworkState();
         }
         return mInstance;
     }
 
-    public void registerReceiver(Context context) {
-
+    public void registerReceiver(Context context)
+    {
         try {
 
             if (mNetworkStatusReceiver == null) {
@@ -56,7 +57,8 @@ public class NetworkState extends Observable {
         }
     }
 
-    public void unregisterReceiver(Context context) {
+    public void unregisterReceiver(Context context)
+    {
         try
         {
             if (mNetworkStatusReceiver != null)
@@ -74,19 +76,24 @@ public class NetworkState extends Observable {
         }
     }
 
-    public boolean isNotNetworkAvailable() {
+    public boolean isNotNetworkAvailable()
+    {
         return !isNetworkAvailable();
     }
 
-    public boolean isNetworkAvailable() {
-        return NetworkAvailable;
+    public boolean isNetworkAvailable()
+    {
+        // return NetworkAvailable;
+        return true;
     }
 
-    public NetworkStateEnum getNetworkState() {
+    public NetworkStateEnum getNetworkState()
+    {
         return mNetworkState;
     }
 
-    public boolean enqueuePreservedNetworkTask(NetworkRequest networkRequest) {
+    public boolean enqueuePreservedNetworkTask(NetworkRequest networkRequest)
+    {
 
         try
         {
@@ -113,8 +120,10 @@ public class NetworkState extends Observable {
         }
     }
 
-    public void dequeuePreservedNetworkTask() {
+    public void dequeuePreservedNetworkTask()
+    {
         try {
+
             ThreadExecutor threadExecutor = new ThreadExecutor(1);
 
             while (mPreservedTasks.peek() != null) {
@@ -126,16 +135,19 @@ public class NetworkState extends Observable {
         }
     }
 
-    private class NetworkStatusReceiver extends BroadcastReceiver {
+    private class NetworkStatusReceiver extends BroadcastReceiver
+    {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent)
+        {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            if (activeNetworkInfo == null) {
-
+            if (activeNetworkInfo == null)
+            {
                 if (NetworkAvailable) {
                     NetworkAvailable = false;
 
@@ -154,7 +166,8 @@ public class NetworkState extends Observable {
 
                 mNetworkState = (wifiNetworkInfo.isAvailable() ? NetworkStateEnum.WIFI : NetworkStateEnum.LTE);
 
-                if (NetworkAvailable) {
+                if (NetworkAvailable)
+                {
                     dequeuePreservedNetworkTask();
                 }
             }

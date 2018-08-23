@@ -50,6 +50,8 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         }
     }
 
+    protected abstract void init(Bundle savedInstanceState) throws Exception;
+
     @SuppressWarnings("unchecked")
     @Override
     public final void onClick(View v)
@@ -88,8 +90,6 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    protected abstract void init(Bundle savedInstanceState) throws Exception;
 
     @SuppressWarnings("unchecked")
     protected <V extends View> V find(int id)

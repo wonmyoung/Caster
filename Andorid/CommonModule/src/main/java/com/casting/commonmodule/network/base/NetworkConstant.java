@@ -6,6 +6,8 @@ public interface NetworkConstant {
     String ResponseMessage = "ResponseMessage";
     String HttpPost = "POST";
     String HttpGet = "GET";
+    String HttpPut = "PUT";
+    String HttpDelete = "DELETE";
     String ParsingError = "파싱에러";
     String HttpConnectionError = "Http Connection 오류";
 

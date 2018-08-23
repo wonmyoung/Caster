@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <LinearLayout
@@ -41,26 +42,29 @@
         </FrameLayout>
 
         <android.support.design.widget.TabLayout
-            style="@style/CustomTabLayoutStyle"
             android:id="@+id/main_TabLayout"
+            style="@style/CustomTabLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
             app:tabBackground="@drawable/selector_tab_indicator"
             app:tabGravity="fill"
-            app:tabTextAppearance="@style/CustomTabTexStyle"
             app:tabIndicatorColor="@color/mainColor0"
             app:tabIndicatorHeight="@dimen/dp3"
             app:tabMaxWidth="0dp"
-            app:tabMode="fixed"/>
+            app:tabMode="fixed"
+            app:tabTextAppearance="@style/CustomTabTexStyle" />
 
     </LinearLayout>
 
     <com.casting.commonmodule.view.cardstack.SwipeStack
         android:id="@+id/main_SwipeCardStack"
-        android:layout_width="@dimen/dp250"
-        android:layout_height="@dimen/dp300"
+        android:layout_width="@dimen/dp300"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dp135"/>
+        android:layout_marginTop="@dimen/dp150"
+        android:clipChildren="false"
+        app:stack_rotation="0"
+        app:stack_size="5"/>
 
     <android.support.v7.widget.AppCompatSeekBar
         android:id="@+id/main_seekBarController"

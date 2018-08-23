@@ -1,11 +1,13 @@
 package com.casting.component.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.casting.R;
@@ -16,6 +18,7 @@ import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.cardstack.SwipeStack;
 import com.casting.commonmodule.view.cardstack.SwipeStackAdapter;
+import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.menudrawer.MenuDrawer;
 import com.casting.commonmodule.view.menudrawer.Position;
@@ -26,9 +29,12 @@ import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RequestCastList;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerStateChangeListener, SeekBar.OnSeekBarChangeListener, TabLayout.OnTabSelectedListener, IResponseListener {
+public class MainActivity extends BaseFCActivity implements
+        MenuDrawer.OnDrawerStateChangeListener, SeekBar.OnSeekBarChangeListener, TabLayout.OnTabSelectedListener, IResponseListener
+{
 
     private class BothMenuDrawer
     {
@@ -70,9 +76,11 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
         }
     }
 
-    private class MainCardSwipeAdapter extends SwipeStackAdapter<Cast> {
+    private class MainCardSwipeAdapter extends SwipeStackAdapter<Cast>
+    {
 
-        public MainCardSwipeAdapter() {
+        public MainCardSwipeAdapter()
+        {
             super(MainActivity.this, R.layout.main_cast_card);
         }
 
@@ -80,7 +88,13 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
         protected void bindItemDataView
                 (CompositeViewHolder viewHolder, int position, Cast item)
         {
+            Context c = getBaseContext();
 
+            ImageView imageView = viewHolder.find(R.id.castCardBack);
+
+            int radius = (int) c.getResources().getDimension(R.dimen.dp25);
+
+            ImageLoader.loadRoundImage(c, imageView, item.getThumbnails()[0], radius);
         }
     }
 
@@ -184,6 +198,13 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
         else
         {
             //TODO 에러 처리 정의 필요
+            // 더미 데이터 로드
+            ArrayList<Cast> castList = new ArrayList<>();
+
+            loadDummyCastList(castList);
+
+            mSwipeStackAdapter.setItemList(castList);
+            mSwipeStackAdapter.notifyDataSetChanged();
         }
     }
 

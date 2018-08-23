@@ -2,6 +2,7 @@ package com.casting.commonmodule.network;
 
 import android.support.annotation.MainThread;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.casting.commonmodule.IRequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
@@ -18,12 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<NetworkRequest> {
 
-    private static class LazyHolder {
-
+    private static class LazyHolder
+    {
         private static NetworkRequestHandler mInstance = new NetworkRequestHandler();
     }
 
-    public static NetworkRequestHandler getInstance() {
+    public static NetworkRequestHandler getInstance()
+    {
         return LazyHolder.mInstance;
     }
 
@@ -36,13 +38,12 @@ public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<N
 
     private ConcurrentHashMap<BaseRequest, Queue<IResponseListener>> protocolsQueueHashMap = new ConcurrentHashMap<>();
 
-    public boolean isAnyNetworkThreadProcess() {
-
+    public boolean isAnyNetworkThreadProcess()
+    {
         boolean networkInProgress = false;
 
         for (BaseRequest request : protocolsQueueHashMap.keySet())
         {
-
             Queue<IResponseListener> queue = protocolsQueueHashMap.get(request);
 
             if (queue.size() > 0)
@@ -51,11 +52,12 @@ public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<N
                 break;
             }
         }
+
         return networkInProgress;
     }
 
-    public boolean isNetworkThreadProcess(NetworkRequest r) {
-
+    public boolean isNetworkThreadProcess(NetworkRequest r)
+    {
         Queue<IResponseListener> queue = protocolsQueueHashMap.get(r);
 
         return (queue != null && queue.size() > 0);
@@ -69,10 +71,8 @@ public class NetworkRequestHandler implements NetworkConstant, IRequestHandler<N
     @SuppressWarnings("unchecked")
     public void request(NetworkRequest r)
     {
-
         if (NetworkState.getInstance().isNetworkAvailable())
         {
-
             if (isNetworkThreadIdle(r))
             {
                 IResponseListener responseListener = r.getResponseListener();

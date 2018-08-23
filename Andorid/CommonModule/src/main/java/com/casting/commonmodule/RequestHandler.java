@@ -1,15 +1,18 @@
 package com.casting.commonmodule;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.casting.commonmodule.db.LocalDBRequest;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.NetworkRequest;
+import com.casting.commonmodule.network.NetworkState;
 import com.casting.commonmodule.session.SessionLogin;
 import com.casting.commonmodule.session.SessionLogout;
 import com.casting.commonmodule.session.SessionRequestHandler;
 import com.casting.commonmodule.session.SessionWait;
 import com.casting.commonmodule.thread.ThreadExecutor;
+import com.casting.commonmodule.view.component.CommonApplication;
 
 import java.util.concurrent.Executors;
 
@@ -29,20 +32,12 @@ public class RequestHandler implements IRequestHandler<BaseRequest> {
         mThreadExecutor = new ThreadExecutor(10);
     }
 
-    public void init(Application a)
-    {
-        SessionRequestHandler.getInstance().init(a);
-
-
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void request(BaseRequest r)
     {
         if (r != null)
         {
-
             if (r instanceof SessionLogin ||
                 r instanceof SessionLogout ||
                 r instanceof SessionWait)
