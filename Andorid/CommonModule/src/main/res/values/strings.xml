@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_copyright">Copyright(c) VoltSoftware.co.LTD All rights reserved. </string>
-    <string name="app_name">영어의꼼수</string>
+    <string name="app_copyright"> </string>
+    <string name="app_name"></string>
     <string name="app_name_blank">영어의 꼼수</string>
     <string name="app_licenseKey">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqBtgfVkWdJCkViWexY/aKwRQEnnyWUdDeiL0+mBaZ+kU9IzOtnUO4j8fPuWub7YD+ExIY4nK91x2P4YKEz+o4nva7hFpOBxr9liSgPABrc3682n2I8SwZpqIkez2YvaVrkk0/i3cadMZCIArmQrdWTyUVmi6Ej9k+WxSmK08Y3Yr4cOmGfgIoGMan4Xecmxo4SXLZ770m+byo3uYqyCzKt4Y4SHIfYhpxIf8kcDS69icyAT+PynUQszFQEFG7ib7OKqscor6kbWjtBKIwtBglhWVzk/e6nGjB8JVlAG/l8UqzrgWM/a/125EtvoXY3DfMCMm8Ecd3XM/+vwVu6osqQIDAQAB</string>
 
-    <string name="kakaoApiKey">bff7254f2f43ff0eb846d7378d575a9d</string>
-    <string name="kakaoSchema">kakaobff7254f2f43ff0eb846d7378d575a9d</string>
-    <string name="kakaoLinkApi">kakaolink</string>
-    <string name="kakaoShareText">영단어 암기의 꼼수!</string>
+    <string name="kakaoApiKey"></string>
+    <string name="kakaoSchema"></string>
+    <string name="kakaoLinkApi"></string>
+    <string name="kakaoShareText"></string>
 
-    <string name="FacebookApiKey">479111609112666</string>
-    <string name="NaverClientKey">NKtY0ySpLzzhqy1xw57k</string>
-    <string name="NaverSecretKey">7A6VHQEfwh</string>
+    <string name="FacebookApiKey"></string>
+    <string name="NaverClientKey"></string>
+    <string name="NaverSecretKey"></string>
 
     <string name="confirm">확인</string>
     <string name="cancel">취소</string>

@@ -19,6 +19,8 @@ import com.casting.commonmodule.view.cardstack.SwipeStackAdapter;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.menudrawer.MenuDrawer;
 import com.casting.commonmodule.view.menudrawer.Position;
+import com.casting.component.fragment.LeftSideMenu;
+import com.casting.component.fragment.RightSideMenu;
 import com.casting.model.Cast;
 import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
@@ -101,9 +103,12 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
         mBothMenuDrawer = new BothMenuDrawer();
         mBothMenuDrawer.attach(this);
         mBothMenuDrawer.setContentView(R.layout.layout_main_activity);
-        mBothMenuDrawer.setLeftMenuView(R.layout.layout_menu_left_drawer, menuDrawerWidth);
-        mBothMenuDrawer.setRightMenuView(R.layout.layout_menu_right_drawer, menuDrawerWidth);
+        mBothMenuDrawer.setLeftMenuView(R.layout.left_menu_frame, menuDrawerWidth);
+        mBothMenuDrawer.setRightMenuView(R.layout.right_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setDrawerListener(this);
+
+        addFragmentStack(R.id.left_menu_frame, new LeftSideMenu());
+        addFragmentStack(R.id.right_menu_frame, new RightSideMenu());
 
         mTopButton1 = find(R.id.main_TopMenuButton1);
         mTopButton1.setOnClickListener(this);
@@ -178,7 +183,7 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
         }
         else
         {
-
+            //TODO 에러 처리 정의 필요
         }
     }
 
@@ -196,9 +201,14 @@ public class MainActivity extends BaseFCActivity implements MenuDrawer.OnDrawerS
 
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
     {
+        if (fromUser)
+        {
+            int cardCount = (mSwipeStackAdapter.getCount() - 1);
+            int selectedCard = (cardCount * progress) / 100;
 
+        }
     }
 
     @Override

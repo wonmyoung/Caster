@@ -8,6 +8,7 @@ import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.session.facebook.FacebookSessionSDK;
 import com.casting.commonmodule.session.google.GoogleSessionSDK;
 import com.casting.commonmodule.session.kakao.KaKaoSessionSDK;
+import com.facebook.FacebookSdk;
 
 public class SessionRequestHandler implements IRequestHandler {
 
@@ -22,6 +23,8 @@ public class SessionRequestHandler implements IRequestHandler {
     public void init(Application application)
     {
         KaKaoSessionSDK.getInstance().init(application);
+
+        FacebookSdk.sdkInitialize(application);
     }
 
     @Override

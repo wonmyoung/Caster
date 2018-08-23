@@ -41,11 +41,17 @@
         </FrameLayout>
 
         <android.support.design.widget.TabLayout
+            style="@style/CustomTabLayoutStyle"
             android:id="@+id/main_TabLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp60"
-            app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            app:tabBackground="@drawable/selector_tab_indicator"
+            app:tabGravity="fill"
+            app:tabTextAppearance="@style/CustomTabTexStyle"
+            app:tabIndicatorColor="@color/mainColor0"
+            app:tabIndicatorHeight="@dimen/dp3"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"/>
 
     </LinearLayout>
 
