@@ -2,20 +2,18 @@ package com.casting.component.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.casting.FutureCasting;
 import com.casting.R;
-import com.casting.commonmodule.network.NetworkRequestHandler;
 import com.casting.component.fragment.LoginFragment;
-import com.casting.component.fragment.RegisterFragment;
 
 public class IntroActivity extends BaseFCActivity {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
     {
-        setContentView(R.layout.layout_intro_activity);
+        setContentView(R.layout.intro_activity);
 
         Runnable runnable = new Runnable() {
             @Override
@@ -33,5 +31,16 @@ public class IntroActivity extends BaseFCActivity {
     protected void onClickEvent(View v)
     {
 
+    }
+
+    @Override
+    protected void onFragmentVisible(Fragment fragment)
+    {
+        super.onFragmentVisible(fragment);
+
+        if (fragment == null)
+        {
+            finish();
+        }
     }
 }

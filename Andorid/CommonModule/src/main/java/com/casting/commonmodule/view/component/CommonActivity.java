@@ -13,9 +13,11 @@ import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.casting.commonmodule.utility.EasyLog;
+
 import java.util.List;
 
-public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener {
 
     /**
      * 연속 클릭 이벤트 방지 맵.
@@ -23,11 +25,18 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
     private SparseArray mPreviousClickEvent = new SparseArray();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
+
+        EasyLog.LogMessage(this, ">> onCreate ");
 
         try
         {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.removeOnBackStackChangedListener(this);
+            fragmentManager.addOnBackStackChangedListener(this);
+
             init(savedInstanceState);
         }
         catch (Exception e)
@@ -37,11 +46,18 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState)
+    {
         super.onCreate(savedInstanceState, persistentState);
+
+        EasyLog.LogMessage(this, ">> onCreate ");
 
         try
         {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.removeOnBackStackChangedListener(this);
+            fragmentManager.addOnBackStackChangedListener(this);
+
             init(savedInstanceState);
         }
         catch (Exception e)
@@ -89,6 +105,23 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
 
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public final void onBackStackChanged()
+    {
+        EasyLog.LogMessage(this, ">> onBackStackChanged ");
+
+        Fragment fragment = getVisibleTopFragment();
+
+        onFragmentVisible(fragment);
+    }
+
+    protected void onFragmentVisible(Fragment fragment)
+    {
+        String name = (fragment == null ? null : fragment.getClass().getSimpleName());
+
+        EasyLog.LogMessage(this, ">> onFragmentVisible ", name);
     }
 
     @SuppressWarnings("unchecked")
@@ -171,7 +204,7 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         }
     }
 
-    public <F extends CommonFragment> void popBackFragmentStack(F f)
+    protected <F extends CommonFragment> void popBackFragmentStack(F f)
     {
         if (f != null)
         {
@@ -189,6 +222,13 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         getSupportFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
+    protected int getVisibleTopFragmentCount()
+    {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+
+        return (fragmentList == null ? 0 : fragmentList.size());
+    }
+
     protected Fragment getVisibleTopFragment()
     {
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
@@ -197,7 +237,8 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         {
             for (Fragment fragment: getSupportFragmentManager().getFragments())
             {
-                if (fragment.isVisible())
+                if (fragment != null &&
+                    fragment.isVisible())
                 {
                     return fragment;
                 }

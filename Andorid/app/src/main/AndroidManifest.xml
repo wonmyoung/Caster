@@ -33,6 +33,24 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.baseActivity" />
 
+        <activity
+            android:name=".component.activity.ProfileActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
+        <activity
+            android:name=".component.activity.CastChartActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
+        <activity
+            android:name=".component.activity.SettingActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
     </application>
 
 </manifest>

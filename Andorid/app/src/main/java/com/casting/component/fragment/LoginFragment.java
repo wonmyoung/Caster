@@ -38,7 +38,7 @@ public class LoginFragment extends CommonFragment implements IResponseListener
 
     public LoginFragment()
     {
-        super(R.layout.layout_login);
+        super(R.layout.login_fragment);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class LoginFragment extends CommonFragment implements IResponseListener
     @Override
     protected boolean onBackPressed()
     {
-        return false;
+        return true;
     }
 
     @SuppressWarnings("unchecked")

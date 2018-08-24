@@ -50,7 +50,7 @@ public class InsertForm extends LinearLayout {
 
     private void init(Context c, AttributeSet attrs, int defStyle)
     {
-        LayoutInflater.from(c).inflate(R.layout.layout_insert_form, this);
+        LayoutInflater.from(c).inflate(R.layout.view_insert_form, this);
 
         TitleView = find(R.id.title_view);
         InsertView = find(R.id.insert_form);

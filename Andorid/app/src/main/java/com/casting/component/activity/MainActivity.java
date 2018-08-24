@@ -29,7 +29,6 @@ import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RequestCastList;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseFCActivity implements
@@ -116,7 +115,7 @@ public class MainActivity extends BaseFCActivity implements
 
         mBothMenuDrawer = new BothMenuDrawer();
         mBothMenuDrawer.attach(this);
-        mBothMenuDrawer.setContentView(R.layout.layout_main_activity);
+        mBothMenuDrawer.setContentView(R.layout.main_activity);
         mBothMenuDrawer.setLeftMenuView(R.layout.left_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setRightMenuView(R.layout.right_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setDrawerListener(this);

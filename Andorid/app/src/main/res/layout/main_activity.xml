@@ -59,9 +59,10 @@
     <com.casting.commonmodule.view.cardstack.SwipeStack
         android:id="@+id/main_SwipeCardStack"
         android:layout_width="@dimen/dp300"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/dp350"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dp150"
+        android:gravity="center"
         android:clipChildren="false"
         app:stack_rotation="0"
         app:stack_size="5"/>

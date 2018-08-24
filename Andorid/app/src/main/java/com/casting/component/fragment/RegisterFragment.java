@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,7 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
     private Button      mRegisterButton;
 
     public RegisterFragment() {
-        super(R.layout.layout_register);
+        super(R.layout.register_fragment);
     }
 
     @Override

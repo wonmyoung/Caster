@@ -161,6 +161,7 @@ public abstract class CommonFragment extends Fragment implements View.OnClickLis
     protected void popBackFragmentStack()
     {
         getSupportFragmentManager().popBackStack();
+
     }
 
     protected void popBackFragmentStack(String tag)
