@@ -41,7 +41,7 @@
 
         </FrameLayout>
 
-        <android.support.design.widget.TabLayout
+        <com.casting.view.CustomTabLayout
             android:id="@+id/main_TabLayout"
             style="@style/CustomTabLayoutStyle"
             android:layout_width="match_parent"

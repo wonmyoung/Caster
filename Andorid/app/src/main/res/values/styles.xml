@@ -32,6 +32,8 @@
         <item name="android:textColor">@color/color_7c7c7c</item>
         <item name="android:textStyle">normal</item>
         <item name="textAllCaps">false</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
     </style>
 
 </resources>

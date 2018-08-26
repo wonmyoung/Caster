@@ -64,7 +64,7 @@
             android:layout_marginLeft="@dimen/dp30"
             android:layout_marginRight="@dimen/dp30"
             android:visibility="gone"
-            app:title="이메일" />
+            app:title="이메일"/>
 
         <com.casting.view.InsertForm
             android:id="@+id/insertForm2"

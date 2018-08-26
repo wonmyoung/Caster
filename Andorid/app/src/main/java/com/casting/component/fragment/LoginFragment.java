@@ -7,9 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.UnderlineSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,14 +20,14 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.component.CommonFragment;
 import com.casting.component.activity.MainActivity;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
 import com.casting.view.InsertForm;
 
-public class LoginFragment extends CommonFragment implements IResponseListener
-{
+public class LoginFragment extends CommonFragment implements IResponseListener, TextView.OnEditorActionListener {
 
     private ViewGroup   mRegisterFrame;
     private Button      mButton0;
@@ -61,7 +63,9 @@ public class LoginFragment extends CommonFragment implements IResponseListener
         mBottomTextView.setText(spannableStringBuilder);
 
         mLoginIDForm = find(R.id.insertForm1);
+        mLoginIDForm.setEditorActionListener(this);
         mLoginPWForm = find(R.id.insertForm2);
+        mLoginPWForm.setEditorActionListener(this);
 
         mLoginButton = find(R.id.loginButton);
         mLoginButton.setOnClickListener(this);
@@ -131,5 +135,20 @@ public class LoginFragment extends CommonFragment implements IResponseListener
                 a.finish();
             }
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int action, KeyEvent event)
+    {
+        if (v.equals(mLoginIDForm.getInsertView()) && action == EditorInfo.IME_ACTION_NEXT)
+        {
+            mLoginPWForm.getInsertView().requestFocus();
+        }
+        else if (v.equals(mLoginPWForm.getInsertView()) && action == EditorInfo.IME_ACTION_NEXT)
+        {
+            UtilityUI.setForceKeyboardDown(getContext(), mLoginPWForm.getInsertView());
+        }
+
+        return false;
     }
 }

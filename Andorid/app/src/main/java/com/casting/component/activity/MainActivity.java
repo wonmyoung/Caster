@@ -5,10 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
@@ -29,6 +31,7 @@ import com.casting.model.Cast;
 import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RequestCastList;
+import com.casting.view.CustomTabLayout;
 
 import java.util.ArrayList;
 
@@ -103,7 +106,7 @@ public class MainActivity extends BaseFCActivity implements
     private Button  mTopButton1;
     private Button  mTopButton2;
 
-    private TabLayout   mTabLayout;
+    private CustomTabLayout     mTabLayout;
 
     private SwipeStack  mSwipeStack;
     private SeekBar     mMainSeekBar;
@@ -131,19 +134,9 @@ public class MainActivity extends BaseFCActivity implements
 
         mTabLayout = find(R.id.main_TabLayout);
         mTabLayout.addOnTabSelectedListener(this);
-
-        TabLayout.Tab tab1 = mTabLayout.newTab();
-        tab1.setText("참여가능 캐스트");
-
-        TabLayout.Tab tab2 = mTabLayout.newTab();
-        tab2.setText("BEST 10 캐스트");
-
-        TabLayout.Tab tab3 = mTabLayout.newTab();
-        tab3.setText("최고보상 캐스트");
-
-        mTabLayout.addTab(tab1);
-        mTabLayout.addTab(tab2);
-        mTabLayout.addTab(tab3);
+        mTabLayout.addTextTab("참여가능 캐스트");
+        mTabLayout.addTextTab("BEST 10 캐스트");
+        mTabLayout.addTextTab("최고보상 캐스트");
 
         mSwipeStackAdapter = new MainCardSwipeAdapter();
         mSwipeStack = find(R.id.main_SwipeCardStack);
