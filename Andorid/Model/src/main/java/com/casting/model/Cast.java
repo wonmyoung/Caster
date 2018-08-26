@@ -2,8 +2,9 @@ package com.casting.model;
 
 import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.view.list.ICommonItem;
+import com.casting.model.global.ItemConstant;
 
-public class Cast extends BaseModel implements ICommonItem {
+public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     private double      RemainingTime;
     private String      Title;
@@ -53,6 +54,6 @@ public class Cast extends BaseModel implements ICommonItem {
 
     @Override
     public int getItemType() {
-        return 0;
+        return CAST_CARD_THIN;
     }
 }

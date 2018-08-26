@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends RecyclerView.Adapter<CompositeViewHolder> implements ICommonListConstant {
+public abstract class CommonRecyclerAdapter extends RecyclerView.Adapter<CompositeViewHolder> implements ICommonListConstant {
 
-    private ArrayList<D> mdArrayList;
+    private ArrayList<ICommonItem> mdArrayList;
 
     private Context         mContext;
 
@@ -58,9 +58,9 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
 
             int viewType = getItemViewType(position);
 
-            D d = getItem(position);
+            ICommonItem commonItem = getItem(position);
 
-            bindBodyItemView(holder, position, viewType, d);
+            bindBodyItemView(holder, position, viewType, commonItem);
 
         }
         catch (Exception e)
@@ -69,11 +69,14 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    protected abstract CompositeViewHolder createBodyViewHolder(ViewGroup parent, int viewType);
+    protected abstract CompositeViewHolder createBodyViewHolder
+            (ViewGroup parent, int viewType);
 
-    protected abstract void bindBodyItemView(CompositeViewHolder holder, int position , int viewType, D item) throws Exception;
+    protected abstract void bindBodyItemView
+            (CompositeViewHolder holder, int position , int viewType, ICommonItem item) throws Exception;
 
-    public Context getContext() {
+    public final Context getContext()
+    {
         return mContext;
     }
 
@@ -97,12 +100,17 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
             {
                 position -= (isUsingHeader() ? 1 : 0);
 
-                return ((position < itemSize) ? getBodyItemViewType(position) : LIST_FOOTER_VIEW);
+                return ((position < itemSize) ? getBodyViewType(position) : LIST_FOOTER_VIEW);
             }
         }
     }
 
-    public abstract int getBodyItemViewType(int position);
+    protected final int getBodyViewType(int position)
+    {
+        ICommonItem d = getItem(position);
+
+        return (d == null ? -1 : d.getItemType());
+    }
 
     @Override
     public int getItemCount()
@@ -123,7 +131,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public D getItem(int listPosition)
+    public ICommonItem getItem(int listPosition)
     {
         int itemPosition = listPosition;
         if (itemPosition > 0 && isUsingHeader()) {
@@ -140,7 +148,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public int getItemPosition(D d)
+    public int getItemPosition(ICommonItem d)
     {
         try
         {
@@ -159,13 +167,15 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public List<D> getItemList() {
+    public List<ICommonItem> getItemList()
+    {
         return mdArrayList;
     }
 
-    public void setItemList(ArrayList<D> collection)
+    @SuppressWarnings("unchecked")
+    public <D extends ICommonItem> void setItemList(ArrayList<D> collection)
     {
-        this.mdArrayList = collection;
+        this.mdArrayList = (ArrayList<ICommonItem>) collection;
     }
 
     public View getHeaderView() {
@@ -192,11 +202,12 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         return mEmptyView;
     }
 
-    public void setEmptyView(View emptyView) {
+    public void setEmptyView(View emptyView)
+    {
         mEmptyView = emptyView;
     }
 
-    public int removeItem(D d)
+    public int removeItem(ICommonItem d)
     {
         if (d != null)
         {
@@ -223,7 +234,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public boolean removeItemList(ArrayList<D> dCollection)
+    public boolean removeItemList(ArrayList<ICommonItem> dCollection)
     {
         if (dCollection != null)
         {
@@ -233,14 +244,14 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         return false;
     }
 
-    public void addItem(final D d)
+    public void addItem(final ICommonItem d)
     {
         if (mdArrayList != null) {
             mdArrayList.add(d);
         }
     }
 
-    public void addItem(final int position , final D d)
+    public void addItem(final int position , final ICommonItem d)
     {
         if (mdArrayList != null)
         {
@@ -256,14 +267,14 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public void addItemList(final ArrayList<D> dCollection)
+    public void addItemList(final ArrayList<ICommonItem> dCollection)
     {
         if (mdArrayList != null && dCollection != null) {
             mdArrayList.addAll(dCollection);
         }
     }
 
-    public void addItemList(final int start , final ArrayList<D> dArrayList)
+    public void addItemList(final int start , final ArrayList<ICommonItem> dArrayList)
     {
         if (dArrayList != null && mdArrayList != null)
         {
@@ -281,7 +292,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public boolean changeItem(final int position, D d)
+    public boolean changeItem(final int position, ICommonItem d)
     {
         boolean result = false;
 
@@ -294,7 +305,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         return result;
     }
 
-    public int changeItem(D d)
+    public int changeItem(ICommonItem d)
     {
         int position = mdArrayList.indexOf(d);
         if (position > -1) {
@@ -304,7 +315,7 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         return position;
     }
 
-    public void changeItemList(ArrayList<D> dArrayList)
+    public void changeItemList(ArrayList<ICommonItem> dArrayList)
     {
         clear();
 
@@ -318,19 +329,23 @@ public abstract class CommonRecyclerAdapter<D extends ICommonItem> extends Recyc
         }
     }
 
-    public boolean isBelongItem(D d) {
+    public boolean isBelongItem(ICommonItem d)
+    {
         return (mdArrayList != null && mdArrayList.contains(d));
     }
 
-    public boolean isUsingHeader() {
+    public boolean isUsingHeader()
+    {
         return mHeaderView != null;
     }
 
-    public boolean isUsingFooter() {
+    public boolean isUsingFooter()
+    {
         return mFooterView != null;
     }
 
-    public boolean isUsingEmptyView() {
+    public boolean isUsingEmptyView()
+    {
         return (mEmptyView != null);
     }
 

@@ -34,7 +34,7 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
     private Button      mRegisterButton;
 
     public RegisterFragment() {
-        super(R.layout.register_fragment);
+        super(R.layout.fragment_register);
     }
 
     @Override

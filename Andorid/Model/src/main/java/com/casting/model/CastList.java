@@ -8,11 +8,11 @@ public class CastList extends BaseModel {
 
     public ArrayList<Cast> CastArrayList;
 
-    public ArrayList<Cast> getCastArrayList() {
+    public ArrayList<Cast> getCastList() {
         return CastArrayList;
     }
 
-    public void setCastArrayList(ArrayList<Cast> castArrayList) {
+    public void setCastList(ArrayList<Cast> castArrayList) {
         CastArrayList = castArrayList;
     }
 }

@@ -16,6 +16,11 @@ public abstract class ExpandableItem extends BaseExpandable {
     }
 
     @Override
+    public int getItemType() {
+        return EXPANDABLE_PARENT;
+    }
+
+    @Override
     public int getExpandableItemType() {
         return EXPANDABLE_PARENT;
     }

@@ -7,6 +7,8 @@ import com.casting.model.request.Login;
 import com.casting.model.request.RegisterMember;
 import com.casting.model.request.RequestCast;
 import com.casting.model.request.RequestCastList;
+import com.casting.model.request.RequestTimeLine;
+import com.casting.model.request.RequestTimeLineList;
 
 public class FutureCasting extends CommonApplication {
 
@@ -41,6 +43,18 @@ public class FutureCasting extends CommonApplication {
             stringBuilder.append(createCastListUrl(requestCastList));
         }
         else if (request.isRight(RequestCast.class))
+        {
+
+        }
+        else if (request.isRight(RequestCastList.class))
+        {
+
+        }
+        else if (request.isRight(RequestTimeLine.class))
+        {
+
+        }
+        else if (request.isRight(RequestTimeLineList.class))
         {
 
         }

@@ -15,6 +15,7 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.cardstack.SwipeStack;
 import com.casting.commonmodule.view.cardstack.SwipeStackAdapter;
@@ -80,7 +81,7 @@ public class MainActivity extends BaseFCActivity implements
 
         public MainCardSwipeAdapter()
         {
-            super(MainActivity.this, R.layout.main_cast_card);
+            super(MainActivity.this, R.layout.view_item_cast_card);
         }
 
         @Override
@@ -115,7 +116,7 @@ public class MainActivity extends BaseFCActivity implements
 
         mBothMenuDrawer = new BothMenuDrawer();
         mBothMenuDrawer.attach(this);
-        mBothMenuDrawer.setContentView(R.layout.main_activity);
+        mBothMenuDrawer.setContentView(R.layout.activity_main);
         mBothMenuDrawer.setLeftMenuView(R.layout.left_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setRightMenuView(R.layout.right_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setDrawerListener(this);
@@ -191,7 +192,7 @@ public class MainActivity extends BaseFCActivity implements
         {
             CastList castList = response.getResponseModel();
 
-            mSwipeStackAdapter.setItemList(castList.getCastArrayList());
+            mSwipeStackAdapter.setItemList(castList.getCastList());
             mSwipeStackAdapter.notifyDataSetChanged();
         }
         else
@@ -227,7 +228,7 @@ public class MainActivity extends BaseFCActivity implements
         {
             int cardCount = (mSwipeStackAdapter.getCount() - 1);
             int selectedCard = (cardCount * progress) / 100;
-
+            EasyLog.LogMessage("confirm" , "selectedCard = ", Integer.toString(selectedCard));
         }
     }
 

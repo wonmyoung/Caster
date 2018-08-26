@@ -25,7 +25,7 @@ public class ActiveMember extends Observable {
         this.mMember = mMember;
 
         setChanged();
-        notifyObservers();
+        notifyObservers(member);
     }
 
     public String getEmailAddress()

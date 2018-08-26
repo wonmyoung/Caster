@@ -13,7 +13,7 @@ public class IntroActivity extends BaseFCActivity {
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
     {
-        setContentView(R.layout.intro_activity);
+        setContentView(R.layout.activity_intro);
 
         Runnable runnable = new Runnable() {
             @Override

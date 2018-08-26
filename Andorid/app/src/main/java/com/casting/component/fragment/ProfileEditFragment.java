@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
 
 import java.util.Observable;
@@ -13,7 +14,7 @@ import java.util.Observer;
 public class ProfileEditFragment extends CommonFragment implements Observer {
 
     public ProfileEditFragment() {
-        super(0);
+        super(R.layout.fragment_profile_edit);
     }
 
     @Override
@@ -35,6 +36,6 @@ public class ProfileEditFragment extends CommonFragment implements Observer {
 
     @Override
     protected boolean onBackPressed() {
-        return false;
+        return true;
     }
 }

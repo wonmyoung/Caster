@@ -312,10 +312,15 @@ public class UtilityUI {
     }
 
     public static int getColor(Context context, int id) {
+
         final int version = Build.VERSION.SDK_INT;
-        if (version >= Build.VERSION_CODES.M) {
+
+        if (version >= Build.VERSION_CODES.M)
+        {
             return ContextCompat.getColor(context, id);
-        } else {
+        }
+        else
+        {
             return context.getResources().getColor(id);
         }
     }

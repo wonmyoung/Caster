@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
 
 import java.util.Observable;
@@ -15,7 +16,7 @@ public class FollowingFragment extends CommonFragment implements Observer
 
     public FollowingFragment()
     {
-        super(0);
+        super(R.layout.fragment_following);
     }
 
     @Override
@@ -39,6 +40,6 @@ public class FollowingFragment extends CommonFragment implements Observer
     @Override
     protected boolean onBackPressed()
     {
-        return false;
+        return true;
     }
 }

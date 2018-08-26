@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:weightSum="100"
-    android:orientation="vertical">
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    android:weightSum="100">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,16 +15,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/dp15"
-            android:paddingTop="@dimen/dp20"
-            android:orientation="vertical">
+            android:paddingTop="@dimen/dp20">
 
             <com.casting.commonmodule.view.CircleImageView
                 android:id="@+id/userImage"
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
                 android:background="@color/mainColor0"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -37,23 +38,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="조감독"
+                    android:textColor="@color/color_black"
                     android:textSize="@dimen/dp20"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_black"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/userGrade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_white"
-                    android:text="골드"
                     android:layout_marginLeft="@dimen/dp10"
-                    android:textSize="@dimen/dp14"
-                    android:paddingLeft="@dimen/dp10"
-                    android:paddingTop="@dimen/dp2"
+                    android:background="@drawable/shape_main_color_round10"
                     android:paddingBottom="@dimen/dp2"
+                    android:paddingLeft="@dimen/dp10"
                     android:paddingRight="@dimen/dp10"
-                    android:background="@drawable/shape_main_color_round10"/>
+                    android:paddingTop="@dimen/dp2"
+                    android:text="골드"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/dp14" />
 
             </LinearLayout>
 
@@ -62,18 +63,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp5"
-                android:textSize="@dimen/dp12"
+                android:text="Mr.cho"
                 android:textColor="@color/color_7c7c7c"
-                android:text="Mr.cho"/>
+                android:textSize="@dimen/dp12" />
 
             <TextView
                 android:id="@+id/userDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp5"
-                android:textSize="@dimen/dp12"
+                android:text="Professional MD / Amateur musician"
                 android:textColor="@color/color_7c7c7c"
-                android:text="Professional MD / Amateur musician"/>
+                android:textSize="@dimen/dp12" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,64 +85,70 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/userInfo1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                     <TextView
+                        android:id="@+id/userInfo2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                     <TextView
+                        android:id="@+id/userInfo3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/userInfo4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                     <TextView
+                        android:id="@+id/userInfo5"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                     <TextView
+                        android:id="@+id/userInfo6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:textSize="@dimen/dp14"
                         android:text="text"
-                        android:layout_weight="1"/>
+                        android:textSize="@dimen/dp14" />
 
                 </LinearLayout>
 
@@ -150,19 +157,21 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/userProfileEdit"
             android:layout_width="@dimen/dp80"
             android:layout_height="@dimen/dp25"
             android:layout_gravity="right|top"
+            android:layout_marginRight="@dimen/dp20"
+            android:layout_marginTop="@dimen/dp45"
+            android:background="@drawable/shape_main_color_nofill_round10"
             android:text="프로필 수정하기"
             android:textColor="@color/mainColor0"
-            android:textSize="@dimen/dp10"
-            android:layout_marginTop="@dimen/dp45"
-            android:layout_marginRight="@dimen/dp20"
-            android:background="@drawable/shape_main_color_nofill_round10"/>
+            android:textSize="@dimen/dp10" />
 
     </FrameLayout>
 
     <android.support.design.widget.TabLayout
+        android:id="@+id/userProfileTab"
         style="@style/CustomTabLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -173,11 +182,12 @@
         app:tabIndicatorHeight="@dimen/dp3"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/CustomTabTexStyle"/>
+        app:tabTextAppearance="@style/CustomTabTexStyle" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/userProfileListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="52"/>
+        android:layout_weight="52" />
 
 </LinearLayout>

@@ -11,7 +11,7 @@ public abstract class BaseExpandable implements ICommonItem {
     public static final int EXPANDED_CHILD = 10;
     public static final int EXPANDABLE_PARENT = 20;
 
-    public abstract int getExpandableItemType();
-
     public abstract Object getRootObject();
+
+    public abstract int getExpandableItemType();
 }

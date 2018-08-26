@@ -38,7 +38,7 @@ public class LoginFragment extends CommonFragment implements IResponseListener
 
     public LoginFragment()
     {
-        super(R.layout.login_fragment);
+        super(R.layout.fragment_login);
     }
 
     @Override

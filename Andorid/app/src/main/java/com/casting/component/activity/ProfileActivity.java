@@ -1,26 +1,50 @@
 package com.casting.component.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.casting.R;
+import com.casting.commonmodule.IResponseListener;
+import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseModel;
+import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.commonmodule.view.image.ImageLoader;
+import com.casting.commonmodule.view.list.CompositeViewHolder;
+import com.casting.commonmodule.view.list.ICommonItem;
+import com.casting.interfaces.ItemBindStrategy;
+import com.casting.model.Cast;
+import com.casting.model.CastList;
+import com.casting.model.Member;
+import com.casting.model.TimeLine;
+import com.casting.model.TimeLineList;
+import com.casting.model.global.ActiveMember;
+import com.casting.model.request.RequestCastList;
+import com.casting.model.request.RequestTimeLineList;
+import com.casting.view.ItemViewAdapter;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ProfileActivity extends CommonActivity implements Observer
-{
+public class ProfileActivity extends CommonActivity
+        implements Observer, TabLayout.OnTabSelectedListener, ItemBindStrategy, IResponseListener {
 
     private CircleImageView mUserPicView;
 
     private TextView    mUserNickNameView;
     private TextView    mUserGradeView;
+    private TextView    mUserDescription;
     private TextView    mUserIdView;
     private TextView    mInfoView1;
     private TextView    mInfoView2;
@@ -32,22 +56,265 @@ public class ProfileActivity extends CommonActivity implements Observer
     private TabLayout       mTabLayout;
     private Button          mUserEditButton;
     private RecyclerView    mListView;
+    private ItemViewAdapter     mListViewAdapter;
+    private LinearLayoutManager mListViewManager;
 
     @Override
     protected void init(Bundle savedInstanceState) throws Exception
     {
-        setContentView(R.layout.profile_activity);
+        setContentView(R.layout.activity_profile);
+
+        mUserPicView = find(R.id.userImage);
+        mUserNickNameView = find(R.id.userNickName);
+        mUserGradeView = find(R.id.userGrade);
+        mUserIdView = find(R.id.userIdView);
+        mUserDescription = find(R.id.userDescription);
+        mUserEditButton = find(R.id.userProfileEdit);
+        mUserEditButton.setOnClickListener(this);
+
+        mInfoView1 = find(R.id.userInfo1);
+        mInfoView2 = find(R.id.userInfo2);
+        mInfoView3 = find(R.id.userInfo3);
+        mInfoView4 = find(R.id.userInfo4);
+        mInfoView5 = find(R.id.userInfo5);
+        mInfoView6 = find(R.id.userInfo6);
+        mInfoView6.setVisibility(View.INVISIBLE);
+
+        mTabLayout = find(R.id.userProfileTab);
+        mTabLayout.addOnTabSelectedListener(this);
+        TabLayout.Tab tab1 = mTabLayout.newTab();
+        tab1.setText("타임라인");
+
+        TabLayout.Tab tab2 = mTabLayout.newTab();
+        tab2.setText("참여중인 캐스트");
+
+        TabLayout.Tab tab3 = mTabLayout.newTab();
+        tab3.setText("종료된 캐스트");
+        mTabLayout.addTab(tab1);
+        mTabLayout.addTab(tab2);
+        mTabLayout.addTab(tab3);
+
+        mListViewAdapter = new ItemViewAdapter(this, this);
+        mListView = find(R.id.userProfileListView);
+        mListView.setAdapter(mListViewAdapter);
+        mListViewManager = new LinearLayoutManager(this);
+        mListView.setLayoutManager(mListViewManager);
+        mListView.setHasFixedSize(true);
+
+        ActiveMember activeMember = ActiveMember.getInstance();
+
+        updateMemberData(activeMember.getMember());
+
+        activeMember.addObserver(this);
+    }
+
+    @Override
+    public void onThreadResponseListen(BaseResponse response)
+    {
+//        mListViewAdapter.clear();
+//        mListViewAdapter.notifyDataSetChanged();
+//
+//        BaseModel m = response.getResponseModel();
+//
+//        if (m instanceof TimeLineList)
+//        {
+//            TimeLineList t = (TimeLineList) m;
+//
+//            mListViewAdapter.setItemList(t.getTimeLineList());
+//            mListViewAdapter.notifyDataSetChanged();
+//        }
+//        else if (m instanceof CastList)
+//        {
+//
+//            CastList c = (CastList) m;
+//
+//            mListViewAdapter.setItemList(c.getCastList());
+//            mListViewAdapter.notifyDataSetChanged();
+//        }
+        ArrayList<ICommonItem> list = new ArrayList<>();
+
+        if (mTabLayout.getSelectedTabPosition() == 0)
+        {
+            loadDummyTimeLineList(list);
+        }
+        else
+        {
+            loadDummyCastList(list);
+        }
+
+        mListViewAdapter.setItemList(list);
+        mListViewAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void update(Observable o, Object arg)
     {
+        if (o instanceof ActiveMember && arg instanceof Member)
+        {
+            Member member = (Member) arg;
 
+            updateMemberData(member);
+        }
+    }
+
+    private void updateMemberData(Member member)
+    {
+        if (member != null)
+        {
+            ImageLoader.loadImage(this, mUserPicView, member.getUserPicThumbnail());
+
+            mUserNickNameView.setText(member.getNickName());
+            mUserIdView.setText(member.getUserId());
+            mUserGradeView.setText(member.getUserGrade());
+            mUserDescription.setText(member.getDescription());
+
+            mInfoView1.setText(buildInfoString("CAP", member.getUserCap()));
+            mInfoView2.setText(buildInfoString("예측수", member.getCorrectCast()));
+            mInfoView3.setText(buildInfoString("적중률", member.getCorrectRate()));
+            mInfoView4.setText(buildInfoString("팔로잉", member.getFollowingNum()));
+            mInfoView5.setText(buildInfoString("팔로워", member.getFollowerNum()));
+        }
     }
 
     @Override
     protected void onClickEvent(View v)
     {
+        if (v.equals(mUserEditButton))
+        {
 
+        }
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab)
+    {
+
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab)
+    {
+        mListViewAdapter.clear();
+        mListViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab)
+    {
+        switch (tab.getPosition())
+        {
+            case 0:
+            {
+                RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
+                requestTimeLineList.setMember(ActiveMember.getInstance().getMember());
+                requestTimeLineList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestTimeLineList);
+                break;
+            }
+
+            case 1:
+            {
+                RequestCastList requestCastList = new RequestCastList();
+                requestCastList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestCastList);
+                break;
+            }
+
+            case 2:
+            {
+                RequestCastList requestCastList = new RequestCastList();
+                requestCastList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestCastList);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void bindBodyItemView
+            (CompositeViewHolder holder, int position, int viewType, ICommonItem item) throws Exception
+    {
+
+        switch (viewType)
+        {
+            case CAST_CARD:
+            {
+                break;
+            }
+
+            case CAST_CARD_THIN:
+            {
+                break;
+            }
+
+            case CAST_CARD_LONG:
+            {
+                break;
+            }
+
+            case TIME_LINE:
+            {
+                break;
+            }
+        }
+    }
+
+    private SpannableStringBuilder buildInfoString(String prefix, double data)
+    {
+        return buildInfoString(prefix, Double.toString(data));
+    }
+
+    private SpannableStringBuilder buildInfoString(String prefix, int data)
+    {
+        return buildInfoString(prefix, Integer.toString(data));
+    }
+
+    private SpannableStringBuilder buildInfoString(String prefix, String data)
+    {
+
+        int color1 = UtilityUI.getColor(this, R.color.color_f2f2f2);
+        int color2 = Color.BLACK;
+
+        SpannableString spannableString1 = UtilityUI.getColorSpannableString(prefix, color1);
+        SpannableString spannableString2 = UtilityUI.getColorSpannableString(data, color2);
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(spannableString1);
+        builder.append("  ");
+        builder.append(spannableString2);
+
+        return builder;
+    }
+
+    private void loadDummyTimeLineList(ArrayList<ICommonItem> list)
+    {
+        if (list == null)
+        {
+            list = new ArrayList<>();
+        }
+
+        for (int i = 0 ; i < 100 ; i++)
+        {
+            TimeLine timeLine = new TimeLine();
+
+            list.add(timeLine);
+        }
+    }
+
+    private void loadDummyCastList(ArrayList<ICommonItem> list)
+    {
+        if (list == null)
+        {
+            list = new ArrayList<>();
+        }
+
+        for (int i = 0 ; i < 100 ; i++)
+        {
+            Cast cast = new Cast();
+
+            list.add(cast);
+        }
     }
 }

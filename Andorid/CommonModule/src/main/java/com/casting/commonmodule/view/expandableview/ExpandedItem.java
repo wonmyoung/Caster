@@ -12,12 +12,12 @@ public abstract class ExpandedItem extends BaseExpandable {
     }
 
     @Override
-    public int getExpandableItemType() {
-        return EXPANDED_CHILD;
+    public Object getRootObject() {
+        return mRootObject;
     }
 
     @Override
-    public Object getRootObject() {
-        return mRootObject;
+    public int getExpandableItemType() {
+        return EXPANDED_CHILD;
     }
 }

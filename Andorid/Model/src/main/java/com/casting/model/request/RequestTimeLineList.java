@@ -1,0 +1,40 @@
+package com.casting.model.request;
+
+import android.content.ContentValues;
+
+import com.casting.commonmodule.network.NetworkRequest;
+import com.casting.commonmodule.network.base.NetworkParcelable;
+import com.casting.model.Member;
+
+public class RequestTimeLineList extends NetworkRequest {
+
+    private Member  mMember;
+
+    @Override
+    public String getHttpMethod() {
+        return null;
+    }
+
+    @Override
+    public ContentValues getHttpRequestHeader() {
+        return null;
+    }
+
+    @Override
+    public ContentValues getHttpRequestParameter() {
+        return null;
+    }
+
+    @Override
+    public <P extends NetworkParcelable> P getNetworkParcelable() {
+        return null;
+    }
+
+    public Member getMember() {
+        return mMember;
+    }
+
+    public void setMember(Member member) {
+        this.mMember = member;
+    }
+}

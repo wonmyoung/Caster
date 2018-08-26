@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 
 import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
+import com.casting.component.activity.CastChartActivity;
 import com.casting.component.activity.ProfileActivity;
+import com.casting.component.activity.SettingActivity;
 import com.casting.model.global.ActiveMember;
 import com.kakao.usermgmt.response.model.UserProfile;
 
@@ -44,10 +46,18 @@ public class LeftSideMenu extends CommonFragment implements Observer {
             }
 
             case R.id.leftMenuButton2:
-                break;
+            {
+                Intent intent = new Intent(getContext(), CastChartActivity.class);
+
+                startActivity(intent);
+            }
 
             case R.id.leftMenuButton3:
-                break;
+            {
+                Intent intent = new Intent(getContext(), SettingActivity.class);
+
+                startActivity(intent);
+            }
         }
     }
 

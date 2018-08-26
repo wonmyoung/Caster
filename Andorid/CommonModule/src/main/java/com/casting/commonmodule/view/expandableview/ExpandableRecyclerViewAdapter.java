@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.casting.commonmodule.view.list.CommonRecyclerAdapter;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
+import com.casting.commonmodule.view.list.ICommonItem;
 
 import java.util.LinkedList;
 
-public abstract class ExpandableRecyclerViewAdapter<P extends ExpandableItem , E extends ExpandedItem> extends CommonRecyclerAdapter<BaseExpandable> {
+public abstract class ExpandableRecyclerViewAdapter<P extends ExpandableItem , E extends ExpandedItem> extends CommonRecyclerAdapter {
 
     public ExpandableRecyclerViewAdapter(Context context) {
         super(context);
@@ -15,7 +16,7 @@ public abstract class ExpandableRecyclerViewAdapter<P extends ExpandableItem , E
 
     @SuppressWarnings("unchecked")
     @Override
-    public void bindBodyItemView(CompositeViewHolder holder, int position, int viewType, BaseExpandable item) throws Exception {
+    public void bindBodyItemView(CompositeViewHolder holder, int position, int viewType, ICommonItem item) throws Exception {
 
         switch (viewType) {
             case BaseExpandable.EXPANDABLE_PARENT:
@@ -41,7 +42,7 @@ public abstract class ExpandableRecyclerViewAdapter<P extends ExpandableItem , E
             CompositeViewHolder holder, int position , E item);
 
     protected abstract void onBindStaticView(
-            CompositeViewHolder holder, int position , BaseExpandable item);
+            CompositeViewHolder holder, int position , ICommonItem item);
 
     /**
      *
@@ -73,22 +74,18 @@ public abstract class ExpandableRecyclerViewAdapter<P extends ExpandableItem , E
         LinkedList<ExpandedItem> eArrayList = p.getExpandedChilds();
 
         int collapsePosition = getItemList().indexOf(p);
-        ((P) getItemList().get(collapsePosition)).setExpanded(false);
-        int index = collapsePosition + 1;
 
-        while (getItemList().size() > index &&
-               getItem(index).getExpandableItemType() == BaseExpandable.EXPANDED_CHILD) {
+//        ((P) getItemList().get(collapsePosition)).setExpanded(false);
+//
+//        int index = collapsePosition + 1;
+//
+//        while (getItemList().size() > index &&
+//               getItem(index).getExpandableItemType() == BaseExpandable.EXPANDED_CHILD) {
+//
+//            getItemList().remove(index);
+//        }
 
-            getItemList().remove(index);
-        }
-
-        notifyItemRangeRemoved(index , eArrayList.size());
+        //notifyItemRangeRemoved(index , eArrayList.size());
     }
 
-    @Override
-    public int getBodyItemViewType(int position) {
-        BaseExpandable baseExpandable = getItem(position);
-
-        return (baseExpandable == null ? 0 : baseExpandable.getExpandableItemType());
-    }
 }
