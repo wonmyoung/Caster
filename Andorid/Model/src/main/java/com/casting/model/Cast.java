@@ -12,6 +12,8 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
     private int         RewardCash;
     private String[]    Thumbnails;
 
+    private int   mItemType;
+
     public double getRemainingTime() {
         return RemainingTime;
     }
@@ -52,8 +54,14 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
         Thumbnails = thumbnails;
     }
 
+    public void setItemType(int itemType)
+    {
+        mItemType = itemType;
+    }
+
     @Override
-    public int getItemType() {
-        return CAST_CARD_THIN;
+    public int getItemType()
+    {
+        return mItemType;
     }
 }

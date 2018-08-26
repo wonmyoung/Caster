@@ -6,6 +6,8 @@
     android:orientation="vertical"
     android:layout_marginLeft="@dimen/dp15"
     android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp10"
+    android:layout_marginBottom="@dimen/dp10"
     card_view:cardCornerRadius="@dimen/dp15"
     card_view:cardElevation="@dimen/dp5"
     card_view:cardMaxElevation="0dp">

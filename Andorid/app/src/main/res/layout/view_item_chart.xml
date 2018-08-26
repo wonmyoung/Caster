@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp50"
+    android:weightSum="100"
+    android:paddingLeft="@dimen/dp15">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="60"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="99."
+            android:textColor="@color/color_7c7c7c"/>
+
+        <com.casting.commonmodule.view.CircleImageView
+            android:layout_width="@dimen/dp40"
+            android:layout_height="@dimen/dp40"
+            android:layout_marginLeft="@dimen/dp10"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="조감독"
+            android:layout_marginLeft="@dimen/dp10"
+            android:textColor="@color/color_7c7c7c"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="골드"
+            android:paddingLeft="@dimen/dp10"
+            android:paddingRight="@dimen/dp10"
+            android:paddingTop="@dimen/dp2"
+            android:paddingBottom="@dimen/dp2"
+            android:textSize="@dimen/dp12"
+            android:layout_marginLeft="@dimen/dp10"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:background="@drawable/shape_main_color_round5"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="40"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical|right">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="100%"
+            android:textSize="@dimen/dp12"
+            android:textColor="@color/mainColor0"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="100%"
+            android:textSize="@dimen/dp12"
+            android:textColor="@color/mainColor0"/>
+
+    </LinearLayout>
 
 </LinearLayout>

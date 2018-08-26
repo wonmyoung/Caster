@@ -11,7 +11,8 @@ import com.casting.commonmodule.view.component.CommonFragment;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ProfileEditFragment extends CommonFragment implements Observer {
+public class ProfileEditFragment extends CommonFragment implements Observer
+{
 
     public ProfileEditFragment() {
         super(R.layout.fragment_profile_edit);

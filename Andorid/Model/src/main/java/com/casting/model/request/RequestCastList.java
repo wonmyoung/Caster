@@ -36,7 +36,7 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
     }
 
     @Override
-    public NetworkParcelable getNetworkParcelable() {
+    public JSONParcelable getNetworkParcelable() {
         return this;
     }
 

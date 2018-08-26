@@ -4,9 +4,13 @@ import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
+import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.model.Member;
+import com.casting.model.TimeLineList;
 
-public class RequestTimeLineList extends NetworkRequest {
+import org.json.JSONObject;
+
+public class RequestTimeLineList extends NetworkRequest implements JSONParcelable<TimeLineList> {
 
     private Member  mMember;
 
@@ -25,8 +29,9 @@ public class RequestTimeLineList extends NetworkRequest {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <P extends NetworkParcelable> P getNetworkParcelable() {
+    public JSONParcelable getNetworkParcelable() {
         return null;
     }
 
@@ -36,5 +41,10 @@ public class RequestTimeLineList extends NetworkRequest {
 
     public void setMember(Member member) {
         this.mMember = member;
+    }
+
+    @Override
+    public TimeLineList parse(JSONObject jsonObject) {
+        return null;
     }
 }

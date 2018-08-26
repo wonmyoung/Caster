@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.casting.R;
@@ -29,6 +31,7 @@ import com.casting.model.Member;
 import com.casting.model.TimeLine;
 import com.casting.model.TimeLineList;
 import com.casting.model.global.ActiveMember;
+import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
@@ -111,8 +114,8 @@ public class ProfileActivity extends CommonActivity
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-//        mListViewAdapter.clear();
-//        mListViewAdapter.notifyDataSetChanged();
+        mListViewAdapter.clear();
+        mListViewAdapter.notifyDataSetChanged();
 //
 //        BaseModel m = response.getResponseModel();
 //
@@ -131,6 +134,8 @@ public class ProfileActivity extends CommonActivity
 //            mListViewAdapter.setItemList(c.getCastList());
 //            mListViewAdapter.notifyDataSetChanged();
 //        }
+        Log.d("confirm" , ">> confirm onThreadResponseListen getResponseCode = " + response.getResponseCode());
+
         ArrayList<ICommonItem> list = new ArrayList<>();
 
         if (mTabLayout.getSelectedTabPosition() == 0)
@@ -188,7 +193,42 @@ public class ProfileActivity extends CommonActivity
     @Override
     public void onTabSelected(TabLayout.Tab tab)
     {
+        switch (tab.getPosition())
+        {
+            case 0:
+            {
+                Member member = ActiveMember.getInstance().getMember();
 
+                RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
+                requestTimeLineList.setMember(member);
+                requestTimeLineList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestTimeLineList);
+                break;
+            }
+
+            case 1:
+            {
+                RequestCastList requestCastList = new RequestCastList();
+                requestCastList.setEmailAddress(ActiveMember.getInstance().getEmailAddress());
+                requestCastList.setOrder(RequestCastList.Order.Available);
+                requestCastList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestCastList);
+                break;
+            }
+
+            case 2:
+            {
+                RequestCastList requestCastList = new RequestCastList();
+                requestCastList.setEmailAddress(ActiveMember.getInstance().getEmailAddress());
+                requestCastList.setOrder(RequestCastList.Order.Available);
+                requestCastList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestCastList);
+                break;
+            }
+        }
     }
 
     @Override
@@ -201,41 +241,12 @@ public class ProfileActivity extends CommonActivity
     @Override
     public void onTabReselected(TabLayout.Tab tab)
     {
-        switch (tab.getPosition())
-        {
-            case 0:
-            {
-                RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
-                requestTimeLineList.setMember(ActiveMember.getInstance().getMember());
-                requestTimeLineList.setResponseListener(this);
 
-                RequestHandler.getInstance().request(requestTimeLineList);
-                break;
-            }
-
-            case 1:
-            {
-                RequestCastList requestCastList = new RequestCastList();
-                requestCastList.setResponseListener(this);
-
-                RequestHandler.getInstance().request(requestCastList);
-                break;
-            }
-
-            case 2:
-            {
-                RequestCastList requestCastList = new RequestCastList();
-                requestCastList.setResponseListener(this);
-
-                RequestHandler.getInstance().request(requestCastList);
-                break;
-            }
-        }
     }
 
     @Override
     public void bindBodyItemView
-            (CompositeViewHolder holder, int position, int viewType, ICommonItem item) throws Exception
+            (CompositeViewHolder viewHolder, int position, int viewType, ICommonItem item) throws Exception
     {
 
         switch (viewType)
@@ -247,6 +258,13 @@ public class ProfileActivity extends CommonActivity
 
             case CAST_CARD_THIN:
             {
+                Cast cast = (Cast) item;
+
+                ImageView imageView = viewHolder.find(R.id.castCardBack);
+
+                int radius = (int) getResources().getDimension(R.dimen.dp25);
+
+                ImageLoader.loadRoundImage(this, imageView, cast.getThumbnails()[0], radius);
                 break;
             }
 
@@ -290,8 +308,7 @@ public class ProfileActivity extends CommonActivity
 
     private void loadDummyTimeLineList(ArrayList<ICommonItem> list)
     {
-        if (list == null)
-        {
+        if (list == null) {
             list = new ArrayList<>();
         }
 
@@ -305,14 +322,20 @@ public class ProfileActivity extends CommonActivity
 
     private void loadDummyCastList(ArrayList<ICommonItem> list)
     {
-        if (list == null)
-        {
+        if (list == null) {
             list = new ArrayList<>();
         }
 
         for (int i = 0 ; i < 100 ; i++)
         {
             Cast cast = new Cast();
+            cast.setItemType(ItemConstant.CAST_CARD_THIN);
+            cast.setRemainingTime(60 * 60 * 1000);
+            cast.setRewardCash(20000);
+            cast.setTitle("비트코인의 7월 25일 지정가격은 얼마일까요 ?");
+            cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
+            cast.setThumbnails(
+                    "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");
 
             list.add(cast);
         }

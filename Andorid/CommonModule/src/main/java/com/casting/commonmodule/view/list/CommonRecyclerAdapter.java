@@ -55,7 +55,6 @@ public abstract class CommonRecyclerAdapter extends RecyclerView.Adapter<Composi
     {
         try
         {
-
             int viewType = getItemViewType(position);
 
             ICommonItem commonItem = getItem(position);
@@ -308,7 +307,8 @@ public abstract class CommonRecyclerAdapter extends RecyclerView.Adapter<Composi
     public int changeItem(ICommonItem d)
     {
         int position = mdArrayList.indexOf(d);
-        if (position > -1) {
+        if (position > -1)
+        {
             mdArrayList.set(position, d);
         }
 
