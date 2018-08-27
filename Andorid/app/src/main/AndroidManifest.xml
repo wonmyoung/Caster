@@ -38,6 +38,18 @@
         </activity>
 
         <activity
+            android:name=".component.activity.LoginActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
+        <activity
+            android:name=".component.activity.RegisterActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
+        <activity
             android:name=".component.activity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -51,6 +63,13 @@
 
         <activity
             android:name=".component.activity.ProfileEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.baseActivity" />
+
+        <activity
+            android:name=".component.activity.FollowingListActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"

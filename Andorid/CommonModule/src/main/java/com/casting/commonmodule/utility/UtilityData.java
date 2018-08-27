@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -27,6 +29,49 @@ import java.util.Date;
 import java.util.Locale;
 
 public class UtilityData {
+
+    /**
+     * 제공된 권한이 허용되어 있는지 확인한다.
+     *
+     * @param oContext
+     *            Context
+     * @param strDeniedPermissions
+     *            String 거부된 퍼미션 정보
+     * @return boolean
+     */
+    public static boolean hasSelfPermission(Context oContext, String strDeniedPermissions)
+    {
+        if (UtilityData.isBelowMOS() || strDeniedPermissions == null)
+        {
+            return true;
+        }
+
+        return ContextCompat.checkSelfPermission(oContext, strDeniedPermissions) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     *
+     * @return booleans ..
+     */
+    public static boolean isBelowMOS() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+			/* API Level 이 22 이며, M 버전이 아닐 때 true */
+            if (isMNC()) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * M preview 1, 2 OS 버전 인경우.
+     *
+     * @return boolean
+     */
+    public static boolean isMNC() {
+        return "MNC".equals(Build.VERSION.CODENAME);
+    }
 
     public static String confirmMobileNumber(Context context) {
         if (context != null) {

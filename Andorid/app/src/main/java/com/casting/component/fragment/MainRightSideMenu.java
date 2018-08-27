@@ -8,15 +8,11 @@ import android.view.ViewGroup;
 import com.casting.R;
 import com.casting.commonmodule.view.component.CommonFragment;
 
-import java.util.Observable;
-import java.util.Observer;
+public class MainRightSideMenu extends CommonFragment {
 
-public class FollowingFragment extends CommonFragment implements Observer
-{
-
-    public FollowingFragment()
+    public MainRightSideMenu()
     {
-        super(R.layout.fragment_following);
+        super(R.layout.right_menu);
     }
 
     @Override
@@ -32,14 +28,8 @@ public class FollowingFragment extends CommonFragment implements Observer
     }
 
     @Override
-    public void update(Observable o, Object arg)
-    {
-
-    }
-
-    @Override
     protected boolean onBackPressed()
     {
-        return true;
+        return false;
     }
 }

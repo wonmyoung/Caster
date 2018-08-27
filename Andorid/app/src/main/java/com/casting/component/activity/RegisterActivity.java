@@ -1,14 +1,11 @@
-package com.casting.component.fragment;
+package com.casting.component.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,26 +17,23 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.commonmodule.view.component.CommonFragment;
-import com.casting.component.activity.MainActivity;
+import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.model.request.RegisterMember;
 import com.casting.view.InsertForm;
 
-public class RegisterFragment extends CommonFragment implements TextView.OnEditorActionListener, IResponseListener {
+public class RegisterActivity extends CommonActivity implements TextView.OnEditorActionListener, IResponseListener {
 
-    private InsertForm  mInsertForm1;
+    private InsertForm mInsertForm1;
     private InsertForm  mInsertForm2;
     private InsertForm  mInsertForm3;
     private InsertForm  mInsertForm4;
-    private Button      mRegisterButton;
-
-    public RegisterFragment() {
-        super(R.layout.fragment_register);
-    }
+    private Button mRegisterButton;
 
     @Override
-    protected void init(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception
+    protected void init(Bundle savedInstanceState) throws Exception
     {
+        setContentView(R.layout.activity_register);
+
         mInsertForm1 = find(R.id.registrationForm1);
         mInsertForm1.getInsertView().setFilters(
                 new InputFilter[]{UtilityUI.getEnglishFilter()});
@@ -55,12 +49,6 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
 
         mRegisterButton = find(R.id.registerButton);
         mRegisterButton.setOnClickListener(this);
-    }
-
-    @Override
-    protected boolean onBackPressed()
-    {
-        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -94,15 +82,15 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
 
             if (TextUtils.isEmpty(password1))
             {
-                Toast.makeText(getContext(), "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
             }
             else if (TextUtils.isEmpty(password2))
             {
-                Toast.makeText(getContext(), "비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show();
             }
             else if (!password1.equalsIgnoreCase(password2))
             {
-                Toast.makeText(getContext(), "비밀번호가 맞지 않습니다 다시 확인해주세요", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "비밀번호가 맞지 않습니다 다시 확인해주세요", Toast.LENGTH_SHORT).show();
             }
             else
             {
@@ -134,7 +122,7 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
         }
         else if (v.equals(mInsertForm4.getInsertView()) && action == EditorInfo.IME_ACTION_NEXT)
         {
-            UtilityUI.setForceKeyboardDown(getContext(), mInsertForm4.getInsertView());
+            UtilityUI.setForceKeyboardDown(this, mInsertForm4.getInsertView());
 
             mRegisterButton.performClick();
         }
@@ -147,15 +135,11 @@ public class RegisterFragment extends CommonFragment implements TextView.OnEdito
     {
         if (response instanceof NetworkResponse)
         {
-            Intent intent = new Intent(getContext(), MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
 
-            Activity a = getActivity();
+            startActivity(intent);
 
-            if (a != null && !a.isFinishing())
-            {
-                a.startActivity(intent);
-                a.finish();
-            }
+            finish();
         }
     }
 }

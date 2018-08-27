@@ -1,14 +1,11 @@
-package com.casting.component.fragment;
+package com.casting.component.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -21,13 +18,16 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.commonmodule.view.component.CommonFragment;
-import com.casting.component.activity.MainActivity;
+import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.model.global.ActiveMember;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
 import com.casting.view.InsertForm;
 
-public class LoginFragment extends CommonFragment implements IResponseListener, TextView.OnEditorActionListener {
+import java.util.Observable;
+import java.util.Observer;
+
+public class LoginActivity extends CommonActivity implements IResponseListener, TextView.OnEditorActionListener, Observer {
 
     private ViewGroup   mRegisterFrame;
     private Button      mButton0;
@@ -38,14 +38,11 @@ public class LoginFragment extends CommonFragment implements IResponseListener, 
     private InsertForm  mLoginPWForm;
     private Button      mLoginButton;
 
-    public LoginFragment()
-    {
-        super(R.layout.fragment_login);
-    }
-
     @Override
-    protected void init(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) throws Exception
+    protected void init(Bundle savedInstanceState) throws Exception
     {
+        setContentView(R.layout.activity_login);
+
         mRegisterFrame = find(R.id.registerFrame);
         mButton0 = find(R.id.registerFrameButton0);
         mButton0.setOnClickListener(this);
@@ -71,27 +68,21 @@ public class LoginFragment extends CommonFragment implements IResponseListener, 
         mLoginButton.setOnClickListener(this);
     }
 
-    @Override
-    protected boolean onBackPressed()
-    {
-        return true;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     protected void onClickEvent(View v)
     {
         if (v.equals(mButton0))
         {
-            RegisterFragment registerFragment = new RegisterFragment();
+            Intent intent = new Intent(this, RegisterActivity.class);
 
-            replaceFragment(R.id.intro_layoutFrame, registerFragment);
+            startActivity(intent);
         }
         else if (v.equals(mButton1))
         {
 
             RequestFacebookSession requestFacebookSession = new RequestFacebookSession();
-            requestFacebookSession.setAppCompatActivity((AppCompatActivity) getActivity());
+            requestFacebookSession.setAppCompatActivity(this);
             requestFacebookSession.setResponseListener(this);
 
             RequestHandler.getInstance().request(requestFacebookSession);
@@ -125,15 +116,11 @@ public class LoginFragment extends CommonFragment implements IResponseListener, 
     {
         if (response instanceof NetworkResponse)
         {
-            Intent intent = new Intent(getContext(), MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
 
-            Activity a = getActivity();
+            startActivity(intent);
 
-            if (a != null && !a.isFinishing())
-            {
-                a.startActivity(intent);
-                a.finish();
-            }
+            finish();
         }
     }
 
@@ -146,9 +133,25 @@ public class LoginFragment extends CommonFragment implements IResponseListener, 
         }
         else if (v.equals(mLoginPWForm.getInsertView()) && action == EditorInfo.IME_ACTION_NEXT)
         {
-            UtilityUI.setForceKeyboardDown(getContext(), mLoginPWForm.getInsertView());
+            UtilityUI.setForceKeyboardDown(this, mLoginPWForm.getInsertView());
         }
 
         return false;
+    }
+
+    @Override
+    public void update(Observable o, Object arg)
+    {
+        if (o instanceof ActiveMember && !isFinishing())
+        {
+            try
+            {
+                finish();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -41,6 +41,8 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
     private EditText        UserNickName;
     private EditText        UserIntroduction;
 
+    private String      mProfilePicPath;
+
     @Override
     protected void init(Bundle savedInstanceState) throws Exception
     {
@@ -142,9 +144,9 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
             {
                 int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 
-                String picPath = cursor.getString(index);
+                mProfilePicPath = cursor.getString(index);
 
-                ExifInterface e = new ExifInterface(picPath);
+                ExifInterface e = new ExifInterface(mProfilePicPath);
 
                 int degree = 0;
 
@@ -169,7 +171,7 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
                     degree = 0;
                 }
 
-                Bitmap bitmap = BitmapFactory.decodeFile(picPath);
+                Bitmap bitmap = BitmapFactory.decodeFile(mProfilePicPath);
 
                 Matrix matrix = new Matrix();
                 matrix.postRotate(degree);

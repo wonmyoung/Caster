@@ -5,12 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
@@ -25,8 +23,8 @@ import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.menudrawer.MenuDrawer;
 import com.casting.commonmodule.view.menudrawer.Position;
-import com.casting.component.fragment.LeftSideMenu;
-import com.casting.component.fragment.RightSideMenu;
+import com.casting.component.fragment.MainLeftSideMenu;
+import com.casting.component.fragment.MainRightSideMenu;
 import com.casting.model.Cast;
 import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
@@ -124,8 +122,8 @@ public class MainActivity extends BaseFCActivity implements
         mBothMenuDrawer.setRightMenuView(R.layout.right_menu_frame, menuDrawerWidth);
         mBothMenuDrawer.setDrawerListener(this);
 
-        addFragmentStack(R.id.left_menu_frame, new LeftSideMenu());
-        addFragmentStack(R.id.right_menu_frame, new RightSideMenu());
+        addFragmentStack(R.id.left_menu_frame, new MainLeftSideMenu());
+        addFragmentStack(R.id.right_menu_frame, new MainRightSideMenu());
 
         mTopButton1 = find(R.id.main_TopMenuButton1);
         mTopButton1.setOnClickListener(this);

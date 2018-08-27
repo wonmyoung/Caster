@@ -17,9 +17,9 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import java.util.Observable;
 import java.util.Observer;
 
-public class LeftSideMenu extends CommonFragment implements Observer {
+public class MainLeftSideMenu extends CommonFragment implements Observer {
 
-    public LeftSideMenu()
+    public MainLeftSideMenu()
     {
         super(R.layout.left_menu);
     }

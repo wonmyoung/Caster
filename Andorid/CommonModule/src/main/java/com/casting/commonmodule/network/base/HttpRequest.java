@@ -79,6 +79,7 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             if (HttpPost.equalsIgnoreCase(mHttpMethod)) {
 
                 OutputStream outputStream = connection.getOutputStream();
+
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 bufferedWriter.write(convertParameter());
                 bufferedWriter.flush();
