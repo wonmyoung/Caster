@@ -19,6 +19,7 @@
             android:layout_gravity="center"/>
 
         <TextView
+            android:id="@+id/userProfileEditButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="완료"
@@ -80,6 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/dp12"
+            android:imeOptions="actionNext"
             android:textColor="@color/color_505050"
             android:layout_marginLeft="@dimen/dp15"
             android:hint="조감독"/>
@@ -116,6 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/dp12"
+            android:imeOptions="actionDone"
             android:textColor="@color/color_505050"
             android:layout_marginLeft="@dimen/dp15"
             android:hint="자기소개를 입력해주세요"/>

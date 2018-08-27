@@ -1,5 +1,6 @@
 package com.casting.component.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -186,7 +187,9 @@ public class ProfileActivity extends CommonActivity
     {
         if (v.equals(mUserEditButton))
         {
+            Intent intent = new Intent(this, ProfileEditActivity.class);
 
+            startActivity(intent);
         }
     }
 
