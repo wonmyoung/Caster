@@ -80,7 +80,9 @@ public class ProfileActivity extends CommonActivity
         mInfoView2 = find(R.id.userInfo2);
         mInfoView3 = find(R.id.userInfo3);
         mInfoView4 = find(R.id.userInfo4);
+        mInfoView4.setOnClickListener(this);
         mInfoView5 = find(R.id.userInfo5);
+        mInfoView5.setOnClickListener(this);
         mInfoView6 = find(R.id.userInfo6);
         mInfoView6.setVisibility(View.INVISIBLE);
 
@@ -188,6 +190,18 @@ public class ProfileActivity extends CommonActivity
         if (v.equals(mUserEditButton))
         {
             Intent intent = new Intent(this, ProfileEditActivity.class);
+
+            startActivity(intent);
+        }
+        else if (v.equals(mInfoView4))
+        {
+            Intent intent = new Intent(this, FollowingListActivity.class);
+
+            startActivity(intent);
+        }
+        else if (v.equals(mInfoView5))
+        {
+            Intent intent = new Intent(this, FollowingListActivity.class);
 
             startActivity(intent);
         }

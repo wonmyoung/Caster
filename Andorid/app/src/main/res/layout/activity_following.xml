@@ -5,4 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/color_white">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp60">
+
+    </FrameLayout>
+
+    <com.casting.commonmodule.view.list.CommonRecyclerView
+        android:id="@+id/followingListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

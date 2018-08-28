@@ -52,6 +52,14 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_timeline, parent);
                 break;
 
+            case FOLLOWING_INFO_ITEM:
+                v = inflateView(R.layout.view_item_following_info, parent);
+                break;
+
+            case ALARM:
+                v = inflateView(R.layout.view_item_alarm, parent);
+                break;
+
             default:
                 v = new View(c);
                 break;

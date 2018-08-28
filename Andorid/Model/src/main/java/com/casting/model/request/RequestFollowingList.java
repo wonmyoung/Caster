@@ -3,20 +3,21 @@ package com.casting.model.request;
 import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
-import com.casting.commonmodule.network.base.IFileUpLoader;
 import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.model.Member;
 
-public class PostMember extends NetworkRequest implements IFileUpLoader {
+public class RequestFollowingList extends NetworkRequest {
+
+    public enum FollowingVector
+    {FOLLOWING, FOLLOWER}
+
+    private FollowingVector mFollowingVector;
 
     private Member  mMember;
 
-    private String  FilePath;
-
     @Override
-    public String getHttpMethod()
-    {
-        return HttpPost;
+    public String getHttpMethod() {
+        return null;
     }
 
     @Override
@@ -42,22 +43,11 @@ public class PostMember extends NetworkRequest implements IFileUpLoader {
         this.mMember = member;
     }
 
-    public void setFilePath(String filePath) {
-        FilePath = filePath;
+    public RequestFollowingList.FollowingVector getFollowingVector() {
+        return mFollowingVector;
     }
 
-    @Override
-    public String getFilePath() {
-        return FilePath;
-    }
-
-    @Override
-    public String getFileField() {
-        return null;
-    }
-
-    @Override
-    public String getFileMimeType() {
-        return null;
+    public void setFollowingVector(RequestFollowingList.FollowingVector vector) {
+        mFollowingVector = vector;
     }
 }

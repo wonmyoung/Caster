@@ -50,6 +50,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
                 Intent intent = new Intent(getContext(), CastChartActivity.class);
 
                 startActivity(intent);
+                break;
             }
 
             case R.id.leftMenuButton3:
@@ -57,6 +58,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
                 Intent intent = new Intent(getContext(), SettingActivity.class);
 
                 startActivity(intent);
+                break;
             }
         }
     }

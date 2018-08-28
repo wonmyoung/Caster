@@ -10,6 +10,7 @@ public interface ItemConstant {
     int CAST_CARD_LONG = 1005;
     int FOLLOWING_INFO_ITEM = 1006;
     int CHART_ITEM = 1007;
+    int ALARM = 1008;
 
     int GRAPH_A = 2001;
 }

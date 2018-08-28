@@ -16,6 +16,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -29,6 +32,12 @@ import java.util.Map;
 public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
     private final static int DEFAULT_TIMEOUT = 5 * 1000;
+
+    private final static String TWO_HYPENS  = "--";
+    private final static String BOUNDARY    = "*************************";
+    private final static String LINE_END    = "\r\n";
+    private final static int MAX_BUFFER_SIZE = 1024 * 1024;
+
 
     private NetworkRequest  mNetworkRequest;
 
@@ -52,7 +61,7 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             strUrlBuilder.append(mUrlData);
 
             if (HttpGet.equalsIgnoreCase(mHttpMethod)) {
-                strUrlBuilder.append(convertParameter());
+                strUrlBuilder.append(buildParameter());
             }
 
             URL url = new URL(strUrlBuilder.toString());
@@ -63,13 +72,13 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("charset", "utf-8");
 
-            if (getRequestHttpHeader() != null)
+            if (mRequestHeader != null)
             {
-                for (String key : getRequestHttpHeader().keySet())
+                for (String key : mRequestHeader.keySet())
                 {
-                    String value = getRequestHttpHeader().getAsString(key);
+                    String v = mRequestHeader.getAsString(key);
 
-                    connection.setRequestProperty(key , value);
+                    connection.setRequestProperty(key , v);
                 }
             }
             connection.setDoOutput(mHttpMethod.equalsIgnoreCase(HttpPost));
@@ -78,10 +87,56 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
             if (HttpPost.equalsIgnoreCase(mHttpMethod)) {
 
-                OutputStream outputStream = connection.getOutputStream();
+
+                DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+
+                if (mNetworkRequest instanceof IFileUpLoader)
+                {
+                    IFileUpLoader fileUpLoader = (IFileUpLoader) mNetworkRequest;
+
+                    String filePath = fileUpLoader.getFilePath();
+                    String fileMimeType = fileUpLoader.getFileMimeType();
+                    String fileField = fileUpLoader.getFileField();
+
+                    String[] q = filePath.split("/");
+                    int id = q.length - 1;
+
+                    connection.setRequestProperty("User-Agent", "Android Multipart HTTP Client 1.0");
+                    connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+
+                    outputStream.writeBytes(TWO_HYPENS + BOUNDARY + LINE_END);
+                    outputStream.writeBytes("Content-Disposition: form-data; name=\"" + fileField + "\"; filename=\"" + q[id] + "\"" + LINE_END);
+                    outputStream.writeBytes("Content-Type: " + fileMimeType + LINE_END);
+                    outputStream.writeBytes("Content-Transfer-Encoding: binary" + LINE_END);
+                    outputStream.writeBytes(LINE_END);
+
+                    File file = new File(filePath);
+
+                    FileInputStream fileInputStream = new FileInputStream(file);
+
+                    int bytesAvailable = fileInputStream.available();
+                    int bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+
+                    byte[] buffer = new byte[bufferSize];
+
+                    int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0)
+                    {
+                        outputStream.write(buffer, 0, bufferSize);
+
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, MAX_BUFFER_SIZE);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                    }
+
+                    outputStream.writeBytes(LINE_END);
+
+                    fileInputStream.close();
+                }
 
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                bufferedWriter.write(convertParameter());
+                bufferedWriter.write(buildParameter());
                 bufferedWriter.flush();
                 bufferedWriter.close();
 
@@ -146,7 +201,7 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
                     responseBuilder.append(stringLine).append('\n');
                 }
 
-                convertRawServerData2Log(responseBuilder.toString());
+                printServerLog(responseBuilder.toString());
 
                 bufferedReader.close();
                 connection.getErrorStream().close();
@@ -221,8 +276,8 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
         mNetworkRequest = networkRequest;
     }
 
-    private String convertParameter() throws UnsupportedEncodingException {
-
+    private String buildParameter() throws UnsupportedEncodingException
+    {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (mParameterValues != null)
@@ -233,20 +288,20 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
                 String parameterName = URLEncoder.encode(entry.getKey() , "UTF-8");
 
-                if (entry.getValue() != null)
-                {
-                    String parameterValue = URLEncoder.encode(entry.getValue().toString() , "UTF-8");
-                    String parameter = parameterName + "=" + parameterValue;
+                Object o = entry.getValue();
 
-                    if (TextUtils.isEmpty(stringBuilder.toString()))
-                    {
-                        stringBuilder.append(parameter);
-                    }
-                    else
+                if (o != null)
+                {
+                    String parameterValue = URLEncoder.encode(o.toString() , "UTF-8");
+
+                    if (!TextUtils.isEmpty(stringBuilder.toString()))
                     {
                         stringBuilder.append("&");
-                        stringBuilder.append(parameter);
                     }
+
+                    stringBuilder.append(parameterName);
+                    stringBuilder.append("=");
+                    stringBuilder.append(parameterValue);
                 }
             }
 
@@ -255,10 +310,11 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             EasyLog.LogMessage(">> parameter :", stringBuilder.toString());
             EasyLog.LogMessage("*********************************************************************");
         }
+
         return stringBuilder.toString();
     }
 
-    private void convertRawServerData2Log(String responseData) {
+    private void printServerLog(String responseData) {
         EasyLog.LogMessage("*********************************************************************");
         EasyLog.LogMessage(">> URL :", mUrlData);
         EasyLog.LogMessage(">> responseData :", responseData);
