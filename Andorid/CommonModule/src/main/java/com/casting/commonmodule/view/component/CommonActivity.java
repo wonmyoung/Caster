@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
@@ -23,7 +24,7 @@ import com.casting.commonmodule.utility.UtilityUI;
 
 import java.util.List;
 
-public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener {
+public abstract class CommonActivity extends AppCompatActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener, CompoundButton.OnCheckedChangeListener {
 
     /** ONE vod M OS에서 체크해야 할 퍼미션의 종류 */
 	/* READ_EXTERNAL_STORAGE (API 16) STORAGE 그룹이다. */
@@ -96,7 +97,29 @@ public abstract class CommonActivity extends AppCompatActivity implements View.O
         onClickEvent(v);
     }
 
-    protected abstract void onClickEvent(View v);
+    @SuppressWarnings("unchecked")
+    @Override
+    public final void onCheckedChanged(CompoundButton v, boolean b)
+    {
+        int viewId = v.getId();
+        int previousEventTime = (int) mPreviousClickEvent.get(viewId, 0);
+        if ((SystemClock.elapsedRealtime() - previousEventTime) < 700) {
+            return;
+        }
+        mPreviousClickEvent.put(viewId, (int) SystemClock.elapsedRealtime());
+
+        onCheckedChangedEvent(v, b);
+    }
+
+    protected void onClickEvent(View v)
+    {
+        EasyLog.LogMessage(this, ">> onClickEvent ");
+    }
+
+    protected void onCheckedChangedEvent(CompoundButton v, boolean b)
+    {
+        EasyLog.LogMessage(this, ">> onCheckedChangedEvent ");
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)

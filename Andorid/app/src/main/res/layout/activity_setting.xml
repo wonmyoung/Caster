@@ -48,6 +48,7 @@
                 android:layout_gravity="center_vertical"/>
 
             <ToggleButton
+                android:id="@+id/settingButton1"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp20"
                 android:layout_gravity="center_vertical|right"/>
@@ -67,6 +68,7 @@
                 android:layout_gravity="center_vertical"/>
 
             <ToggleButton
+                android:id="@+id/settingButton2"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp20"
                 android:layout_gravity="center_vertical|right"/>
@@ -86,6 +88,7 @@
                 android:layout_gravity="center_vertical"/>
 
             <ToggleButton
+                android:id="@+id/settingButton3"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp20"
                 android:layout_gravity="center_vertical|right"/>
@@ -105,6 +108,7 @@
                 android:layout_gravity="center_vertical"/>
 
             <ToggleButton
+                android:id="@+id/settingButton4"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp20"
                 android:layout_gravity="center_vertical|right"/>
@@ -121,6 +125,7 @@
             android:layout_marginBottom="@dimen/dp10"/>
 
         <TextView
+            android:id="@+id/informationView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="이용안내"
@@ -129,6 +134,7 @@
             android:layout_gravity="center_vertical"/>
 
         <TextView
+            android:id="@+id/informationView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="고객문의"

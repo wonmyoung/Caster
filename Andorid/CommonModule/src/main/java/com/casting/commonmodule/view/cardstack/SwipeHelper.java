@@ -23,9 +23,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
+import com.casting.commonmodule.utility.UtilityUI;
+import com.nineoldandroids.view.ViewHelper;
+
 public class SwipeHelper implements View.OnTouchListener {
 
     private final SwipeStack mSwipeStack;
+
     private View mObservedView;
 
     private boolean mListenForTouchEvents;
@@ -155,7 +159,8 @@ public class SwipeHelper implements View.OnTouchListener {
                     .setDuration(duration)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
-                        public void onAnimationEnd(Animator animation) {
+                        public void onAnimationEnd(Animator animation)
+                        {
                             mSwipeStack.onViewSwipedToLeft();
                         }
                     });
@@ -214,12 +219,57 @@ public class SwipeHelper implements View.OnTouchListener {
         mOpacityEnd = alpha;
     }
 
-    public void swipeViewToLeft() {
+    public void swipeViewToLeft()
+    {
         swipeViewToLeft(mAnimationDuration);
     }
 
-    public void swipeViewToRight() {
+    public void swipeViewToRight()
+    {
         swipeViewToRight(mAnimationDuration);
+    }
+
+    public void rollBack()
+    {
+        if (!isDoubleEffect())
+        {
+            if (!mListenForTouchEvents) return;
+
+            mListenForTouchEvents = false;
+
+//            mObservedView.animate().cancel();
+//            mObservedView.animate()
+//                    .x(mSwipeStack.getWidth() + mObservedView.getX())
+//                    .rotation(mRotateDegrees)
+//                    .alpha(0f)
+//                    .setDuration(mAnimationDuration)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            mSwipeStack.onViewSwipedToRight();
+//                        }
+//                    });
+
+            final View v = mSwipeStack.getRemovedViewStack().pop();
+
+            v.animate().cancel();
+            v.animate().x(0).y(0).rotation(0)
+                    .alpha(1.0f)
+                    .setDuration(mAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+
+                            mObservedView = v;
+                        }
+                    });
+        }
+        else
+        {
+            resetViewPosition();
+        }
     }
 
     private static boolean isDoubleEffect() {

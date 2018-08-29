@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.casting.R;
+import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonFragment;
 import com.casting.component.activity.CastChartActivity;
 import com.casting.component.activity.ProfileActivity;
@@ -19,6 +21,11 @@ import java.util.Observer;
 
 public class MainLeftSideMenu extends CommonFragment implements Observer {
 
+    private CircleImageView mProfileUserPic;
+    private TextView        mProfileUserGrade;
+    private TextView        mProfileUserName;
+    private TextView        mProfileUserId;
+
     public MainLeftSideMenu()
     {
         super(R.layout.left_menu);
@@ -30,6 +37,12 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
         find(R.id.leftMenuButton1).setOnClickListener(this);
         find(R.id.leftMenuButton2).setOnClickListener(this);
         find(R.id.leftMenuButton3).setOnClickListener(this);
+
+        mProfileUserPic = find(R.id.userImage);
+        mProfileUserGrade = find(R.id.userGrade);
+        mProfileUserName = find(R.id.userNickName);
+        mProfileUserId = find(R.id.userIdView);
+
     }
 
     @Override
