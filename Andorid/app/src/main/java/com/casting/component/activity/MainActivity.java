@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -215,12 +216,7 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
     {
-        if (fromUser)
-        {
-            int cardCount = (mSwipeStackAdapter.getCount() - 1);
-            int selectedCard = (cardCount * progress) / 100;
-            EasyLog.LogMessage("confirm" , "selectedCard = ", Integer.toString(selectedCard));
-        }
+
     }
 
     @Override
@@ -232,7 +228,24 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar)
     {
+        int progress = seekBar.getProgress();
 
+        int cardCount = (mSwipeStackAdapter.getCount() - 1);
+        final int selectedCard = (cardCount * progress) / 100;
+
+        int currentPosition = mSwipeStack.getCurrentPosition();
+        if (currentPosition < selectedCard)
+        {
+            int swipeCount = (selectedCard - currentPosition);
+
+            mSwipeStack.swipeTopView(swipeCount);
+        }
+        else
+        {
+            int rollbackCount = (currentPosition - selectedCard);
+
+            mSwipeStack.rollBack(rollbackCount);
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -31,8 +32,10 @@ import android.widget.FrameLayout;
 
 import com.casting.commonmodule.R;
 
+import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SwipeStack extends ViewGroup
 {
@@ -76,6 +79,10 @@ public class SwipeStack extends ViewGroup
     private SwipeStackTopListner mSwipeStackTopListner;
 
     private Stack<View> mRemovedViewStack = new Stack<>();
+
+    private Queue<Runnable> mSwipeRunnableQueue = new LinkedBlockingQueue<>();
+
+    private Queue<Runnable> mRollBackRunnableQueue = new LinkedBlockingQueue<>();
 
     private boolean mUserSwipeProgress;
 
@@ -185,6 +192,8 @@ public class SwipeStack extends ViewGroup
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
+        Log.d("confirm", ">> confirm onLayout ");
+
         if (mAdapter == null || mAdapter.isEmpty())
         {
             mCurrentViewIndex = 0;
@@ -210,6 +219,10 @@ public class SwipeStack extends ViewGroup
         }
 
         mIsFirstLayout = false;
+
+        if (mSwipeRunnableQueue.peek() != null) {
+            mSwipeRunnableQueue.poll().run();
+        }
     }
 
     private void addNextView()
@@ -262,6 +275,8 @@ public class SwipeStack extends ViewGroup
 
     private void reorderItems()
     {
+        Log.d("confirm", ">> confirm reorderItems ");
+
         for (int i = 0; i < getChildCount(); i++)
         {
             View childView = getChildAt(i);
@@ -380,25 +395,32 @@ public class SwipeStack extends ViewGroup
 
     public void onViewSwipedToLeft()
     {
+        removeTopView();
+
         if (mListener != null) {
             mListener.onViewSwipedToLeft(getCurrentPosition());
         }
+    }
 
-        removeTopView();
+    public void onViewRollBack()
+    {
+        mCurrentViewIndex -= 1;
+
+        removeViewAt(0);
+
+        if (mRollBackRunnableQueue.peek() != null)
+        {
+            mRollBackRunnableQueue.poll().run();
+        }
     }
 
     public void onViewSwipedToRight()
     {
+        removeTopView();
+
         if (mListener != null) {
             mListener.onViewSwipedToRight(getCurrentPosition());
         }
-
-        removeTopView();
-    }
-
-    public void onViewRollBack(View v)
-    {
-        
     }
 
     /**
@@ -547,12 +569,38 @@ public class SwipeStack extends ViewGroup
         }
     }
 
-    public void rollBack()
+    public void swipeTopView(int swipeCount)
     {
-        if (getChildCount() > 0)
+        for (int i = 0 ; i < swipeCount ; i++)
         {
-            mSwipeHelper.rollBack();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run()
+                {
+                    mSwipeHelper.swipeView();
+                }
+            };
+            mSwipeRunnableQueue.add(runnable);
         }
+
+        mSwipeRunnableQueue.poll().run();
+    }
+
+    public void rollBack(int rollbackCount)
+    {
+        for (int i = 0 ; i < rollbackCount ; i++)
+        {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run()
+                {
+                    mSwipeHelper.rollBack();
+                }
+            };
+            mRollBackRunnableQueue.add(runnable);
+        }
+
+        mRollBackRunnableQueue.poll().run();
     }
 
     /**
