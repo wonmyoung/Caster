@@ -3,6 +3,7 @@ package com.casting.component.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
@@ -20,6 +22,8 @@ import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.cardstack.SwipeStack;
 import com.casting.commonmodule.view.cardstack.SwipeStackAdapter;
+import com.casting.commonmodule.view.cardstack.SwipeStackController;
+import com.casting.commonmodule.view.cardstack.SwipeStackListener;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.menudrawer.MenuDrawer;
@@ -33,10 +37,11 @@ import com.casting.model.request.RequestCastList;
 import com.casting.view.CustomTabLayout;
 
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MainActivity extends BaseFCActivity implements
-        MenuDrawer.OnDrawerStateChangeListener, SeekBar.OnSeekBarChangeListener, TabLayout.OnTabSelectedListener, IResponseListener
-{
+        MenuDrawer.OnDrawerStateChangeListener, SeekBar.OnSeekBarChangeListener, TabLayout.OnTabSelectedListener, IResponseListener, SwipeStackListener {
 
     private class BothMenuDrawer
     {
@@ -93,10 +98,13 @@ public class MainActivity extends BaseFCActivity implements
             Context c = getBaseContext();
 
             ImageView imageView = viewHolder.find(R.id.castCardBack);
-
+            UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_main_color_round10);
             int radius = (int) c.getResources().getDimension(R.dimen.dp25);
 
-            ImageLoader.loadRoundImage(c, imageView, item.getThumbnails()[0], radius);
+            // ImageLoader.loadRoundImage(c, imageView, item.getThumbnails()[0], radius);
+
+            TextView textView = viewHolder.find(R.id.castCardTitle);
+            textView.setText(item.getTitle());
         }
     }
 
@@ -110,6 +118,10 @@ public class MainActivity extends BaseFCActivity implements
     private SwipeStack  mSwipeStack;
     private SeekBar     mMainSeekBar;
     private MainCardSwipeAdapter mSwipeStackAdapter;
+
+    private int topPosition = 0;
+
+    private Queue<Runnable> mSwipeExecutionQueue = new LinkedBlockingQueue<>();
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
@@ -140,6 +152,7 @@ public class MainActivity extends BaseFCActivity implements
         mSwipeStackAdapter = new MainCardSwipeAdapter();
         mSwipeStack = find(R.id.main_SwipeCardStack);
         mSwipeStack.setAdapter(mSwipeStackAdapter);
+        mSwipeStack.addStackListener(this);
 
         mMainSeekBar = find(R.id.main_seekBarController);
         mMainSeekBar.setOnSeekBarChangeListener(this);
@@ -228,6 +241,8 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar)
     {
+        SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
+
         int progress = seekBar.getProgress();
 
         int cardCount = (mSwipeStackAdapter.getCount() - 1);
@@ -238,13 +253,13 @@ public class MainActivity extends BaseFCActivity implements
         {
             int swipeCount = (selectedCard - currentPosition);
 
-            mSwipeStack.swipeTopView(swipeCount);
+            swipeCardStack(swipeCount);
         }
         else
         {
-            int rollbackCount = (currentPosition - selectedCard);
+            int rollBackCount = (currentPosition - selectedCard);
 
-            mSwipeStack.rollBack(rollbackCount);
+            rollBackCardStack(rollBackCount);
         }
     }
 
@@ -283,6 +298,8 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onTabUnselected(TabLayout.Tab tab)
     {
+        mMainSeekBar.setProgress(0);
+
         mSwipeStack.resetStack();
     }
 
@@ -290,6 +307,77 @@ public class MainActivity extends BaseFCActivity implements
     public void onTabReselected(TabLayout.Tab tab)
     {
 
+    }
+
+    @Override
+    public void onViewSwipedToLeft(int position)
+    {
+
+    }
+
+    @Override
+    public void onViewSwipedToRight(int position) {
+
+    }
+
+    @Override
+    public void onStackEmpty() {
+
+    }
+
+    @Override
+    public void onStackTopVisible(int position)
+    {
+        if (mSwipeExecutionQueue.peek() != null)
+        {
+            topPosition = position;
+
+            mSwipeExecutionQueue.poll().run();
+        }
+    }
+
+    private void swipeCardStack(int swipeCount)
+    {
+        if (swipeCount > 0)
+        {
+            for (int i = 0 ; i < swipeCount ; i++)
+            {
+                Runnable runnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
+                        swipeStackController.swipeView();
+                    }
+                };
+                mSwipeExecutionQueue.add(runnable);
+            }
+
+            mSwipeExecutionQueue.poll().run();
+        }
+    }
+
+    private void rollBackCardStack(int rollbackCount)
+    {
+        if (rollbackCount > 0)
+        {
+            for (int i = 0 ; i < 1 ; i++)
+            {
+                Runnable runnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
+                        swipeStackController.rollBack();
+                    }
+                };
+                mSwipeExecutionQueue.add(runnable);
+            }
+
+            mSwipeExecutionQueue.poll().run();
+        }
     }
 
     private void loadDummyCastList(ArrayList<Cast> list)
@@ -303,7 +391,7 @@ public class MainActivity extends BaseFCActivity implements
             Cast cast = new Cast();
             cast.setRemainingTime(60 * 60 * 1000);
             cast.setRewardCash(20000);
-            cast.setTitle("비트코인의 7월 25일 지정가격은 얼마일까요 ?");
+            cast.setTitle(" 더미데이터 더미데이터 번호 = [" + i + "]");
             cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
             cast.setThumbnails(
                     "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");

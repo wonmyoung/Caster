@@ -18,46 +18,48 @@ package com.casting.commonmodule.view.cardstack;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.database.DataSetObserver;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.OvershootInterpolator;
 
-import com.casting.commonmodule.utility.UtilityUI;
-import com.nineoldandroids.view.ViewHelper;
-
-public class SwipeHelper implements View.OnTouchListener {
+public class SwipeStackController extends DataSetObserver implements View.OnTouchListener {
 
     private final SwipeStack mSwipeStack;
 
     private View mObservedView;
 
     private boolean mListenForTouchEvents;
+
     private float mDownX;
     private float mDownY;
     private float mInitialX;
     private float mInitialY;
-    private int mPointerId;
-
     private float mRotateDegrees = SwipeStack.DEFAULT_SWIPE_ROTATION;
     private float mOpacityEnd = SwipeStack.DEFAULT_SWIPE_OPACITY;
+
+    private int mPointerId;
     private int mAnimationDuration = SwipeStack.DEFAULT_ANIMATION_DURATION;
 
     private static long m_lLastClickTime = 0;
 
-    public SwipeHelper(SwipeStack swipeStack) {
+    public SwipeStackController(SwipeStack swipeStack)
+    {
         mSwipeStack = swipeStack;
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent event)
+    {
 
-        try {
-            switch (event.getAction()) {
+        try
+        {
+            switch (event.getAction())
+            {
                 case MotionEvent.ACTION_DOWN:
-                    if(!mListenForTouchEvents || !mSwipeStack.isEnabled()) {
+                    if (!mListenForTouchEvents || !mSwipeStack.isEnabled())
+                    {
                         return false;
                     }
 
@@ -70,6 +72,7 @@ public class SwipeHelper implements View.OnTouchListener {
                     return true;
 
                 case MotionEvent.ACTION_MOVE:
+
                     int pointerIndex = event.findPointerIndex(mPointerId);
                     if (pointerIndex < 0) return false;
 
@@ -83,78 +86,99 @@ public class SwipeHelper implements View.OnTouchListener {
                     mObservedView.setY(newY);
 
                     float dragDistanceX = newX - mInitialX;
-                    float swipeProgress = Math.min(Math.max(
-                            dragDistanceX / mSwipeStack.getWidth(), -1), 1);
+                    float swipeProgress = Math.min(Math.max(dragDistanceX / mSwipeStack.getWidth(), -1), 1);
 
                     mSwipeStack.onSwipeProgress(swipeProgress);
 
-                    if (mRotateDegrees > 0) {
+                    if (mRotateDegrees > 0)
+                    {
                         float rotation = mRotateDegrees * swipeProgress;
                         mObservedView.setRotation(rotation);
                     }
 
-                    if (mOpacityEnd < 1f) {
+                    if (mOpacityEnd < 1f)
+                    {
                         float alpha = 1 - Math.min(Math.abs(swipeProgress * 2), 1);
                         mObservedView.setAlpha(alpha);
                     }
-
                     return true;
 
                 case MotionEvent.ACTION_UP:
-                    v.getParent().requestDisallowInterceptTouchEvent(false);
-                    mSwipeStack.onSwipeEnd();
-                    checkViewPosition();
 
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+
+                    mSwipeStack.onSwipeEnd();
+
+                    checkViewPosition();
                     return true;
 
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
 
         return false;
     }
 
-    private void checkViewPosition() {
-        if(!mSwipeStack.isEnabled()) {
-            resetViewPosition();
-            return;
-        }
+    @Override
+    public void onChanged()
+    {
+        super.onChanged();
 
-        float viewCenterHorizontal = mObservedView.getX() + (mObservedView.getWidth() / 2);
-        float parentFirstThird = mSwipeStack.getWidth() / 3f;
-        float parentLastThird = parentFirstThird * 2;
-
-        if (viewCenterHorizontal < parentFirstThird &&
-                mSwipeStack.getAllowedSwipeDirections() != SwipeStack.SWIPE_DIRECTION_ONLY_RIGHT) {
-            mListenForTouchEvents = true;
-            swipeViewToLeft(mAnimationDuration / 2);
-        } else if (viewCenterHorizontal > parentLastThird &&
-                mSwipeStack.getAllowedSwipeDirections() != SwipeStack.SWIPE_DIRECTION_ONLY_LEFT) {
-            mListenForTouchEvents = true;
-            swipeViewToRight(mAnimationDuration / 2);
-        } else {
-            resetViewPosition();
+        if (mSwipeStack != null)
+        {
+            mSwipeStack.requestLayout();
         }
     }
 
-    private void resetViewPosition() {
+    public void setAnimationDuration(int duration) {
+        mAnimationDuration = duration;
+    }
+
+    public void setRotation(float rotation) {
+        mRotateDegrees = rotation;
+    }
+
+    public void setOpacityEnd(float alpha) {
+        mOpacityEnd = alpha;
+    }
+
+    public void swipeView()
+    {
+        mObservedView.animate().cancel();
         mObservedView.animate()
-                .x(mInitialX)
-                .y(mInitialY)
-                .rotation(0)
-                .alpha(1)
+                .x(-mSwipeStack.getWidth() + mObservedView.getX())
+                .rotation(-mRotateDegrees)
+                .alpha(0f)
                 .setDuration(mAnimationDuration)
-                .setInterpolator(new OvershootInterpolator(1.4f))
-                .setListener(null);
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        mSwipeStack.onViewSwipedToLeft();
+                    }
+                });
     }
 
-    private void swipeViewToLeft(int duration) {
+    public void swipeViewToLeft()
+    {
+        int childCount = (mSwipeStack == null ? 0 : mSwipeStack.getChildCount());
+        if (childCount > 0)
+        {
+            swipeViewToLeft(mAnimationDuration);
+        }
+    }
+
+    private void swipeViewToLeft(int duration)
+    {
         if (!isDoubleEffect())
         {
             if (!mListenForTouchEvents) return;
 
             mListenForTouchEvents = false;
+
             mObservedView.animate().cancel();
             mObservedView.animate()
                     .x(-mSwipeStack.getWidth() + mObservedView.getX())
@@ -171,11 +195,21 @@ public class SwipeHelper implements View.OnTouchListener {
         }
         else
         {
-            resetViewPosition();
+            rollbackCurrentViewPosition();
         }
     }
 
-    private void swipeViewToRight(int duration) {
+    public void swipeViewToRight()
+    {
+        int childCount = (mSwipeStack == null ? 0 : mSwipeStack.getChildCount());
+        if (childCount > 0)
+        {
+            swipeViewToRight(mAnimationDuration);
+        }
+    }
+
+    private void swipeViewToRight(int duration)
+    {
         if (!isDoubleEffect())
         {
             if (!mListenForTouchEvents) return;
@@ -187,16 +221,18 @@ public class SwipeHelper implements View.OnTouchListener {
                     .rotation(mRotateDegrees)
                     .alpha(0f)
                     .setDuration(duration)
-                    .setListener(new AnimatorListenerAdapter() {
+                    .setListener(new AnimatorListenerAdapter()
+                    {
                         @Override
-                        public void onAnimationEnd(Animator animation) {
+                        public void onAnimationEnd(Animator animation)
+                        {
                             mSwipeStack.onViewSwipedToRight();
                         }
                     });
         }
         else
         {
-            resetViewPosition();
+            rollbackCurrentViewPosition();
         }
     }
 
@@ -223,74 +259,76 @@ public class SwipeHelper implements View.OnTouchListener {
         mListenForTouchEvents = false;
     }
 
-    public void setAnimationDuration(int duration) {
-        mAnimationDuration = duration;
-    }
-
-    public void setRotation(float rotation) {
-        mRotateDegrees = rotation;
-    }
-
-    public void setOpacityEnd(float alpha) {
-        mOpacityEnd = alpha;
-    }
-
-    public void swipeViewToLeft()
-    {
-        swipeViewToLeft(mAnimationDuration);
-    }
-
-    public void swipeViewToRight()
-    {
-        swipeViewToRight(mAnimationDuration);
-    }
-
-    private boolean bAnimationRunning = false;
-
-    public void swipeView()
-    {
-        Log.d("confirm", ">> confirm swipeView ");
-        Log.d("confirm", ">> confirm rollBack mObservedView getX ? " +ViewHelper.getX(mObservedView));
-
-        mObservedView.animate()
-                .x(-mSwipeStack.getWidth() + mObservedView.getX())
-                .rotation(-mRotateDegrees)
-                .alpha(0f)
-                .setDuration(mAnimationDuration)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        mSwipeStack.onViewSwipedToLeft();
-                    }
-                });
-    }
-
     public void rollBack()
     {
-        final View v = mSwipeStack.getRemovedViewStack().pop();
+        if (!mSwipeStack.getRemovedViewStack().isEmpty())
+        {
+            final View v = mSwipeStack.getRemovedViewStack().pop();
 
-        int top = mSwipeStack.getChildCount();
+            int top = mSwipeStack.getChildCount();
 
-        mSwipeStack.addView(v, top);
+            mSwipeStack.addView(v, top);
 
-        v.animate().x(0).rotation(0)
-                .alpha(1.0f)
-                .setDuration(mAnimationDuration)
-                .setListener(new AnimatorListenerAdapter()
-                {
+            v.animate().x(0).rotation(0).alpha(1.0f)
+                    .setDuration(mAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter()
+                    {
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
 
-                        mSwipeStack.onViewRollBack();
-                    }
-                });
+                            mSwipeStack.onViewRollBack();
+                        }
+                    });
+        }
+
     }
 
-    private static boolean isDoubleEffect() {
-        if (SystemClock.elapsedRealtime() - m_lLastClickTime <= 100) {
+    private void rollbackCurrentViewPosition()
+    {
+        mObservedView.animate().x(mInitialX).y(mInitialY).rotation(0).alpha(1)
+                .setDuration(mAnimationDuration)
+                .setInterpolator(new OvershootInterpolator(1.4f))
+                .setListener(null);
+    }
+
+    private void checkViewPosition()
+    {
+        if (!mSwipeStack.isEnabled())
+        {
+            rollbackCurrentViewPosition();
+            return;
+        }
+
+        float viewCenterHorizontal = mObservedView.getX() + (mObservedView.getWidth() / 2);
+        float parentFirstThird = mSwipeStack.getWidth() / 3f;
+        float parentLastThird = parentFirstThird * 2;
+
+        if (viewCenterHorizontal < parentFirstThird &&
+                mSwipeStack.getAllowedSwipeDirections() != SwipeStack.SWIPE_DIRECTION_ONLY_RIGHT)
+        {
+            mListenForTouchEvents = true;
+
+            swipeViewToLeft(mAnimationDuration / 2);
+        }
+        else if (viewCenterHorizontal > parentLastThird &&
+                mSwipeStack.getAllowedSwipeDirections() != SwipeStack.SWIPE_DIRECTION_ONLY_LEFT)
+        {
+            mListenForTouchEvents = true;
+
+            swipeViewToRight(mAnimationDuration / 2);
+        }
+        else
+        {
+            rollbackCurrentViewPosition();
+        }
+    }
+
+    private static boolean isDoubleEffect()
+    {
+        if (SystemClock.elapsedRealtime() - m_lLastClickTime <= 100)
+        {
             return true;
         }
         m_lLastClickTime = SystemClock.elapsedRealtime();

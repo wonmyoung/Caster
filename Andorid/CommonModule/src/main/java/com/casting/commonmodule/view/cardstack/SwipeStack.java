@@ -32,14 +32,12 @@ import android.widget.FrameLayout;
 
 import com.casting.commonmodule.R;
 
-import java.util.Queue;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class SwipeStack extends ViewGroup
 {
-
     public static final int SWIPE_DIRECTION_BOTH = 0;
     public static final int SWIPE_DIRECTION_ONLY_LEFT = 1;
     public static final int SWIPE_DIRECTION_ONLY_RIGHT = 2;
@@ -47,16 +45,18 @@ public class SwipeStack extends ViewGroup
     public static final int DEFAULT_ANIMATION_DURATION = 300;
     public static final int DEFAULT_STACK_SIZE = 3;
     public static final int DEFAULT_STACK_ROTATION = 8;
+
     public static final float DEFAULT_SWIPE_ROTATION = 30f;
     public static final float DEFAULT_SWIPE_OPACITY = 1f;
     public static final float DEFAULT_SCALE_FACTOR = 1f;
+
     public static final boolean DEFAULT_DISABLE_HW_ACCELERATION = true;
 
-    private static final String KEY_SUPER_STATE = "superState";
-    private static final String KEY_CURRENT_INDEX = "currentIndex";
+    private static final String KEY_SUPER_STATE     = "superState";
+    private static final String KEY_CURRENT_INDEX   = "currentIndex";
 
     private Adapter mAdapter;
-    private Random mRandom;
+    private Random  mRandom;
 
     private int mAllowedSwipeDirections;
     private int mAnimationDuration;
@@ -64,27 +64,22 @@ public class SwipeStack extends ViewGroup
     private int mNumberOfStackedViews;
     private int mViewSpacing;
     private int mViewRotation;
+
     private float mSwipeRotation;
     private float mSwipeOpacity;
     private float mScaleFactor;
+
     private boolean mDisableHwAcceleration;
     private boolean mIsFirstLayout = true;
-    private boolean mReOrderAnimApply = true;
 
     private View mTopView;
-    private SwipeHelper mSwipeHelper;
-    private DataSetObserver mDataObserver;
-    private SwipeStackListener mListener;
-    private SwipeProgressListener mProgressListener;
-    private SwipeStackTopListner mSwipeStackTopListner;
+
+    private SwipeStackController    mSwipeStackController;
+
+    private LinkedList<SwipeStackListener>      mStackListenerList;
+    private LinkedList<SwipeProgressListener>   mProgressListenerList;
 
     private Stack<View> mRemovedViewStack = new Stack<>();
-
-    private Queue<Runnable> mSwipeRunnableQueue = new LinkedBlockingQueue<>();
-
-    private Queue<Runnable> mRollBackRunnableQueue = new LinkedBlockingQueue<>();
-
-    private boolean mUserSwipeProgress;
 
     public SwipeStack(Context context)
     {
@@ -95,20 +90,17 @@ public class SwipeStack extends ViewGroup
     {
         this(context, attrs, 0);
 
-        readAttributes(attrs);
-
-        initialize();
+        init(context, attrs);
     }
 
     public SwipeStack(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
-        readAttributes(attrs);
 
-        initialize();
+        init(context, attrs);
     }
 
-    private void readAttributes(AttributeSet attributeSet)
+    private void init(Context c, AttributeSet attributeSet)
     {
         TypedArray attrs = getContext().obtainStyledAttributes(attributeSet, R.styleable.SwipeStack);
 
@@ -140,32 +132,16 @@ public class SwipeStack extends ViewGroup
         {
             attrs.recycle();
         }
-    }
 
-    private void initialize()
-    {
         mRandom = new Random();
 
         setClipToPadding(false);
         setClipChildren(false);
-        setUserSwipeProgress(false);
 
-        mSwipeHelper = new SwipeHelper(this);
-        mSwipeHelper.setAnimationDuration(mAnimationDuration);
-        mSwipeHelper.setRotation(mSwipeRotation);
-        mSwipeHelper.setOpacityEnd(mSwipeOpacity);
-
-        mDataObserver = new DataSetObserver()
-        {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-
-                invalidate();
-
-                requestLayout();
-            }
-        };
+        mSwipeStackController = new SwipeStackController(this);
+        mSwipeStackController.setAnimationDuration(mAnimationDuration);
+        mSwipeStackController.setRotation(mSwipeRotation);
+        mSwipeStackController.setOpacityEnd(mSwipeOpacity);
     }
 
     @Override
@@ -180,9 +156,11 @@ public class SwipeStack extends ViewGroup
     @Override
     public void onRestoreInstanceState(Parcelable state)
     {
-        if (state instanceof Bundle) {
+        if (state instanceof Bundle)
+        {
             Bundle bundle = (Bundle) state;
             mCurrentViewIndex = bundle.getInt(KEY_CURRENT_INDEX);
+
             state = bundle.getParcelable(KEY_SUPER_STATE);
         }
 
@@ -190,61 +168,343 @@ public class SwipeStack extends ViewGroup
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    protected void onLayout(boolean changed, int l, int t, int r, int b)
+    {
+        Log.d("confirm" , ">> confirm onLayout ");
 
-        Log.d("confirm", ">> confirm onLayout ");
+        if (mAdapter != null && !mAdapter.isEmpty())
+        {
+            int itemCount = mAdapter.getCount();
+            int visibleViewCount = getChildCount();
 
-        if (mAdapter == null || mAdapter.isEmpty())
+            Log.d("confirm" , ">> confirm onLayout visibleViewCount = " + visibleViewCount);
+            Log.d("confirm" , ">> confirm onLayout mNumberOfStackedViews = " + mNumberOfStackedViews);
+            Log.d("confirm" , ">> confirm onLayout mCurrentViewIndex = " + mCurrentViewIndex);
+
+            if (visibleViewCount < mNumberOfStackedViews)
+            {
+                for (int x = visibleViewCount; x < mNumberOfStackedViews && mCurrentViewIndex < itemCount; x++)
+                {
+                    addNextView();
+                }
+            }
+
+            reorderItems();
+
+            if (mAdapter.getCount() > 0)
+            {
+                int currentPosition = getCurrentPosition();
+
+                notifyStackPop(currentPosition);
+            }
+            else
+            {
+                notifyStackEmpty();
+            }
+
+            mIsFirstLayout = false;
+        }
+        else
         {
             mCurrentViewIndex = 0;
 
             removeAllViewsInLayout();
-            return;
         }
+    }
 
-        for (int x = getChildCount(); x < mNumberOfStackedViews && mCurrentViewIndex < mAdapter.getCount(); x++)
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(width, height);
+    }
+
+    public void onSwipeStart()
+    {
+        int currentPosition = getCurrentPosition();
+
+        notifySwipeStart(currentPosition);
+    }
+
+    public void onSwipeProgress(float progress)
+    {
+        int currentPosition = getCurrentPosition();
+
+        notifySwipeProgress(currentPosition, progress);
+    }
+
+    public void onSwipeEnd()
+    {
+        notifySwipeEnd(getCurrentPosition());
+    }
+
+    public void onViewSwipedToLeft()
+    {
+        removeTopView();
+
+        notifyStackSwipedLeft(getCurrentPosition());
+    }
+
+    public void onViewSwipedToRight()
+    {
+        removeTopView();
+
+        notifyStackSwipedRight(getCurrentPosition());
+    }
+
+    public void onViewRollBack()
+    {
+        if (getChildCount() > 0)
         {
-            addNextView();
-        }
-
-        reorderItems();
-
-        if (mSwipeStackTopListner != null && mAdapter.getCount() > 0)
-        {
-            int currentPosition = getCurrentPosition();
-            if (currentPosition == 0 && mIsFirstLayout)
+            int itemCount = mAdapter.getCount();
+            int visibleViewCount = getChildCount();
+            if (visibleViewCount > mNumberOfStackedViews &&
+               (visibleViewCount - mNumberOfStackedViews) == 1)
             {
-                mSwipeStackTopListner.onStackTopVisible(0);
+                removeViewAt(0);
+                Log.d("confirm" , ">> confirm onViewRollBack itemCount = " + itemCount);
+                Log.d("confirm" , ">> confirm onViewRollBack visibleViewCount = " + visibleViewCount);
+                Log.d("confirm" , ">> confirm onViewRollBack mNumberOfStackedViews = " + mNumberOfStackedViews);
+                Log.d("confirm" , ">> confirm onViewRollBack mCurrentViewIndex = " + mCurrentViewIndex);
+
+                notifyStackPop(getCurrentPosition());
             }
         }
+    }
 
-        mIsFirstLayout = false;
+    /**
+     * Returns the current adapter position.
+     *
+     * @return The current position.
+     */
+    public int getCurrentPosition()
+    {
+        return mCurrentViewIndex - getChildCount();
+    }
 
-        if (mSwipeRunnableQueue.peek() != null) {
-            mSwipeRunnableQueue.poll().run();
+    /**
+     * Returns the adapter currently in use in this SwipeStack.
+     *
+     * @return The adapter currently used to display data in this SwipeStack.
+     */
+    public Adapter getAdapter()
+    {
+        return mAdapter;
+    }
+
+    /**
+     * Sets the data behind this SwipeView.
+     *
+     * @param adapter The Adapter which is responsible for maintaining the
+     *                data backing this list and for producing a view to represent an
+     *                item in that data set.
+     * @see #getAdapter()
+     */
+    public void setAdapter(Adapter adapter)
+    {
+        if (mAdapter != null) {
+            mAdapter.unregisterDataSetObserver(mSwipeStackController);
         }
+
+        mAdapter = adapter;
+        mAdapter.registerDataSetObserver(mSwipeStackController);
+    }
+
+    /**
+     * Returns the allowed swipe directions.
+     *
+     * @return The currently allowed swipe directions.
+     */
+    public int getAllowedSwipeDirections() {
+        return mAllowedSwipeDirections;
+    }
+
+    /**
+     * Sets the allowed swipe directions.
+     *
+     * @param directions One of {@link #SWIPE_DIRECTION_BOTH},
+     *                   {@link #SWIPE_DIRECTION_ONLY_LEFT}, or {@link #SWIPE_DIRECTION_ONLY_RIGHT}.
+     */
+    public void setAllowedSwipeDirections(int directions) {
+        mAllowedSwipeDirections = directions;
+    }
+
+    /**
+     * Register a callback to be invoked when the user has swiped the top view
+     * left / right or when the stack gets empty.
+     *
+     * @param listener The callback that will run
+     */
+    public void addStackListener(@Nullable SwipeStackListener listener)
+    {
+        if (mStackListenerList == null) {
+            mStackListenerList = new LinkedList<>();
+        }
+
+        mStackListenerList.add(listener);
+    }
+
+    public void removeStackListener(SwipeStackListener listener)
+    {
+        if (mStackListenerList != null) {
+            mStackListenerList.remove(listener);
+        }
+    }
+
+    /**
+     * Register a callback to be invoked when the user starts / stops interacting
+     * with the top view of the stack.
+     *
+     * @param listener The callback that will run
+     */
+    public void addSwipeProgressListener(@Nullable SwipeProgressListener listener)
+    {
+        if (mProgressListenerList == null) {
+            mProgressListenerList = new LinkedList<>();
+        }
+
+        mProgressListenerList.add(listener);
+    }
+
+    public void removeSwipeProgressListener(@Nullable SwipeProgressListener listener)
+    {
+        if (mStackListenerList != null) {
+            mStackListenerList.remove(listener);
+        }
+    }
+
+    /**
+     * Get the view from the top of the stack.
+     *
+     * @return The view if the stack is not empty or null otherwise.
+     */
+    public View getTopView() {
+        return mTopView;
+    }
+
+    public Stack<View> getRemovedViewStack()
+    {
+        return mRemovedViewStack;
+    }
+
+    public int getViewRotation() {
+        return mViewRotation;
+    }
+
+    public void setViewRotation(int viewRotation) {
+        this.mViewRotation = viewRotation;
+        requestLayout();
+    }
+
+    public SwipeStackController getSwipeStackController()
+    {
+        return mSwipeStackController;
+    }
+
+    private void notifyStackPop(int position)
+    {
+        if (mStackListenerList != null)
+        {
+            for (SwipeStackListener swipeStackListener : mStackListenerList)
+            {
+                swipeStackListener.onStackTopVisible(position);
+            }
+        }
+    }
+
+    private void notifyStackSwipedLeft(int position)
+    {
+        if (mStackListenerList != null)
+        {
+            for (SwipeStackListener swipeStackListener : mStackListenerList)
+            {
+                swipeStackListener.onViewSwipedToLeft(position);
+            }
+        }
+    }
+
+    private void notifyStackSwipedRight(int position)
+    {
+        if (mStackListenerList != null)
+        {
+            for (SwipeStackListener swipeStackListener : mStackListenerList)
+            {
+                swipeStackListener.onViewSwipedToRight(position);
+            }
+        }
+    }
+
+    private void notifyStackEmpty()
+    {
+        if (mStackListenerList != null)
+        {
+            for (SwipeStackListener swipeStackListener : mStackListenerList)
+            {
+                swipeStackListener.onStackEmpty();
+            }
+        }
+    }
+
+    private void notifySwipeStart(int position)
+    {
+        if (mProgressListenerList != null)
+        {
+            for (SwipeProgressListener swipeProgressListener : mProgressListenerList)
+            {
+                swipeProgressListener.onSwipeStart(position);
+            }
+        }
+    }
+
+    private void notifySwipeProgress(int position, float progress)
+    {
+        if (mProgressListenerList != null)
+        {
+            for (SwipeProgressListener swipeProgressListener : mProgressListenerList)
+            {
+                swipeProgressListener.onSwipeProgress(position, progress);
+            }
+        }
+    }
+
+    private void notifySwipeEnd(int position)
+    {
+        if (mProgressListenerList != null)
+        {
+            for (SwipeProgressListener swipeProgressListener : mProgressListenerList)
+            {
+                swipeProgressListener.onSwipeEnd(position);
+            }
+        }
+    }
+
+    private void removeBottomView()
+    {
+
     }
 
     private void addNextView()
     {
         if (mCurrentViewIndex < mAdapter.getCount())
         {
-            View bottomView = mAdapter.getView(mCurrentViewIndex, null, this);
+            View view = mAdapter.getView(mCurrentViewIndex, null, this);
 
-            bottomView.setTag(R.id.new_view, true);
+            view.setTag(R.id.new_view, true);
 
-            if (!mDisableHwAcceleration) {
-                bottomView.setLayerType(LAYER_TYPE_HARDWARE, null);
+            if (!mDisableHwAcceleration)
+            {
+                view.setLayerType(LAYER_TYPE_HARDWARE, null);
             }
 
-            if (mViewRotation > 0) {
-                bottomView.setRotation(mRandom.nextInt(mViewRotation) - (mViewRotation / 2));
+            if (mViewRotation > 0)
+            {
+                view.setRotation(mRandom.nextInt(mViewRotation) - (mViewRotation / 2));
             }
 
             int width = getWidth() - (getPaddingLeft() + getPaddingRight());
             int height = getHeight() - (getPaddingTop() + getPaddingBottom());
 
-            LayoutParams params = bottomView.getLayoutParams();
+            LayoutParams params = view.getLayoutParams();
 
             if (params == null) {
                 params = new LayoutParams(
@@ -265,9 +525,9 @@ public class SwipeStack extends ViewGroup
                 measureSpecHeight = MeasureSpec.EXACTLY;
             }
 
-            bottomView.measure(measureSpecWidth | width, measureSpecHeight | height);
+            view.measure(measureSpecWidth | width, measureSpecHeight | height);
 
-            addViewInLayout(bottomView, 0, params, true);
+            addViewInLayout(view, 0, params, true);
 
             mCurrentViewIndex++;
         }
@@ -275,8 +535,6 @@ public class SwipeStack extends ViewGroup
 
     private void reorderItems()
     {
-        Log.d("confirm", ">> confirm reorderItems ");
-
         for (int i = 0; i < getChildCount(); i++)
         {
             View childView = getChildAt(i);
@@ -298,15 +556,16 @@ public class SwipeStack extends ViewGroup
             }
 
             boolean isNewView = (boolean) childView.getTag(R.id.new_view);
+
             float scaleFactor = (float) Math.pow(mScaleFactor, getChildCount() - i);
 
             if (i == topViewIndex)
             {
-                mSwipeHelper.unregisterObservedView();
+                mSwipeStackController.unregisterObservedView();
 
                 mTopView = childView;
 
-                mSwipeHelper.registerObservedView(mTopView, newPositionX, newPositionY);
+                mSwipeStackController.registerObservedView(mTopView, newPositionX, newPositionY);
             }
 
             if (!mIsFirstLayout)
@@ -346,261 +605,6 @@ public class SwipeStack extends ViewGroup
 
             removeView(mTopView);
         }
-
-        if (getChildCount() == 0)
-        {
-
-            if (mListener != null) {
-                mListener.onStackEmpty();
-            }
-
-            if (mSwipeStackTopListner != null) {
-                mSwipeStackTopListner.onStackEmpty();
-            }
-        }
-        else
-        {
-            if (mSwipeStackTopListner != null) {
-                mSwipeStackTopListner.onStackTopVisible(getCurrentPosition());
-            }
-        }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        setMeasuredDimension(width, height);
-    }
-
-    public void onSwipeStart()
-    {
-        setUserSwipeProgress(true);
-
-        if (mProgressListener != null) {
-            mProgressListener.onSwipeStart(getCurrentPosition());
-        }
-    }
-
-    public void onSwipeProgress(float progress) {
-//        if (mProgressListener != null)
-//            mProgressListener.onSwipeProgress(getCurrentPosition(), progress);
-    }
-
-    public void onSwipeEnd()
-    {
-        setUserSwipeProgress(false);
-//        if (mProgressListener != null) mProgressListener.onSwipeEnd(getCurrentPosition());
-    }
-
-    public void onViewSwipedToLeft()
-    {
-        removeTopView();
-
-        if (mListener != null) {
-            mListener.onViewSwipedToLeft(getCurrentPosition());
-        }
-    }
-
-    public void onViewRollBack()
-    {
-        mCurrentViewIndex -= 1;
-
-        removeViewAt(0);
-
-        if (mRollBackRunnableQueue.peek() != null)
-        {
-            mRollBackRunnableQueue.poll().run();
-        }
-    }
-
-    public void onViewSwipedToRight()
-    {
-        removeTopView();
-
-        if (mListener != null) {
-            mListener.onViewSwipedToRight(getCurrentPosition());
-        }
-    }
-
-    /**
-     * Returns the current adapter position.
-     *
-     * @return The current position.
-     */
-    public int getCurrentPosition()
-    {
-        return mCurrentViewIndex - getChildCount();
-    }
-
-    /**
-     * Returns the adapter currently in use in this SwipeStack.
-     *
-     * @return The adapter currently used to display data in this SwipeStack.
-     */
-    public Adapter getAdapter()
-    {
-        return mAdapter;
-    }
-
-    /**
-     * Sets the data behind this SwipeView.
-     *
-     * @param adapter The Adapter which is responsible for maintaining the
-     *                data backing this list and for producing a view to represent an
-     *                item in that data set.
-     * @see #getAdapter()
-     */
-    public void setAdapter(Adapter adapter)
-    {
-        if (mAdapter != null) {
-            mAdapter.unregisterDataSetObserver(mDataObserver);
-        }
-
-        mAdapter = adapter;
-        mAdapter.registerDataSetObserver(mDataObserver);
-    }
-
-    /**
-     * Returns the allowed swipe directions.
-     *
-     * @return The currently allowed swipe directions.
-     */
-    public int getAllowedSwipeDirections() {
-        return mAllowedSwipeDirections;
-    }
-
-    /**
-     * Sets the allowed swipe directions.
-     *
-     * @param directions One of {@link #SWIPE_DIRECTION_BOTH},
-     *                   {@link #SWIPE_DIRECTION_ONLY_LEFT}, or {@link #SWIPE_DIRECTION_ONLY_RIGHT}.
-     */
-    public void setAllowedSwipeDirections(int directions) {
-        mAllowedSwipeDirections = directions;
-    }
-
-    /**
-     * Register a callback to be invoked when the user has swiped the top view
-     * left / right or when the stack gets empty.
-     *
-     * @param listener The callback that will run
-     */
-    public void setListener(@Nullable SwipeStackListener listener) {
-        mListener = listener;
-    }
-
-    /**
-     * Register a callback to be invoked when the user starts / stops interacting
-     * with the top view of the stack.
-     *
-     * @param listener The callback that will run
-     */
-    public void setSwipeProgressListener(@Nullable SwipeProgressListener listener) {
-        mProgressListener = listener;
-    }
-
-    public SwipeStackTopListner getSwipeStackTopListner() {
-        return mSwipeStackTopListner;
-    }
-
-    public void setSwipeStackTopListner(SwipeStackTopListner swipeStackTopListner) {
-        this.mSwipeStackTopListner = swipeStackTopListner;
-    }
-
-    /**
-     * Get the view from the top of the stack.
-     *
-     * @return The view if the stack is not empty or null otherwise.
-     */
-    public View getTopView() {
-        return mTopView;
-    }
-
-    public Stack<View> getRemovedViewStack()
-    {
-        return mRemovedViewStack;
-    }
-
-    public int getViewRotation() {
-        return mViewRotation;
-    }
-
-    public void setViewRotation(int viewRotation) {
-        this.mViewRotation = viewRotation;
-        requestLayout();
-    }
-
-    public boolean isUserSwipeProgress() {
-        return mUserSwipeProgress;
-    }
-
-    public void setUserSwipeProgress(boolean userSwipeProgress) {
-        this.mUserSwipeProgress = userSwipeProgress;
-    }
-
-    public boolean iReOrderAnimApply() {
-        return mReOrderAnimApply;
-    }
-
-    public void setReOrderAnimApply(boolean reOrderAnimApply) {
-        this.mReOrderAnimApply = reOrderAnimApply;
-    }
-
-    /**
-     * Programmatically dismiss the top view to the right.
-     */
-    public void swipeTopViewToRight()
-    {
-        if (getChildCount() > 0)
-        {
-            mSwipeHelper.swipeViewToRight();
-        }
-    }
-
-    /**
-     * Programmatically dismiss the top view to the left.
-     */
-    public void swipeTopViewToLeft()
-    {
-        if (getChildCount() > 0)
-        {
-            mSwipeHelper.swipeViewToLeft();
-        }
-    }
-
-    public void swipeTopView(int swipeCount)
-    {
-        for (int i = 0 ; i < swipeCount ; i++)
-        {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run()
-                {
-                    mSwipeHelper.swipeView();
-                }
-            };
-            mSwipeRunnableQueue.add(runnable);
-        }
-
-        mSwipeRunnableQueue.poll().run();
-    }
-
-    public void rollBack(int rollbackCount)
-    {
-        for (int i = 0 ; i < rollbackCount ; i++)
-        {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run()
-                {
-                    mSwipeHelper.rollBack();
-                }
-            };
-            mRollBackRunnableQueue.add(runnable);
-        }
-
-        mRollBackRunnableQueue.poll().run();
     }
 
     /**
@@ -615,66 +619,5 @@ public class SwipeStack extends ViewGroup
         mIsFirstLayout = true;
 
         requestLayout();
-    }
-
-    public interface SwipeStackTopListner {
-
-        void onStackTopVisible(int position);
-
-        void onStackEmpty();
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when the top view was
-     * swiped to the left / right or when the stack gets empty.
-     */
-    public interface SwipeStackListener {
-        /**
-         * Called when a view has been dismissed to the left.
-         *
-         * @param position The position of the view in the adapter currently in use.
-         */
-        void onViewSwipedToLeft(int position);
-
-        /**
-         * Called when a view has been dismissed to the right.
-         *
-         * @param position The position of the view in the adapter currently in use.
-         */
-        void onViewSwipedToRight(int position);
-
-        /**
-         * Called when the last view has been dismissed.
-         */
-        void onStackEmpty();
-    }
-
-    /**
-     * Interface definition for a callback to be invoked when the user
-     * starts / stops interacting with the top view of the stack.
-     */
-    public interface SwipeProgressListener {
-        /**
-         * Called when the user starts interacting with the top view of the stack.
-         *
-         * @param position The position of the view in the currently set adapter.
-         */
-        void onSwipeStart(int position);
-
-//        /**
-//         * Called when the user is dragging the top view of the stack.
-//         *
-//         * @param position The position of the view in the currently set adapter.
-//         * @param progress Represents the horizontal dragging position in relation to
-//         *                 the start position of the drag.
-//         */
-//        void onSwipeProgress(int position, float progress);
-//
-//        /**
-//         * Called when the user has stopped interacting with the top view of the stack.
-//         *
-//         * @param position The position of the view in the currently set adapter.
-//         */
-//        void onSwipeEnd(int position);
     }
 }
