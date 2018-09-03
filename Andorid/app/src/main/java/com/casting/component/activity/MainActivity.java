@@ -111,6 +111,30 @@ public class MainActivity extends BaseFCActivity implements
         }
     }
 
+    private abstract class CardSwipe implements Runnable
+    {
+        public int mPage = -1;
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                int currentTabPage = mTabLayout.getSelectedTabPosition();
+                if (currentTabPage == mPage)
+                {
+                    swipe();
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        protected abstract void swipe() throws Exception;
+    }
+
     private BothMenuDrawer mBothMenuDrawer;
 
     private Button  mTopButton1;
@@ -122,7 +146,7 @@ public class MainActivity extends BaseFCActivity implements
     private SeekBar     mMainSeekBar;
     private MainCardSwipeAdapter mSwipeStackAdapter;
 
-    private Queue<Runnable> mSwipeExecutionQueue = new LinkedList<>();
+    private Queue<CardSwipe> mSwipeExecutionQueue = new LinkedList<>();
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
@@ -310,6 +334,7 @@ public class MainActivity extends BaseFCActivity implements
     {
         mMainSeekBar.setProgress(0);
         mMainSeekBar.setClickable(true);
+        mMainSeekBar.animate().translationY(0);
 
         mSwipeStack.resetStack();
 
@@ -344,9 +369,9 @@ public class MainActivity extends BaseFCActivity implements
     {
         if (mSwipeExecutionQueue.peek() != null)
         {
-            Runnable r = mSwipeExecutionQueue.poll();
+            CardSwipe cardSwipe = mSwipeExecutionQueue.poll();
 
-            mSwipeStack.post(r);
+            mSwipeStack.post(cardSwipe);
 
             int queueSize = mSwipeExecutionQueue.size();
             if (queueSize == 0)
@@ -377,16 +402,18 @@ public class MainActivity extends BaseFCActivity implements
         {
             for (int i = 0 ; i < swipeCount ; i++)
             {
-                Runnable runnable = new Runnable()
+                CardSwipe cardSwipe = new CardSwipe()
                 {
                     @Override
-                    public void run()
+                    protected void swipe() throws Exception
                     {
                         SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
                         swipeStackController.swipeView();
                     }
                 };
-                mSwipeExecutionQueue.add(runnable);
+                cardSwipe.mPage = mTabLayout.getSelectedTabPosition();
+
+                mSwipeExecutionQueue.add(cardSwipe);
             }
 
             int queueSize = mSwipeExecutionQueue.size();
@@ -403,16 +430,18 @@ public class MainActivity extends BaseFCActivity implements
         {
             for (int i = 0 ; i < rollbackCount ; i++)
             {
-                Runnable runnable = new Runnable()
+                CardSwipe cardSwipe = new CardSwipe()
                 {
                     @Override
-                    public void run()
+                    protected void swipe() throws Exception
                     {
                         SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
                         swipeStackController.rollBack();
                     }
                 };
-                mSwipeExecutionQueue.add(runnable);
+                cardSwipe.mPage = mTabLayout.getSelectedTabPosition();
+
+                mSwipeExecutionQueue.add(cardSwipe);
             }
 
             int queueSize = mSwipeExecutionQueue.size();
