@@ -30,4 +30,10 @@ public interface SwipeStackListener {
      * @param position
      */
     void onStackTopVisible(int position);
+
+    /**
+     *
+     * @param position
+     */
+    void onStackRollBack(int position);
 }

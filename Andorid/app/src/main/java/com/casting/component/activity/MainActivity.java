@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -35,8 +36,10 @@ import com.casting.model.CastList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RequestCastList;
 import com.casting.view.CustomTabLayout;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -119,9 +122,7 @@ public class MainActivity extends BaseFCActivity implements
     private SeekBar     mMainSeekBar;
     private MainCardSwipeAdapter mSwipeStackAdapter;
 
-    private int topPosition = 0;
-
-    private Queue<Runnable> mSwipeExecutionQueue = new LinkedBlockingQueue<>();
+    private Queue<Runnable> mSwipeExecutionQueue = new LinkedList<>();
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
@@ -241,25 +242,34 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar)
     {
-        SwipeStackController swipeStackController = mSwipeStack.getSwipeStackController();
-
-        int progress = seekBar.getProgress();
-
-        int cardCount = (mSwipeStackAdapter.getCount() - 1);
-        final int selectedCard = (cardCount * progress) / 100;
-
-        int currentPosition = mSwipeStack.getCurrentPosition();
-        if (currentPosition < selectedCard)
+        int translationY = (int) ViewHelper.getTranslationY(seekBar);
+        if (translationY == 0)
         {
-            int swipeCount = (selectedCard - currentPosition);
+            int progress = seekBar.getProgress();
 
-            swipeCardStack(swipeCount);
-        }
-        else
-        {
-            int rollBackCount = (currentPosition - selectedCard);
+            int cardCount = (mSwipeStackAdapter.getCount() - 1);
+            final int selectedCard = (cardCount * progress) / 100;
 
-            rollBackCardStack(rollBackCount);
+            int currentPosition = mSwipeStack.getCurrentPosition();
+            if (currentPosition < selectedCard)
+            {
+                int swipeCount = (selectedCard - currentPosition);
+
+                swipeCardStack(swipeCount);
+            }
+            else
+            {
+                int rollBackCount = (currentPosition - selectedCard);
+
+                rollBackCardStack(rollBackCount);
+            }
+
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) seekBar.getLayoutParams();
+            translationY += lp.bottomMargin;
+            translationY += seekBar.getMeasuredHeight();
+
+            seekBar.animate().translationY(translationY);
+            seekBar.setClickable(false);
         }
     }
 
@@ -299,8 +309,11 @@ public class MainActivity extends BaseFCActivity implements
     public void onTabUnselected(TabLayout.Tab tab)
     {
         mMainSeekBar.setProgress(0);
+        mMainSeekBar.setClickable(true);
 
         mSwipeStack.resetStack();
+
+        mSwipeExecutionQueue.clear();
     }
 
     @Override
@@ -321,7 +334,8 @@ public class MainActivity extends BaseFCActivity implements
     }
 
     @Override
-    public void onStackEmpty() {
+    public void onStackEmpty()
+    {
 
     }
 
@@ -330,10 +344,31 @@ public class MainActivity extends BaseFCActivity implements
     {
         if (mSwipeExecutionQueue.peek() != null)
         {
-            topPosition = position;
+            Runnable r = mSwipeExecutionQueue.poll();
 
-            mSwipeExecutionQueue.poll().run();
+            mSwipeStack.post(r);
+
+            int queueSize = mSwipeExecutionQueue.size();
+            if (queueSize == 0)
+            {
+                mMainSeekBar.animate().translationY(0);
+                mMainSeekBar.setClickable(true);
+            }
         }
+        else
+        {
+            int itemCount = (mSwipeStackAdapter.getCount() - 1);
+
+            int progress = (position * 100) / itemCount;
+
+            mMainSeekBar.setProgress(progress);
+        }
+    }
+
+    @Override
+    public void onStackRollBack(int position)
+    {
+
     }
 
     private void swipeCardStack(int swipeCount)
@@ -354,7 +389,11 @@ public class MainActivity extends BaseFCActivity implements
                 mSwipeExecutionQueue.add(runnable);
             }
 
-            mSwipeExecutionQueue.poll().run();
+            int queueSize = mSwipeExecutionQueue.size();
+            if (queueSize == swipeCount)
+            {
+                mSwipeExecutionQueue.poll().run();
+            }
         }
     }
 
@@ -362,7 +401,7 @@ public class MainActivity extends BaseFCActivity implements
     {
         if (rollbackCount > 0)
         {
-            for (int i = 0 ; i < 1 ; i++)
+            for (int i = 0 ; i < rollbackCount ; i++)
             {
                 Runnable runnable = new Runnable()
                 {
@@ -376,7 +415,11 @@ public class MainActivity extends BaseFCActivity implements
                 mSwipeExecutionQueue.add(runnable);
             }
 
-            mSwipeExecutionQueue.poll().run();
+            int queueSize = mSwipeExecutionQueue.size();
+            if (queueSize == rollbackCount)
+            {
+                mSwipeExecutionQueue.poll().run();
+            }
         }
     }
 

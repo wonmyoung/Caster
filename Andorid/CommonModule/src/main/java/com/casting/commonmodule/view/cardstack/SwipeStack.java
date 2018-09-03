@@ -170,22 +170,24 @@ public class SwipeStack extends ViewGroup
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b)
     {
-        Log.d("confirm" , ">> confirm onLayout ");
 
         if (mAdapter != null && !mAdapter.isEmpty())
         {
             int itemCount = mAdapter.getCount();
             int visibleViewCount = getChildCount();
 
-            Log.d("confirm" , ">> confirm onLayout visibleViewCount = " + visibleViewCount);
-            Log.d("confirm" , ">> confirm onLayout mNumberOfStackedViews = " + mNumberOfStackedViews);
-            Log.d("confirm" , ">> confirm onLayout mCurrentViewIndex = " + mCurrentViewIndex);
-
             if (visibleViewCount < mNumberOfStackedViews)
             {
                 for (int x = visibleViewCount; x < mNumberOfStackedViews && mCurrentViewIndex < itemCount; x++)
                 {
                     addNextView();
+                }
+            }
+            else if (visibleViewCount > mNumberOfStackedViews)
+            {
+                for (int x = visibleViewCount; x > mNumberOfStackedViews && mCurrentViewIndex < itemCount; x--)
+                {
+                    removeBottomView();
                 }
             }
 
@@ -256,18 +258,10 @@ public class SwipeStack extends ViewGroup
     {
         if (getChildCount() > 0)
         {
-            int itemCount = mAdapter.getCount();
             int visibleViewCount = getChildCount();
-            if (visibleViewCount > mNumberOfStackedViews &&
-               (visibleViewCount - mNumberOfStackedViews) == 1)
+            if (visibleViewCount > mNumberOfStackedViews)
             {
-                removeViewAt(0);
-                Log.d("confirm" , ">> confirm onViewRollBack itemCount = " + itemCount);
-                Log.d("confirm" , ">> confirm onViewRollBack visibleViewCount = " + visibleViewCount);
-                Log.d("confirm" , ">> confirm onViewRollBack mNumberOfStackedViews = " + mNumberOfStackedViews);
-                Log.d("confirm" , ">> confirm onViewRollBack mCurrentViewIndex = " + mCurrentViewIndex);
-
-                notifyStackPop(getCurrentPosition());
+                notifyRollBack(getCurrentPosition());
             }
         }
     }
@@ -478,13 +472,21 @@ public class SwipeStack extends ViewGroup
         }
     }
 
-    private void removeBottomView()
+    private void notifyRollBack(int position)
     {
-
+        if (mStackListenerList != null)
+        {
+            for (SwipeStackListener swipeStackListener : mStackListenerList)
+            {
+                swipeStackListener.onStackRollBack(position);
+            }
+        }
     }
 
     private void addNextView()
     {
+        Log.d("confirm" , ">> confirm addNextView ");
+
         if (mCurrentViewIndex < mAdapter.getCount())
         {
             View view = mAdapter.getView(mCurrentViewIndex, null, this);
@@ -604,6 +606,20 @@ public class SwipeStack extends ViewGroup
             mRemovedViewStack.add(mTopView);
 
             removeView(mTopView);
+        }
+    }
+
+    private void removeBottomView()
+    {
+        Log.d("confirm" , ">> confirm removeBottomView ");
+
+        if (getChildCount() > 0)
+        {
+            View v = getChildAt(0);
+
+            removeViewInLayout(v);
+
+            mCurrentViewIndex--;
         }
     }
 
