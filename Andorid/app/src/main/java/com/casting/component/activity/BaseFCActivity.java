@@ -7,8 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.interfaces.Constants;
 
-public abstract class BaseFCActivity extends CommonActivity {
+public abstract class BaseFCActivity extends CommonActivity implements Constants {
 
     private static final int REQUEST_START_APP = 1;
 

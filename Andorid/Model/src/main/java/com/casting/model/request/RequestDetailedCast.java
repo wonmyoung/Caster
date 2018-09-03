@@ -9,7 +9,9 @@ import com.casting.model.Cast;
 
 import org.json.JSONObject;
 
-public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> {
+public class RequestDetailedCast extends NetworkRequest implements JSONParcelable<Cast> {
+
+    private Cast mCast;
 
     @Override
     public String getHttpMethod() {
@@ -34,5 +36,13 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
     @Override
     public Cast parse(JSONObject jsonObject) {
         return null;
+    }
+
+    public Cast getCast() {
+        return mCast;
+    }
+
+    public void setCast(Cast c) {
+        this.mCast = c;
     }
 }

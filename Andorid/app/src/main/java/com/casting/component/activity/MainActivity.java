@@ -2,6 +2,7 @@ package com.casting.component.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -86,8 +87,7 @@ public class MainActivity extends BaseFCActivity implements
         }
     }
 
-    private class MainCardSwipeAdapter extends SwipeStackAdapter<Cast>
-    {
+    private class MainCardSwipeAdapter extends SwipeStackAdapter<Cast> implements View.OnClickListener {
 
         public MainCardSwipeAdapter()
         {
@@ -100,14 +100,34 @@ public class MainActivity extends BaseFCActivity implements
         {
             Context c = getBaseContext();
 
-            ImageView imageView = viewHolder.find(R.id.castCardBack);
-            UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_main_color_round10);
             int radius = (int) c.getResources().getDimension(R.dimen.dp25);
 
+            ImageView imageView = viewHolder.find(R.id.castCardBack);
+            UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_main_color_round10);
             // ImageLoader.loadRoundImage(c, imageView, item.getThumbnails()[0], radius);
 
             TextView textView = viewHolder.find(R.id.castCardTitle);
             textView.setText(item.getTitle());
+            textView.setTag(position);
+            textView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            Object o = v.getTag();
+
+            if (o != null && o instanceof Integer)
+            {
+                int position = (int) o;
+
+                Cast cast = getItem(position);
+
+                Intent intent = new Intent(MainActivity.this, CastingActivity.class);
+                intent.putExtra(CAST, cast);
+
+                startActivity(intent);
+            }
         }
     }
 
@@ -354,14 +374,21 @@ public class MainActivity extends BaseFCActivity implements
     }
 
     @Override
-    public void onViewSwipedToRight(int position) {
+    public void onViewSwipedToRight(int position)
+    {
 
     }
 
     @Override
     public void onStackEmpty()
     {
+        mMainSeekBar.setProgress(0);
+        mMainSeekBar.setClickable(true);
+        mMainSeekBar.animate().translationY(0);
 
+        mSwipeStack.resetStack();
+
+        mSwipeExecutionQueue.clear();
     }
 
     @Override

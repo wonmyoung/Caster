@@ -1,7 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <com.casting.commonmodule.view.list.CommonRecyclerView
+        android:id="@+id/castingItemListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp55"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp55">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/castCardTitleFrame"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp180"
+        android:layout_marginTop="@dimen/dp55"
+        android:background="@color/color_transparent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp10"
+        android:paddingLeft="@dimen/dp15"
+        android:paddingRight="@dimen/dp15"
+        android:paddingTop="@dimen/dp10">
+
+        <ImageView
+            android:id="@+id/castCardBack"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/castCardTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/dp15"
+            android:layout_marginLeft="@dimen/dp10"
+            android:layout_marginRight="@dimen/dp10"
+            android:text="비트코인의 7월25일의 자정가격은 얼마일까요 ?"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dp40" />
+
+    </FrameLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp50"
+        android:layout_gravity="bottom"
+        android:background="@drawable/shape_main_color_alpha80"
+        android:text="지금 캐스트하기"
+        android:textColor="@color/color_white" />
 
 </FrameLayout>

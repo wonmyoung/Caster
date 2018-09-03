@@ -5,7 +5,7 @@ import com.casting.commonmodule.session.SessionType;
 import com.casting.commonmodule.view.component.CommonApplication;
 import com.casting.model.request.Login;
 import com.casting.model.request.RegisterMember;
-import com.casting.model.request.RequestCast;
+import com.casting.model.request.RequestDetailedCast;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestTimeLine;
 import com.casting.model.request.RequestTimeLineList;
@@ -42,7 +42,7 @@ public class FutureCasting extends CommonApplication {
 
             stringBuilder.append(createCastListUrl(requestCastList));
         }
-        else if (request.isRight(RequestCast.class))
+        else if (request.isRight(RequestDetailedCast.class))
         {
 
         }

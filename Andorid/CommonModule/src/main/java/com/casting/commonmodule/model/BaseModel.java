@@ -1,5 +1,7 @@
 package com.casting.commonmodule.model;
 
-public abstract class BaseModel {
+import java.io.Serializable;
+
+public abstract class BaseModel implements Serializable {
 
 }
