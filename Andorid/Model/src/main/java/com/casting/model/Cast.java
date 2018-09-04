@@ -1,7 +1,5 @@
 package com.casting.model;
 
-import android.annotation.SuppressLint;
-
 import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;
@@ -17,6 +15,8 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
     private String[]    Thumbnails;
 
     private int   mItemType;
+
+    private boolean Done;
 
     public double getRemainingTime() {
         return RemainingTime;
@@ -75,5 +75,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setCastId(String castId) {
         CastId = castId;
+    }
+
+    public boolean isDone() {
+        return Done;
+    }
+
+    public void setDone(boolean done) {
+        Done = done;
     }
 }

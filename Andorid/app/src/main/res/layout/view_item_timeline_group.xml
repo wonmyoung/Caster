@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp220"
+    android:layout_marginLeft="@dimen/dp15"
+    android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp5"
+    android:layout_marginBottom="@dimen/dp5"
+    card_view:cardCornerRadius="@dimen/dp15"
+    card_view:cardElevation="@dimen/dp5"
+    card_view:cardMaxElevation="0dp"
+    card_view:contentPaddingTop="@dimen/dp15"
+    card_view:contentPaddingLeft="@dimen/dp15"
+    card_view:contentPaddingRight="@dimen/dp15"
+    card_view:contentPaddingBottom="@dimen/dp5">
+
+    <TextView
+        android:id="@+id/cardItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="타임라인"
+        android:textStyle="bold"
+        android:textColor="@color/mainColor0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dp30">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp45">
+
+            <com.casting.commonmodule.view.CircleImageView
+                android:id="@+id/user1Image"
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:background="@color/mainColor0"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/user1TimeLine"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp55"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp14"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:maxLength="25"
+                android:textColor="@color/color_666666"
+                android:text="timeline timeline timeline timeline"/>
+
+            <TextView
+                android:id="@+id/user1TimeLineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="1시간전"
+                android:layout_gravity="right|top"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp12"
+                android:textColor="@color/color_adadad"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp45"
+            android:layout_marginTop="@dimen/dp10">
+
+            <com.casting.commonmodule.view.CircleImageView
+                android:id="@+id/user2Image"
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:background="@color/mainColor0"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/user2TimeLine"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp55"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp14"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:maxLength="25"
+                android:text="timeline timeline timeline timeline"/>
+
+            <TextView
+                android:id="@+id/user2TimeLineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="1시간전"
+                android:layout_gravity="right|top"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp12"
+                android:textColor="@color/color_adadad"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp45"
+            android:layout_marginTop="@dimen/dp10">
+
+            <com.casting.commonmodule.view.CircleImageView
+                android:id="@+id/user3Image"
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:background="@color/mainColor0"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/user3TimeLine"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp55"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp14"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:maxLength="25"
+                android:text="timeline timeline timeline timeline"/>
+
+            <TextView
+                android:id="@+id/user3TimeLineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="1시간전"
+                android:layout_gravity="right|top"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dp12"
+                android:textColor="@color/color_adadad"/>
+
+        </FrameLayout>
+
+
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

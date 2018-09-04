@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
-import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
@@ -27,10 +26,8 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
-import com.casting.model.CastList;
 import com.casting.model.Member;
 import com.casting.model.TimeLine;
-import com.casting.model.TimeLineList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestCastList;
@@ -273,7 +270,7 @@ public class ProfileActivity extends CommonActivity
                 break;
             }
 
-            case CAST_CARD_THIN:
+            case CAST_CARD_WIDE_THIN:
             {
                 Cast cast = (Cast) item;
 
@@ -285,7 +282,7 @@ public class ProfileActivity extends CommonActivity
                 break;
             }
 
-            case CAST_CARD_LONG:
+            case CAST_CARD_WIDE:
             {
                 break;
             }
@@ -346,7 +343,7 @@ public class ProfileActivity extends CommonActivity
         for (int i = 0 ; i < 100 ; i++)
         {
             Cast cast = new Cast();
-            cast.setItemType(ItemConstant.CAST_CARD_THIN);
+            cast.setItemType(ItemConstant.CAST_CARD_WIDE_THIN);
             cast.setRemainingTime(60 * 60 * 1000);
             cast.setRewardCash(20000);
             cast.setTitle("비트코인의 7월 25일 지정가격은 얼마일까요 ?");

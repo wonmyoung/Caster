@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp230"
+    android:layout_marginBottom="@dimen/dp5"
+    android:layout_marginLeft="@dimen/dp15"
+    android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp5"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="@dimen/dp15"
+    card_view:cardElevation="@dimen/dp5"
+    card_view:cardMaxElevation="0dp"
+    card_view:contentPaddingBottom="@dimen/dp5"
+    card_view:contentPaddingLeft="@dimen/dp15"
+    card_view:contentPaddingRight="@dimen/dp15"
+    card_view:contentPaddingTop="@dimen/dp15">
+
+    <TextView
+        android:id="@+id/cardItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="캐스트 현황"
+        android:textStyle="bold"
+        android:textColor="@color/mainColor0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp200"
+        android:layout_marginTop="@dimen/dp30"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/castingSelection1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center_vertical"
+                android:maxLines="4"
+                android:text="한화 이글스"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/dp14" />
+
+            <View
+                android:id="@+id/castingSelection1Percent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp4"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_weight="70"
+                android:background="@drawable/shape_main_color_round15" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/castingSelection2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center_vertical"
+                android:maxLines="4"
+                android:text="한화 이글스"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/dp14" />
+
+            <View
+                android:id="@+id/castingSelection2Percent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp4"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_weight="70"
+                android:background="@drawable/shape_main_color_round15" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/castingSelection3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center_vertical"
+                android:maxLines="4"
+                android:text="한화 이글스"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/dp14" />
+
+            <View
+                android:id="@+id/castingSelection3Percent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp4"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_weight="70"
+                android:background="@drawable/shape_main_color_round15" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/castingSelection4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center_vertical"
+                android:maxLines="4"
+                android:text="한화 이글스"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/dp14" />
+
+            <View
+                android:id="@+id/castingSelection4Percent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp4"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_weight="70"
+                android:background="@drawable/shape_main_color_round15" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp30"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp5"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/castingSelection5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="30"
+                android:gravity="center_vertical"
+                android:maxLines="4"
+                android:text="한화 이글스"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/dp14" />
+
+            <View
+                android:id="@+id/castingSelection5Percent"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp4"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp15"
+                android:layout_weight="70"
+                android:background="@drawable/shape_main_color_round15" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -99,16 +99,19 @@ public abstract class CommonRecyclerAdapter extends RecyclerView.Adapter<Composi
             {
                 position -= (isUsingHeader() ? 1 : 0);
 
-                return ((position < itemSize) ? getBodyViewType(position) : LIST_FOOTER_VIEW);
+                if (position < itemSize)
+                {
+                    ICommonItem d = (mdArrayList != null && mdArrayList.size() > position ?
+                                     mdArrayList.get(position) : null);
+
+                    return (d == null ? -1 : d.getItemType());
+                }
+                else
+                {
+                    return LIST_FOOTER_VIEW;
+                }
             }
         }
-    }
-
-    protected final int getBodyViewType(int position)
-    {
-        ICommonItem d = getItem(position);
-
-        return (d == null ? -1 : d.getItemType());
     }
 
     @Override
