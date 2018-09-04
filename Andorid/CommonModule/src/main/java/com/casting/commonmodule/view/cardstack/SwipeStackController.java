@@ -22,9 +22,14 @@ import android.database.DataSetObserver;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Adapter;
 
 public class SwipeStackController extends DataSetObserver implements View.OnTouchListener {
+
+    private static final float CLICK_EVENT_MINIMUM_AREA = 200;
+    private static final float CLICK_EVENT_TIME_AREA = 200;
 
     private final SwipeStack mSwipeStack;
 
@@ -32,8 +37,9 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
 
     private boolean mListenForTouchEvents;
 
-    private float mDownX;
-    private float mDownY;
+    private float mEventDownX;
+    private float mEventDownY;
+    private float mEventDownTime;
     private float mInitialX;
     private float mInitialY;
     private float mRotateDegrees = SwipeStack.DEFAULT_SWIPE_ROTATION;
@@ -52,7 +58,6 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
     @Override
     public boolean onTouch(View v, MotionEvent event)
     {
-
         try
         {
             switch (event.getAction())
@@ -66,8 +71,9 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                     mSwipeStack.onSwipeStart();
                     mPointerId = event.getPointerId(0);
-                    mDownX = event.getX(mPointerId);
-                    mDownY = event.getY(mPointerId);
+                    mEventDownX = event.getX(mPointerId);
+                    mEventDownY = event.getY(mPointerId);
+                    mEventDownTime = SystemClock.elapsedRealtime();
 
                     return true;
 
@@ -76,8 +82,8 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                     int pointerIndex = event.findPointerIndex(mPointerId);
                     if (pointerIndex < 0) return false;
 
-                    float dx = event.getX(pointerIndex) - mDownX;
-                    float dy = event.getY(pointerIndex) - mDownY;
+                    float dx = event.getX(pointerIndex) - mEventDownX;
+                    float dy = event.getY(pointerIndex) - mEventDownY;
 
                     float newX = mObservedView.getX() + dx;
                     float newY = mObservedView.getY() + dy;
@@ -104,6 +110,27 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                     return true;
 
                 case MotionEvent.ACTION_UP:
+
+                    float diffTime = (mEventDownTime == 0 ?
+                            0 : (SystemClock.elapsedRealtime() - mEventDownTime));
+                    float differenceX = (mEventDownX == 0 || event.getX() == 0 ?
+                            0 : Math.abs(mEventDownX - event.getX()));
+                    float differenceY = (mEventDownY == 0 || event.getY() == 0 ?
+                            0 : Math.abs(mEventDownY - event.getY()));
+
+                    if (differenceX < CLICK_EVENT_MINIMUM_AREA &&
+                        differenceY < CLICK_EVENT_MINIMUM_AREA &&
+                        diffTime < CLICK_EVENT_TIME_AREA)
+                    {
+                        Adapter adapter = mSwipeStack.getAdapter();
+
+                        if (adapter instanceof SwipeViewClickListener)
+                        {
+                            SwipeViewClickListener clickListener = (SwipeViewClickListener) adapter;
+
+                            clickListener.onViewClick(v);
+                        }
+                    }
 
                     v.getParent().requestDisallowInterceptTouchEvent(false);
 

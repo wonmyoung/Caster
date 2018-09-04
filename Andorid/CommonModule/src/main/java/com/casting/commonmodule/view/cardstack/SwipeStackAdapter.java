@@ -104,4 +104,12 @@ public abstract class SwipeStackAdapter<T extends ICommonItem> extends BaseAdapt
             tArrayList.addAll((Collection<? extends T>) itemList.clone());
         }
     }
+
+    public void clear()
+    {
+        if (tArrayList != null)
+        {
+            tArrayList.clear();
+        }
+    }
 }
