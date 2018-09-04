@@ -21,7 +21,11 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
+import com.casting.model.CurrentCastingStatus;
 import com.casting.model.LineGraphItem;
+import com.casting.model.News;
+import com.casting.model.NewsGroup;
+import com.casting.model.TimeLineGroup;
 import com.casting.model.request.RequestDetailedCast;
 import com.casting.view.ItemViewAdapter;
 import com.github.mikephil.charting.animation.Easing;
@@ -108,7 +112,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         switch (viewType)
         {
-            case GRAPH_A:
+            case GRAPH_LINE:
                 LineChart lineChart = holder.find(R.id.lineChart);
 
                 List<Entry> entries = new ArrayList<>();
@@ -182,23 +186,16 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             commonItems = new ArrayList<>();
         }
 
+        NewsGroup newsGroup = new NewsGroup();
+        commonItems.add(newsGroup);
+
+        TimeLineGroup timeLineGroup = new TimeLineGroup();
+        commonItems.add(timeLineGroup);
+
         LineGraphItem lineGraphItem = new LineGraphItem();
         commonItems.add(lineGraphItem);
 
-        LineGraphItem lineGraphItem1 = new LineGraphItem();
-        commonItems.add(lineGraphItem);
-
-        LineGraphItem lineGraphItem2 = new LineGraphItem();
-        commonItems.add(lineGraphItem);
-
-        LineGraphItem lineGraphItem3 = new LineGraphItem();
-        commonItems.add(lineGraphItem);
-
-        LineGraphItem lineGraphItem4 = new LineGraphItem();
-        commonItems.add(lineGraphItem);
-
-        LineGraphItem lineGraphItem5 = new LineGraphItem();
-        commonItems.add(lineGraphItem);
-
+        CurrentCastingStatus currentCastingStatus = new CurrentCastingStatus();
+        commonItems.add(currentCastingStatus);
     }
 }

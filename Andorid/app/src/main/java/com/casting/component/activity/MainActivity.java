@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +24,7 @@ import com.casting.commonmodule.view.cardstack.SwipeStack;
 import com.casting.commonmodule.view.cardstack.SwipeStackAdapter;
 import com.casting.commonmodule.view.cardstack.SwipeStackController;
 import com.casting.commonmodule.view.cardstack.SwipeStackListener;
+import com.casting.commonmodule.view.cardstack.SwipeViewClickListener;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.menudrawer.MenuDrawer;
@@ -42,7 +41,6 @@ import com.nineoldandroids.view.ViewHelper;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class MainActivity extends BaseFCActivity implements
         MenuDrawer.OnDrawerStateChangeListener, SeekBar.OnSeekBarChangeListener, TabLayout.OnTabSelectedListener, IResponseListener, SwipeStackListener {
@@ -87,9 +85,9 @@ public class MainActivity extends BaseFCActivity implements
         }
     }
 
-    private class MainCardSwipeAdapter extends SwipeStackAdapter<Cast> implements View.OnClickListener {
+    private class CardSwipeAdapter extends SwipeStackAdapter<Cast> implements SwipeViewClickListener {
 
-        public MainCardSwipeAdapter()
+        public CardSwipeAdapter()
         {
             super(MainActivity.this, R.layout.view_item_cast_card);
         }
@@ -98,24 +96,31 @@ public class MainActivity extends BaseFCActivity implements
         protected void bindItemDataView
                 (CompositeViewHolder viewHolder, int position, Cast item)
         {
+            viewHolder.itemView.setTag(R.id.position, position);
+
             Context c = getBaseContext();
+
+            ImageView imageView = viewHolder.find(R.id.castCardBack);
+
+            String thumbNailPath = (item.getThumbnails() != null && item.getThumbnails().length > 0 ?
+                                    item.getThumbnails()[0] : null);
 
             int radius = (int) c.getResources().getDimension(R.dimen.dp25);
 
-            ImageView imageView = viewHolder.find(R.id.castCardBack);
-            UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_main_color_round10);
-            // ImageLoader.loadRoundImage(c, imageView, item.getThumbnails()[0], radius);
+            ImageLoader.loadRoundImage(c, imageView, thumbNailPath, radius);
 
             TextView textView = viewHolder.find(R.id.castCardTitle);
             textView.setText(item.getTitle());
-            textView.setTag(position);
-            textView.setOnClickListener(this);
         }
 
+
         @Override
-        public void onClick(View v)
+        public void onViewClick(View v)
         {
-            Object o = v.getTag();
+            Object o = v.getTag(R.id.position);
+
+            EasyLog.LogMessage(this, ">> onViewClick ");
+            EasyLog.LogMessage(this, "++ onViewClick tag is null ? = ", Boolean.toString((o == null)));
 
             if (o != null && o instanceof Integer)
             {
@@ -164,7 +169,7 @@ public class MainActivity extends BaseFCActivity implements
 
     private SwipeStack  mSwipeStack;
     private SeekBar     mMainSeekBar;
-    private MainCardSwipeAdapter mSwipeStackAdapter;
+    private CardSwipeAdapter mSwipeStackAdapter;
 
     private Queue<CardSwipe> mSwipeExecutionQueue = new LinkedList<>();
 
@@ -194,7 +199,7 @@ public class MainActivity extends BaseFCActivity implements
         mTabLayout.addTextTab("BEST 10 캐스트");
         mTabLayout.addTextTab("최고보상 캐스트");
 
-        mSwipeStackAdapter = new MainCardSwipeAdapter();
+        mSwipeStackAdapter = new CardSwipeAdapter();
         mSwipeStack = find(R.id.main_SwipeCardStack);
         mSwipeStack.setAdapter(mSwipeStackAdapter);
         mSwipeStack.addStackListener(this);
@@ -220,18 +225,18 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        BaseRequest baseRequest = response.getSourceRequest();
-
-        if (baseRequest instanceof RequestCastList)
+        try
         {
-            try
+            BaseRequest request = response.getSourceRequest();
+
+            if (request instanceof RequestCastList)
             {
                 onCastListResponse(response);
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -353,10 +358,10 @@ public class MainActivity extends BaseFCActivity implements
     public void onTabUnselected(TabLayout.Tab tab)
     {
         mMainSeekBar.setProgress(0);
-        mMainSeekBar.setClickable(true);
         mMainSeekBar.animate().translationY(0);
 
-        mSwipeStack.resetStack();
+        mSwipeStackAdapter.clear();
+        mSwipeStackAdapter.notifyDataSetChanged();
 
         mSwipeExecutionQueue.clear();
     }
@@ -383,7 +388,6 @@ public class MainActivity extends BaseFCActivity implements
     public void onStackEmpty()
     {
         mMainSeekBar.setProgress(0);
-        mMainSeekBar.setClickable(true);
         mMainSeekBar.animate().translationY(0);
 
         mSwipeStack.resetStack();
@@ -490,7 +494,7 @@ public class MainActivity extends BaseFCActivity implements
             Cast cast = new Cast();
             cast.setRemainingTime(60 * 60 * 1000);
             cast.setRewardCash(20000);
-            cast.setTitle(" 더미데이터 더미데이터 번호 = [" + i + "]");
+            cast.setTitle(" 비트코인의 7월25일의 자정가격은 얼마일까요 ? [" + i + "]");
             cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
             cast.setThumbnails(
                     "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");

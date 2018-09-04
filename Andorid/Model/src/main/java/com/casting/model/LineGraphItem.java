@@ -9,6 +9,6 @@ public class LineGraphItem extends BaseModel implements ICommonItem, ItemConstan
     @Override
     public int getItemType()
     {
-        return GRAPH_A;
+        return GRAPH_LINE;
     }
 }

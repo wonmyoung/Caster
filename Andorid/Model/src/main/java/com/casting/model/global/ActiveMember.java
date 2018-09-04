@@ -6,7 +6,8 @@ import java.util.Observable;
 
 public class ActiveMember extends Observable {
 
-    private static class LazyHolder {
+    private static class LazyHolder
+    {
         private static ActiveMember mInstance = new ActiveMember();
     }
 

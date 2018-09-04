@@ -9,7 +9,7 @@
         android:id="@+id/castingItemListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dp55"/>
+        android:layout_marginTop="@dimen/dp55" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,36 +17,14 @@
 
     </FrameLayout>
 
-    <FrameLayout
+    <include
         android:id="@+id/castCardTitleFrame"
+        layout="@layout/view_item_cast_card_wide"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp180"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp55"
-        android:background="@color/color_transparent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dp10"
-        android:paddingLeft="@dimen/dp15"
-        android:paddingRight="@dimen/dp15"
-        android:paddingTop="@dimen/dp10">
-
-        <ImageView
-            android:id="@+id/castCardBack"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/castCardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/dp15"
-            android:layout_marginLeft="@dimen/dp10"
-            android:layout_marginRight="@dimen/dp10"
-            android:text="비트코인의 7월25일의 자정가격은 얼마일까요 ?"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/dp40" />
-
-    </FrameLayout>
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"/>
 
     <Button
         android:layout_width="match_parent"

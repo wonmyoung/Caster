@@ -37,11 +37,11 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 break;
 
             case CAST_CARD_THIN:
-                v = inflateView(R.layout.view_item_cast_card_thin, parent);
+                v = inflateView(R.layout.view_item_cast_card_wide_thin, parent);
                 break;
 
             case CAST_CARD_LONG:
-                v = inflateView(R.layout.view_item_cast_card_long, parent);
+                v = inflateView(R.layout.view_item_cast_card_wide, parent);
                 break;
 
             case CHART_ITEM:
@@ -60,7 +60,7 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_alarm, parent);
                 break;
 
-            case GRAPH_A:
+            case GRAPH_LINE:
                 v = inflateView(R.layout.view_item_line_graph, parent);
                 break;
 
