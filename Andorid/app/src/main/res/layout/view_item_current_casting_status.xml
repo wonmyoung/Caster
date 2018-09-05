@@ -38,22 +38,20 @@
 
             <TextView
                 android:id="@+id/castingSelection1"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp90"
                 android:layout_height="match_parent"
-                android:layout_weight="30"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="1"
                 android:text="한화 이글스"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/dp14" />
 
             <View
                 android:id="@+id/castingSelection1Percent"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp200"
                 android:layout_height="@dimen/dp4"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp15"
-                android:layout_weight="70"
                 android:background="@drawable/shape_main_color_round15" />
 
         </LinearLayout>
@@ -67,22 +65,20 @@
 
             <TextView
                 android:id="@+id/castingSelection2"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp90"
                 android:layout_height="match_parent"
-                android:layout_weight="30"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="1"
                 android:text="한화 이글스"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/dp14" />
 
             <View
                 android:id="@+id/castingSelection2Percent"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp200"
                 android:layout_height="@dimen/dp4"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp15"
-                android:layout_weight="70"
                 android:background="@drawable/shape_main_color_round15" />
 
         </LinearLayout>
@@ -96,22 +92,20 @@
 
             <TextView
                 android:id="@+id/castingSelection3"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp90"
                 android:layout_height="match_parent"
-                android:layout_weight="30"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="1"
                 android:text="한화 이글스"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/dp14" />
 
             <View
                 android:id="@+id/castingSelection3Percent"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp200"
                 android:layout_height="@dimen/dp4"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp15"
-                android:layout_weight="70"
                 android:background="@drawable/shape_main_color_round15" />
 
         </LinearLayout>
@@ -125,22 +119,20 @@
 
             <TextView
                 android:id="@+id/castingSelection4"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp90"
                 android:layout_height="match_parent"
-                android:layout_weight="30"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="1"
                 android:text="한화 이글스"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/dp14" />
 
             <View
                 android:id="@+id/castingSelection4Percent"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp200"
                 android:layout_height="@dimen/dp4"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp15"
-                android:layout_weight="70"
                 android:background="@drawable/shape_main_color_round15" />
 
         </LinearLayout>
@@ -154,22 +146,20 @@
 
             <TextView
                 android:id="@+id/castingSelection5"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp90"
                 android:layout_height="match_parent"
-                android:layout_weight="30"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="1"
                 android:text="한화 이글스"
                 android:textColor="@color/color_666666"
                 android:textSize="@dimen/dp14" />
 
             <View
                 android:id="@+id/castingSelection5Percent"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dp200"
                 android:layout_height="@dimen/dp4"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp15"
-                android:layout_weight="70"
                 android:background="@drawable/shape_main_color_round15" />
 
         </LinearLayout>

@@ -27,6 +27,7 @@
         android:layout_marginRight="@dimen/dp15"/>
 
     <Button
+        android:id="@+id/castButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp50"
         android:layout_gravity="bottom"

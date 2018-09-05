@@ -1,14 +1,18 @@
 package com.casting.component.activity;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.casting.R;
@@ -17,17 +21,23 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CommonRecyclerView;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
-import com.casting.model.CurrentCastingStatus;
+import com.casting.model.CastingStatus;
 import com.casting.model.LineGraphItem;
 import com.casting.model.News;
+import com.casting.model.Reply;
+import com.casting.model.TimeLine;
 import com.casting.model.TimeLineGroup;
 import com.casting.model.request.RequestDetailedCast;
+import com.casting.model.request.RequestNewsList;
+import com.casting.model.request.RequestReplyList;
+import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,23 +45,61 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class CastingActivity extends BaseFCActivity implements ItemBindStrategy, IResponseListener {
+import static com.casting.component.activity.CastingActivity.PageMode.CAST_INFO;
+import static com.casting.component.activity.CastingActivity.PageMode.CAST_DONE;
+
+public class CastingActivity extends BaseFCActivity implements ItemBindStrategy, IResponseListener, Observer {
+
+    enum PageMode
+    {
+        CAST_INFO,
+
+        NEWS_LIST,
+
+        TIME_LINE_LIST,
+        TIME_LINE_WRITE,
+        TIME_LINE_REPLY_LIST,
+        TIME_LINE_REPLY_WRITE,
+
+        CAST_AS_ESSAY,
+        CAST_AS_CHOICE,
+        CAST_AS_TWO_CHOICE,
+        CAST_DONE;
+    }
+
+    private class PageCurrentMode extends Observable
+    {
+        private PageMode    mPageMode = CAST_INFO;
+
+        public void setPageMode(PageMode mode) {
+            this.mPageMode = mode;
+
+            setChanged();
+            notifyObservers();
+        }
+    }
 
 
     private ImageView    mCastImage;
     private TextView     mCastTitle;
+    private Button       mCastButton;
 
     private CommonRecyclerView      mItemListView;
     private ItemViewAdapter         mItemViewAdapter;
     private LinearLayoutManager     mItemLayoutManager;
+
+    private Cast        mTargetCast;
+
+    private PageCurrentMode     mPageCurrentMode = new PageCurrentMode();
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
@@ -60,11 +108,19 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
+        mCastButton = find(R.id.castButton);
+        mCastButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                onCastButtonClickEvent();
+            }
+        });
 
         View head = new View(CastingActivity.this);
         head.setLayoutParams(new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dp235)));
+                (int) getResources().getDimension(R.dimen.dp225)));
 
         View foot = new View(CastingActivity.this);
         foot.setLayoutParams(new FrameLayout.LayoutParams(
@@ -78,47 +134,29 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mItemLayoutManager = new LinearLayoutManager(this);
         mItemListView.setLayoutManager(mItemLayoutManager);
 
-        Cast cast = (Cast) getIntent().getSerializableExtra(CAST);
+        mTargetCast = (Cast) getIntent().getSerializableExtra(CAST);
 
-        if (cast != null)
+        if (mTargetCast != null)
         {
-            String thumbNailPath = cast.getThumbnails()[0];
+            mPageCurrentMode.addObserver(this);
+            mPageCurrentMode.setPageMode((mTargetCast.isDone() ? CAST_DONE : CAST_INFO));
 
-            EasyLog.LogMessage(this, "++ confirm getCastId = ", cast.getCastId());
+            String thumbNailPath = mTargetCast.getThumbnails()[0];
+
+            EasyLog.LogMessage(this, "++ confirm getCastId = ", mTargetCast.getCastId());
             EasyLog.LogMessage(this, "++ confirm thumbNailPath = ", thumbNailPath);
 
             int radius = (int) getResources().getDimension(R.dimen.dp25);
 
-            ImageLoader.loadRoundImage(this, mCastImage, cast.getThumbnails()[0], radius);
+            ImageLoader.loadRoundImage(this, mCastImage, mTargetCast.getThumbnails()[0], radius);
 
-            mCastTitle.setText(cast.getTitle());
+            mCastTitle.setText(mTargetCast.getTitle());
 
             RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
             requestDetailedCast.setResponseListener(this);
-            requestDetailedCast.setCast(cast);
+            requestDetailedCast.setCast(mTargetCast);
 
             RequestHandler.getInstance().request(requestDetailedCast);
-        }
-    }
-
-    @Override
-    protected void onClickEvent(View v)
-    {
-        int position = (int) v.getTag(R.id.position);
-
-        ICommonItem item = mItemViewAdapter.getItem(position);
-
-        switch (item.getItemType())
-        {
-            case NEWS:
-            {
-                break;
-            }
-
-            case GRAPH_LINE:
-            {
-                break;
-            }
         }
     }
 
@@ -143,6 +181,19 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 TextView textView3 = holder.find(R.id.newsTime);
                 textView3.setText(news.getNewsTime());
+                break;
+            }
+
+            case TIME_LINE:
+            {
+                Button button1 = holder.find(R.id.replyThisTimeLine);
+                button1.setTag(R.id.position, position);
+                button1.setOnClickListener(this);
+                button1.setVisibility((mPageCurrentMode.mPageMode == PageMode.TIME_LINE_LIST ? View.VISIBLE : View.GONE));
+
+                Button button2 = holder.find(R.id.shareTimeLineButton);
+                button2.setTag(R.id.position, position);
+                button2.setOnClickListener(this);
                 break;
             }
 
@@ -207,6 +258,230 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 break;
             }
 
+            case CURRENT_CASTING_STATUS:
+            {
+
+
+                CastingStatus currentStatus = (CastingStatus) item;
+
+                for (int i = 1 ; i <= 5 ; i++)
+                {
+                    CastingStatus.CastingOption castingOption = currentStatus.getCastingStatus((i - 1));
+
+                    String packageName = getPackageName();
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("castingSelection");
+                    stringBuilder.append(i);
+
+                    String textViewId = stringBuilder.toString();
+
+                    stringBuilder.append("Percent");
+
+                    String percentageViewId = stringBuilder.toString();
+
+                    Resources res = getResources();
+
+                    int id0 = res.getIdentifier(textViewId, "id", packageName);
+                    int id1 = res.getIdentifier(percentageViewId, "id", packageName);
+
+                    TextView textView = holder.find(id0);
+
+                    View percentageView = holder.find(id1);
+
+                    if (castingOption != null)
+                    {
+                        textView.setVisibility(View.VISIBLE);
+                        textView.setText(castingOption.Name);
+
+                        int totalWidth = (int) res.getDimension(R.dimen.dp200);
+                        int percentage = castingOption.getPercentage();
+
+                        int percentageWidth = (totalWidth * percentage) / 100;
+
+                        EasyLog.LogMessage("++ confirm percentageWidth = " + percentageWidth);
+
+                        int drawableId = (i == 1 ?
+                                R.drawable.shape_main_color_round15 :
+                                R.drawable.shape_gray_color_round15);
+                        UtilityUI.setBackGroundDrawable(percentageView, drawableId);
+
+                        percentageView.getLayoutParams().width = percentageWidth;
+                        percentageView.requestLayout();
+                    }
+                    else
+                    {
+                        textView.setVisibility(View.GONE);
+
+                        percentageView.setVisibility(View.GONE);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o)
+    {
+        if (observable instanceof PageCurrentMode)
+        {
+            switch (mPageCurrentMode.mPageMode)
+            {
+                case CAST_INFO:
+                    mCastButton.setVisibility(View.VISIBLE);
+                    break;
+
+                case NEWS_LIST:
+                case TIME_LINE_LIST:
+                    mCastButton.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onClickEvent(View v)
+    {
+        int position = (int) v.getTag(R.id.position);
+
+        ICommonItem item = mItemViewAdapter.getItem(position);
+
+        switch (item.getItemType())
+        {
+            case NEWS:
+            {
+                News news = (News) item;
+
+                onNewsClickEvent(v, news);
+                break;
+            }
+
+            case TIME_LINE_GROUP:
+            {
+                TimeLineGroup timeLineGroup = (TimeLineGroup) item;
+
+                onTimeLineGroupClickEvent(v, timeLineGroup);
+                break;
+            }
+
+            case TIME_LINE:
+            {
+                TimeLine timeLine = (TimeLine) item;
+
+                onTimeLineClickEvent(v, timeLine);
+                break;
+            }
+        }
+    }
+
+    private void onCastButtonClickEvent()
+    {
+
+    }
+
+    private void onNewsClickEvent(View v, News news)
+    {
+        if (mPageCurrentMode.mPageMode == PageMode.CAST_INFO)
+        {
+            String castId = (mTargetCast == null ? null : mTargetCast.getCastId());
+
+            if (TextUtils.isEmpty(castId))
+            {
+                mPageCurrentMode.setPageMode(PageMode.NEWS_LIST);
+
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                RequestNewsList requestNewsList = new RequestNewsList();
+                requestNewsList.setResponseListener(this);
+                requestNewsList.setCastId(castId);
+
+                RequestHandler.getInstance().request(requestNewsList);
+            }
+        }
+    }
+
+    private void onTimeLineGroupClickEvent(View v, TimeLineGroup timeLineGroup)
+    {
+        mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
+
+        mItemViewAdapter.clear();
+        mItemViewAdapter.notifyDataSetChanged();
+
+        RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
+        requestTimeLineList.setCast(mTargetCast);
+        requestTimeLineList.setResponseListener(this);
+
+        RequestHandler.getInstance().request(requestTimeLineList);
+    }
+
+    private void onTimeLineClickEvent(View v, TimeLine timeLine)
+    {
+        switch (v.getId())
+        {
+            case R.id.replyThisTimeLine:
+            {
+                if (mPageCurrentMode.mPageMode == PageMode.TIME_LINE_LIST)
+                {
+                    mPageCurrentMode.setPageMode(PageMode.TIME_LINE_REPLY_LIST);
+
+                    mItemViewAdapter.clear();
+                    mItemViewAdapter.notifyDataSetChanged();
+
+                    RequestReplyList requestReplyList = new RequestReplyList();
+                    requestReplyList.setResponseListener(this);
+                    requestReplyList.setTargetTimeLine(timeLine);
+
+                    RequestHandler.getInstance().request(requestReplyList);
+                }
+                break;
+            }
+
+            case R.id.shareTimeLineButton:
+            {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+
+        switch (mPageCurrentMode.mPageMode)
+        {
+            case CAST_INFO:
+                finish();
+                break;
+
+            case TIME_LINE_LIST:
+            case NEWS_LIST:
+
+                mPageCurrentMode.setPageMode(CAST_INFO);
+
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
+                requestDetailedCast.setResponseListener(this);
+                requestDetailedCast.setCast(mTargetCast);
+
+                RequestHandler.getInstance().request(requestDetailedCast);
+                break;
+
+            case TIME_LINE_REPLY_LIST:
+                mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
+
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
+                requestTimeLineList.setCast(mTargetCast);
+                requestTimeLineList.setResponseListener(this);
+
+                RequestHandler.getInstance().request(requestTimeLineList);
+                break;
         }
     }
 
@@ -222,6 +497,38 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
 
             loadDummyItemList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+        else if (request.isRight(RequestNewsList.class))
+        {
+
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyNewsList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+        else if (request.isRight(RequestTimeLineList.class))
+        {
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyTimeLineList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+        else if (request.isRight(RequestReplyList.class))
+        {
+            RequestReplyList requestReplyList = (RequestReplyList) request;
+
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            itemArrayList.add(requestReplyList.getTargetTimeLine());
+
+            loadDummyReplyList(itemArrayList);
 
             mItemViewAdapter.setItemList(itemArrayList);
             mItemViewAdapter.notifyDataSetChanged();
@@ -249,7 +556,45 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         lineGraphItem.addPointEntrie("2018-06-11" , 800);
         commonItems.add(lineGraphItem);
 
-        CurrentCastingStatus currentCastingStatus = new CurrentCastingStatus();
-        commonItems.add(currentCastingStatus);
+        CastingStatus castingStatus = new CastingStatus();
+        castingStatus.addStatus("한화 이글스", 80);
+        castingStatus.addStatus("SK", 60);
+        castingStatus.addStatus("두산 베어스", 20);
+        castingStatus.addStatus("롯데 자이언츠", 10);
+        castingStatus.addStatus("기아 타이거즈", 5);
+        commonItems.add(castingStatus);
+    }
+
+    private void loadDummyNewsList(ArrayList<ICommonItem> commonItems)
+    {
+        for (int i = 0 ; i < 100 ; i++)
+        {
+            News news = new News();
+            news.setNewsTitle("주요 뉴스");
+            news.setNews("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
+            news.setNewsTime("1시간전");
+
+            commonItems.add(news);
+        }
+    }
+
+    private void loadDummyTimeLineList(ArrayList<ICommonItem> commonItems)
+    {
+        for (int i = 0 ; i < 100 ; i++)
+        {
+            TimeLine timeLine = new TimeLine();
+
+            commonItems.add(timeLine);
+        }
+    }
+
+    private void loadDummyReplyList(ArrayList<ICommonItem> commonItems)
+    {
+        for (int i = 0 ; i < 100 ; i++)
+        {
+            Reply reply = new Reply();
+
+            commonItems.add(reply);
+        }
     }
 }

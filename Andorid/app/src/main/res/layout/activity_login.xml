@@ -64,7 +64,8 @@
             android:layout_marginLeft="@dimen/dp30"
             android:layout_marginRight="@dimen/dp30"
             android:visibility="gone"
-            app:title="이메일"/>
+            app:title="이메일"
+            app:insertTextType="email"/>
 
         <com.casting.view.InsertForm
             android:id="@+id/insertForm2"
@@ -74,7 +75,8 @@
             android:layout_marginLeft="@dimen/dp30"
             android:layout_marginRight="@dimen/dp30"
             android:visibility="gone"
-            app:title="비밀번호를 입력하세요" />
+            app:title="비밀번호를 입력하세요"
+            app:insertTextType="password"/>
 
         <Button
             android:id="@+id/loginButton"

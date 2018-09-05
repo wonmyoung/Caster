@@ -5,17 +5,14 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
-import com.casting.model.Cast;
-import com.casting.model.Member;
-import com.casting.model.TimeLineList;
+import com.casting.model.ReplyList;
+import com.casting.model.TimeLine;
 
 import org.json.JSONObject;
 
-public class RequestTimeLineList extends NetworkRequest implements JSONParcelable<TimeLineList> {
+public class RequestReplyList extends NetworkRequest implements JSONParcelable<ReplyList> {
 
-    private Member  mMember;
-
-    private Cast    mCast;
+    private TimeLine TargetTimeLine;
 
     @Override
     public String getHttpMethod() {
@@ -34,28 +31,20 @@ public class RequestTimeLineList extends NetworkRequest implements JSONParcelabl
 
     @SuppressWarnings("unchecked")
     @Override
-    public JSONParcelable getNetworkParcelable() {
-        return null;
-    }
-
-    public Member getMember() {
-        return mMember;
-    }
-
-    public void setMember(Member member) {
-        this.mMember = member;
+    public JSONParcelable<ReplyList> getNetworkParcelable() {
+        return this;
     }
 
     @Override
-    public TimeLineList parse(JSONObject jsonObject) {
+    public ReplyList parse(JSONObject jsonObject) {
         return null;
     }
 
-    public Cast getCast() {
-        return mCast;
+    public TimeLine getTargetTimeLine() {
+        return TargetTimeLine;
     }
 
-    public void setCast(Cast c) {
-        this.mCast = c;
+    public void setTargetTimeLine(TimeLine timeLine) {
+        TargetTimeLine = timeLine;
     }
 }
