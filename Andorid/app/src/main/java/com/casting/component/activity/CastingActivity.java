@@ -108,8 +108,10 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
+
         mCastButton = find(R.id.castButton);
-        mCastButton.setOnClickListener(new View.OnClickListener() {
+        mCastButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view)
             {
@@ -129,9 +131,10 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mItemViewAdapter = new ItemViewAdapter(this, this);
         mItemViewAdapter.setHeaderView(head);
         mItemViewAdapter.setFooterView(foot);
+
+        mItemLayoutManager = new LinearLayoutManager(this);
         mItemListView = find(R.id.castingItemListView);
         mItemListView.setAdapter(mItemViewAdapter);
-        mItemLayoutManager = new LinearLayoutManager(this);
         mItemListView.setLayoutManager(mItemLayoutManager);
 
         mTargetCast = (Cast) getIntent().getSerializableExtra(CAST);
@@ -377,7 +380,31 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
     private void onCastButtonClickEvent()
     {
+        if (mTargetCast != null)
+        {
+            Cast.Type type = mTargetCast.getCastType();
 
+            if (type != null)
+            {
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                switch (type)
+                {
+                    case CHOICE:
+                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_CHOICE);
+                        break;
+
+                    case TWO_CHOICE:
+                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_TWO_CHOICE);
+                        break;
+
+                    case ESSAY:
+                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
+                        break;
+                }
+            }
+        }
     }
 
     private void onNewsClickEvent(View v, News news)

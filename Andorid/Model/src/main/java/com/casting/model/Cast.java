@@ -6,6 +6,14 @@ import com.casting.model.global.ItemConstant;
 
 public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
+    public enum Type
+    {
+        CHOICE,
+        TWO_CHOICE,
+        ESSAY;
+    }
+
+
     private String      CastId;
 
     private double      RemainingTime;
@@ -17,6 +25,8 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
     private int   mItemType;
 
     private boolean Done;
+
+    private Type CastType;
 
     public double getRemainingTime() {
         return RemainingTime;
@@ -83,5 +93,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setDone(boolean done) {
         Done = done;
+    }
+
+    public Type getCastType() {
+        return CastType;
+    }
+
+    public void setCastType(Type castType) {
+        CastType = castType;
     }
 }
