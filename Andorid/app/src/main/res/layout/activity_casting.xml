@@ -15,6 +15,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp55">
 
+        <TextView
+            android:id="@+id/castCardTopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="@dimen/dp15"
+            android:textColor="@color/mainColor0"
+            android:textSize="@dimen/dp12"
+            android:text="TopButton"/>
+
     </FrameLayout>
 
     <include

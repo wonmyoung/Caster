@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dp5"
+    android:layout_marginLeft="@dimen/dp15"
+    android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp5"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="@dimen/dp15"
+    card_view:cardElevation="@dimen/dp5"
+    card_view:cardMaxElevation="0dp"
+    card_view:contentPaddingBottom="@dimen/dp5"
+    card_view:contentPaddingLeft="@dimen/dp15"
+    card_view:contentPaddingRight="@dimen/dp15"
+    card_view:contentPaddingTop="@dimen/dp15">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <com.casting.commonmodule.view.CircleImageView
+            android:id="@+id/userImage"
+            android:layout_width="@dimen/dp45"
+            android:layout_height="@dimen/dp45"
+            android:background="@color/mainColor0"
+            android:visibility="gone"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp25"
+                android:layout_marginLeft="@dimen/dp10">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/userNickName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:text="조감독"
+                        android:textColor="@color/mainColor0"
+                        android:textSize="@dimen/dp14" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dp5"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:text="에게 보내는 답글"
+                        android:textColor="@color/color_666666"
+                        android:textSize="@dimen/dp12" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/replyWriteButton"
+                    android:layout_width="@dimen/dp70"
+                    android:layout_height="@dimen/dp17"
+                    android:background="@drawable/shape_main_color_round5"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="답글달기"
+                    android:textSize="@dimen/dp11"
+                    android:textColor="@color/color_white"/>
+
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/userTimeLineInsert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp15"
+                android:layout_marginLeft="@dimen/dp10"
+                android:layout_marginTop="@dimen/dp10"
+                android:paddingLeft="@dimen/dp5"
+                android:paddingTop="@dimen/dp5"
+                android:paddingBottom="@dimen/dp5"
+                android:maxLines="1"
+                android:textSize="@dimen/dp12"
+                android:inputType="text"
+                android:scrollHorizontally="true"
+                android:textColorHint="@color/color_666666"
+                android:hint="댓글달기 (의견을 공유할수록 예측 정확도가 올라가요!)"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:background="@drawable/shape_gray_color_alpha50_round5"
+                android:textColor="@color/color_666666" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

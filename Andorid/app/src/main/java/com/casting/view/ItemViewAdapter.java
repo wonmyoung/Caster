@@ -56,12 +56,20 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_timeline, parent);
                 break;
 
+            case TIME_LINE_WRITE:
+                v = inflateView(R.layout.view_item_timeline_write, parent);
+                break;
+
             case TIME_LINE_GROUP:
                 v = inflateView(R.layout.view_item_timeline_group, parent);
                 break;
 
             case TIME_LINE_REPLY:
                 v = inflateView(R.layout.view_item_timeline_reply, parent);
+                break;
+
+            case TIME_LINE_REPLY_WRITE:
+                v = inflateView(R.layout.view_item_timeline_reply_insert, parent);
                 break;
 
             case CURRENT_CASTING_STATUS:

@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.casting.R;
@@ -30,10 +31,13 @@ import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
 import com.casting.model.LineGraphItem;
+import com.casting.model.Member;
 import com.casting.model.News;
 import com.casting.model.Reply;
 import com.casting.model.TimeLine;
 import com.casting.model.TimeLineGroup;
+import com.casting.model.global.ActiveMember;
+import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestDetailedCast;
 import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestReplyList;
@@ -61,14 +65,13 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
     enum PageMode
     {
-        CAST_INFO,
+        CAST_INFO,                  // 1 Depth 캐스트 화면 상세
 
         NEWS_LIST,
 
         TIME_LINE_LIST,
         TIME_LINE_WRITE,
         TIME_LINE_REPLY_LIST,
-        TIME_LINE_REPLY_WRITE,
 
         CAST_AS_ESSAY,
         CAST_AS_CHOICE,
@@ -80,7 +83,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     {
         private PageMode    mPageMode = CAST_INFO;
 
-        public void setPageMode(PageMode mode) {
+        public void setPageMode(PageMode mode)
+        {
             this.mPageMode = mode;
 
             setChanged();
@@ -88,14 +92,46 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
+    private class ItemInsert implements ICommonItem, ItemConstant
+    {
+        private int mItemType;
+
+        @Override
+        public int getItemType() {
+            return mItemType;
+        }
+
+        public void setItemType(int type)
+        {
+            this.mItemType = type;
+        }
+    }
+
 
     private ImageView    mCastImage;
     private TextView     mCastTitle;
+    private TextView     mCastTopButton;
     private Button       mCastButton;
+    private EditText     mTextInsertView;
 
     private CommonRecyclerView      mItemListView;
     private ItemViewAdapter         mItemViewAdapter;
     private LinearLayoutManager     mItemLayoutManager;
+
+    private RecyclerView.OnScrollListener mScrollKeyboardFocus = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+
+            if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+            {
+                if (mTextInsertView != null)
+                {
+                    UtilityUI.setForceKeyboardDown(CastingActivity.this, mTextInsertView);
+                }
+            }
+        }
+    };
 
     private Cast        mTargetCast;
 
@@ -109,13 +145,22 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
 
+        mCastTopButton = find(R.id.castCardTopButton);
+        mCastTopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                onClickEventTopButton();
+            }
+        });
+
         mCastButton = find(R.id.castButton);
         mCastButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                onCastButtonClickEvent();
+                onClickEventCastButton();
             }
         });
 
@@ -200,6 +245,36 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 break;
             }
 
+            case TIME_LINE_WRITE:
+            {
+                Member member = ActiveMember.getInstance().getMember();
+
+                ImageView imageView = holder.find(R.id.userImage);
+                TextView textView1 = holder.find(R.id.userNickName);
+                TextView textView2 = holder.find(R.id.userId);
+
+                if (member != null)
+                {
+                    ImageLoader.loadImage(this, imageView, member.getUserPicThumbnail());
+
+                    textView1.setText(member.getNickName());
+                    textView2.setText(member.getUserId());
+                }
+
+                mTextInsertView = holder.find(R.id.userTimeLineInsert);
+                break;
+            }
+
+            case TIME_LINE_REPLY_WRITE:
+            {
+                mTextInsertView = holder.find(R.id.userTimeLineInsert);
+
+                Button button = holder.find(R.id.replyWriteButton);
+                button.setTag(R.id.position, position);
+                button.setOnClickListener(this);
+                break;
+            }
+
             case GRAPH_LINE:
             {
                 final LineGraphItem lineGraphItem = (LineGraphItem) item;
@@ -263,13 +338,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case CURRENT_CASTING_STATUS:
             {
-
-
                 CastingStatus currentStatus = (CastingStatus) item;
 
                 for (int i = 1 ; i <= 5 ; i++)
                 {
-                    CastingStatus.CastingOption castingOption = currentStatus.getCastingStatus((i - 1));
+                    CastingStatus.CastingOption castingOption = currentStatus.getCastingOption((i - 1));
 
                     String packageName = getPackageName();
 
@@ -333,11 +406,49 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 case CAST_INFO:
                     mCastButton.setVisibility(View.VISIBLE);
+                    mCastButton.setText("캐스트 하기");
+
+                    mCastTopButton.setVisibility(View.GONE);
                     break;
 
                 case NEWS_LIST:
+                    mCastButton.setVisibility(View.GONE);
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
                 case TIME_LINE_LIST:
                     mCastButton.setVisibility(View.GONE);
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
+                case TIME_LINE_WRITE:
+                    mCastButton.setVisibility(View.GONE);
+
+                    mCastTopButton.setVisibility(View.VISIBLE);
+                    mCastTopButton.setText("완료");
+                    break;
+
+                case CAST_AS_CHOICE:
+                    mCastButton.setVisibility(View.VISIBLE);
+                    mCastButton.setText("캐스트 완료");
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
+                case CAST_AS_ESSAY:
+                    mCastButton.setVisibility(View.VISIBLE);
+                    mCastButton.setText("캐스트 완료");
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
+                case CAST_AS_TWO_CHOICE:
+                    mCastButton.setVisibility(View.VISIBLE);
+                    mCastButton.setText("캐스트 완료");
+
+                    mCastTopButton.setVisibility(View.GONE);
                     break;
             }
         }
@@ -356,7 +467,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 News news = (News) item;
 
-                onNewsClickEvent(v, news);
+                onClickEventNews(v, news);
                 break;
             }
 
@@ -364,7 +475,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 TimeLineGroup timeLineGroup = (TimeLineGroup) item;
 
-                onTimeLineGroupClickEvent(v, timeLineGroup);
+                onClickEventTimeLineGroup(v, timeLineGroup);
                 break;
             }
 
@@ -372,13 +483,34 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 TimeLine timeLine = (TimeLine) item;
 
-                onTimeLineClickEvent(v, timeLine);
+                onClickEventTimeLine(v, timeLine);
                 break;
             }
         }
     }
 
-    private void onCastButtonClickEvent()
+    private void onClickEventTopButton()
+    {
+        switch (mPageCurrentMode.mPageMode)
+        {
+            case TIME_LINE_LIST:
+                mPageCurrentMode.setPageMode(PageMode.TIME_LINE_WRITE);
+
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                ItemInsert itemInsert = new ItemInsert();
+                itemInsert.setItemType(ItemConstant.TIME_LINE_WRITE);
+                mItemViewAdapter.addItem(itemInsert);
+                mItemViewAdapter.notifyDataSetChanged();
+                break;
+
+            case TIME_LINE_WRITE:
+                break;
+        }
+    }
+
+    private void onClickEventCastButton()
     {
         if (mTargetCast != null)
         {
@@ -407,7 +539,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private void onNewsClickEvent(View v, News news)
+    private void onClickEventNews(View v, News news)
     {
         if (mPageCurrentMode.mPageMode == PageMode.CAST_INFO)
         {
@@ -429,7 +561,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private void onTimeLineGroupClickEvent(View v, TimeLineGroup timeLineGroup)
+    private void onClickEventTimeLineGroup(View v, TimeLineGroup timeLineGroup)
     {
         mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
 
@@ -443,7 +575,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         RequestHandler.getInstance().request(requestTimeLineList);
     }
 
-    private void onTimeLineClickEvent(View v, TimeLine timeLine)
+    private void onClickEventTimeLine(View v, TimeLine timeLine)
     {
         switch (v.getId())
         {
@@ -479,12 +611,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         switch (mPageCurrentMode.mPageMode)
         {
             case CAST_INFO:
+            {
                 finish();
                 break;
+            }
 
             case TIME_LINE_LIST:
             case NEWS_LIST:
-
+            {
                 mPageCurrentMode.setPageMode(CAST_INFO);
 
                 mItemViewAdapter.clear();
@@ -496,9 +630,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 RequestHandler.getInstance().request(requestDetailedCast);
                 break;
+            }
 
+            case TIME_LINE_WRITE:
             case TIME_LINE_REPLY_LIST:
+            {
                 mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
+
+                // mItemListView.removeOnScrollListener(mScrollKeyboardFocus);
 
                 mItemViewAdapter.clear();
                 mItemViewAdapter.notifyDataSetChanged();
@@ -509,6 +648,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 RequestHandler.getInstance().request(requestTimeLineList);
                 break;
+            }
         }
     }
 
@@ -553,9 +693,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
 
-            itemArrayList.add(requestReplyList.getTargetTimeLine());
-
             loadDummyReplyList(itemArrayList);
+
+            itemArrayList.add(0, requestReplyList.getTargetTimeLine());
+
+            ItemInsert itemInsert = new ItemInsert();
+            itemInsert.setItemType(TIME_LINE_REPLY_WRITE);
+
+            itemArrayList.add(1, itemInsert);
 
             mItemViewAdapter.setItemList(itemArrayList);
             mItemViewAdapter.notifyDataSetChanged();

@@ -28,8 +28,8 @@ import android.widget.Adapter;
 
 public class SwipeStackController extends DataSetObserver implements View.OnTouchListener {
 
-    private static final float CLICK_EVENT_MINIMUM_AREA = 100;
-    private static final float CLICK_EVENT_TIME_AREA = 200;
+    private static final float CLICK_EVENT_MINIMUM_AREA = 25;
+    private static final float CLICK_EVENT_TIME_AREA = 100;
 
     private final SwipeStack mSwipeStack;
 
