@@ -498,7 +498,7 @@ public class MainActivity extends BaseFCActivity implements
             cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
             cast.setThumbnails(
                     "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");
-
+            cast.setCastType(Cast.Type.ESSAY);
             list.add(cast);
         }
     }

@@ -43,6 +43,7 @@ import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestReplyList;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
+import com.casting.view.insert.TrustGraph;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -394,6 +395,17 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 }
                 break;
             }
+
+            case INSERT_TRUST_GRAPH:
+            {
+                TrustGraph trustGraph = holder.find(R.id.cardItemTrustGraph);
+                trustGraph.addPoint("이럴거면 뭐하러 ..", 0);
+                trustGraph.addPoint("조금 헷갈려요", 25);
+                trustGraph.addPoint("하프 앤 하프", 50);
+                trustGraph.addPoint("거의 틀림 없어요", 75);
+                trustGraph.addPoint("올인", 100);
+                break;
+            }
         }
     }
 
@@ -420,7 +432,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 case TIME_LINE_LIST:
                     mCastButton.setVisibility(View.GONE);
 
-                    mCastTopButton.setVisibility(View.GONE);
+                    mCastTopButton.setVisibility(View.VISIBLE);
+                    mCastTopButton.setText("글쓰기");
                     break;
 
                 case TIME_LINE_WRITE:
@@ -533,6 +546,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                     case ESSAY:
                         mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
+
+                        ItemInsert itemInsert = new ItemInsert();
+                        itemInsert.setItemType(INSERT_TRUST_GRAPH);
+
+                        mItemViewAdapter.addItem(itemInsert);
+                        mItemViewAdapter.notifyDataSetChanged();
                         break;
                 }
             }
@@ -649,6 +668,21 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 RequestHandler.getInstance().request(requestTimeLineList);
                 break;
             }
+
+            case CAST_AS_CHOICE:
+            case CAST_AS_ESSAY:
+            case CAST_AS_TWO_CHOICE:
+                mPageCurrentMode.setPageMode(CAST_INFO);
+
+                mItemViewAdapter.clear();
+                mItemViewAdapter.notifyDataSetChanged();
+
+                RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
+                requestDetailedCast.setResponseListener(this);
+                requestDetailedCast.setCast(mTargetCast);
+
+                RequestHandler.getInstance().request(requestDetailedCast);
+                break;
         }
     }
 

@@ -111,7 +111,7 @@ public class DividerDrawable extends Drawable {
         switch (mPathType) {
             case LINE:
             case DASH:
-                if (mOrientation == LinearLayout.VERTICAL)
+                if (mOrientation == LinearLayout.HORIZONTAL)
                 {
                     startX = getPaddingLeft(); startY = centerY;
                     endX = (canvas.getWidth() - getPaddingRight());

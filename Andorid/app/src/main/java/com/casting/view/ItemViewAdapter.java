@@ -88,6 +88,10 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_line_graph, parent);
                 break;
 
+            case INSERT_TRUST_GRAPH:
+                v = inflateView(R.layout.view_item_trust_graph, parent);
+                break;
+
             default:
                 v = new View(c);
                 break;

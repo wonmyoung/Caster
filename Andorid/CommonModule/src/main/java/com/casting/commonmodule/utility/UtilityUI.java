@@ -837,6 +837,23 @@ public class UtilityUI {
         }
     }
 
+    public static void setBackGroundDrawable(View view , Drawable drawable) {
+        if (view != null) {
+            try {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN)
+                {
+                    view.setBackground(drawable);
+                }
+                else
+                {
+                    view.setBackgroundDrawable(drawable);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static Bitmap getBlurImage(Context context , Bitmap sentBitmap , int radius){
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN){
             Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);

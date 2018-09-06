@@ -16,6 +16,7 @@ public interface ItemConstant {
     int CHART_ITEM              = 1012;
     int ALARM                   = 1013;
     int CURRENT_CASTING_STATUS  = 1014;
+    int INSERT_TRUST_GRAPH      = 1015;
 
     int GRAPH_LINE = 2001;
 }
