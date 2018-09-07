@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,12 @@ import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 public class TrustGraph extends FrameLayout implements View.OnClickListener {
 
     private View            mLineView;
-    private LinearLayout    mItemLayout;
+    private FrameLayout     mItemLayout;
 
     private class Point {
 
@@ -42,6 +44,22 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
 
         public void setValue(Object value) {
             Value = value;
+        }
+    }
+
+    private class SelectedPoint extends Observable
+    {
+        private Point target;
+
+        public Point getPoint() {
+            return target;
+        }
+
+        public void setPoint(Point p) {
+            this.target = p;
+
+            setChanged();
+            notifyObservers();
         }
     }
 
@@ -86,8 +104,7 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
                 LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
         lp2.gravity = Gravity.TOP;
-        mItemLayout = new LinearLayout(c);
-        mItemLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mItemLayout = new FrameLayout(c);
         mItemLayout.setLayoutParams(lp2);
         mItemLayout.setClipChildren(false);
         addView(mItemLayout);
@@ -105,31 +122,52 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
         int childCount = mItemLayout.getChildCount();
         if (childCount > 0)
         {
+            View child1 = mItemLayout.getChildAt(0);
+
+            int child1Width = child1.getMeasuredWidth();
+
+            FrameLayout.LayoutParams lp1 = (LayoutParams) child1.getLayoutParams();
+            lp1.leftMargin = 0;
+            child1.setLayoutParams(lp1);
 
             int lineWidth = mItemLayout.getMeasuredWidth();
-            int leftMarginUnit = (lineWidth / childCount);
 
-            for (int i = 0 ; i < childCount ; i++)
+            View child2 = mItemLayout.getChildAt((childCount - 1));
+
+            int child2Width = child2.getMeasuredWidth();
+
+            FrameLayout.LayoutParams lp2 = (LayoutParams) child2.getLayoutParams();
+            lp2.leftMargin = 0;
+            lp2.leftMargin += lineWidth;
+            lp2.leftMargin -= child2Width;
+            child2.setLayoutParams(lp2);
+
+            if (childCount > 2)
             {
-                View v = mItemLayout.getChildAt(i);
+                int givenWidth = lineWidth;
+                givenWidth -= (child1Width / 2);
+                givenWidth -= (child2Width / 2);
+                int distance = (givenWidth / (childCount - 1));
 
-                int childWidth = (int) getResources().getDimension(R.dimen.dp80);
+                for (int i = 1 ; i < (childCount - 1) ; i++)
+                {
+                    View remainingChild = mItemLayout.getChildAt(i);
 
-                int childX = 0;
-                childX += (leftMarginUnit * i);
-                childX -= (childWidth / 2);
+                    FrameLayout.LayoutParams lp = (LayoutParams) remainingChild.getLayoutParams();
+                    lp.leftMargin = (distance * i) - (remainingChild.getMeasuredWidth() / 2);
+                    lp.leftMargin += (child1Width / 2);
 
-                if (childX < 0) {
-                    childX = 0;
+                    remainingChild.setLayoutParams(lp);
                 }
-
-                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) v.getLayoutParams();
-                lp.leftMargin = childX;
-
-                v.setLayoutParams(lp);
             }
 
             mItemLayout.requestLayout();
+
+            FrameLayout.LayoutParams lineParam = (LayoutParams) mLineView.getLayoutParams();
+            lineParam.leftMargin = (child1Width / 2);
+            lineParam.rightMargin = (child2Width / 2);
+            mLineView.setLayoutParams(lineParam);
+            mLineView.requestLayout();
         }
     }
 
@@ -139,16 +177,29 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
 
     }
 
+    public ArrayList<Point> getPointArrayList()
+    {
+        return PointArrayList;
+    }
+
+    public int getPointArrayListSize()
+    {
+        return (PointArrayList == null ? 0 : PointArrayList.size());
+    }
+
     public void addPoint(String name, Object value)
     {
         Context c = getContext();
 
         LayoutInflater layoutInflater = LayoutInflater.from(c);
 
+        FrameLayout.LayoutParams lp = new LayoutParams(
+                (int) getResources().getDimension(R.dimen.dp40),
+                LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.START;
+
         View view = layoutInflater.inflate(R.layout.view_item_trust_graph_point, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+        view.setLayoutParams(lp);
         mItemLayout.addView(view);
 
         TextView textView = (TextView) view.findViewById(R.id.circlePointMessage);

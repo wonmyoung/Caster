@@ -485,8 +485,6 @@ public class SwipeStack extends ViewGroup
 
     private void addNextView()
     {
-        Log.d("confirm" , ">> confirm addNextView ");
-
         if (mCurrentViewIndex < mAdapter.getCount())
         {
             View view = mAdapter.getView(mCurrentViewIndex, null, this);
@@ -611,8 +609,6 @@ public class SwipeStack extends ViewGroup
 
     private void removeBottomView()
     {
-        Log.d("confirm" , ">> confirm removeBottomView ");
-
         if (getChildCount() > 0)
         {
             View v = getChildAt(0);

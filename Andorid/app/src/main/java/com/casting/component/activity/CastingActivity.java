@@ -399,11 +399,16 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             case INSERT_TRUST_GRAPH:
             {
                 TrustGraph trustGraph = holder.find(R.id.cardItemTrustGraph);
-                trustGraph.addPoint("이럴거면 뭐하러 ..", 0);
-                trustGraph.addPoint("조금 헷갈려요", 25);
-                trustGraph.addPoint("하프 앤 하프", 50);
-                trustGraph.addPoint("거의 틀림 없어요", 75);
-                trustGraph.addPoint("올인", 100);
+
+                int size = trustGraph.getPointArrayListSize();
+                if (size == 0)
+                {
+                    trustGraph.addPoint("가망없음", 0);
+                    trustGraph.addPoint("조금 헷갈려요", 25);
+                    trustGraph.addPoint("하프 앤 하프", 50);
+                    trustGraph.addPoint("거의 틀림 없어요", 75);
+                    trustGraph.addPoint("올인", 100);
+                }
                 break;
             }
         }
@@ -474,7 +479,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         ICommonItem item = mItemViewAdapter.getItem(position);
 
-        switch (item.getItemType())
+        int itemType = (item != null ? item.getItemType() : -1);
+
+        switch (itemType)
         {
             case NEWS:
             {
