@@ -13,9 +13,9 @@ import com.casting.model.request.RequestTimeLineList;
 public class FutureCasting extends CommonApplication {
 
     public static final String HTTP_PROTOCOL    = "http://";
-    public static final String SERVER_DOMAIN    = "voltsoftware.co.kr";
-    public static final String SERVER_PORT      = ":8080/";
-    public static final String SERVER_TARGET    = "edu/";
+    public static final String SERVER_DOMAIN    = "ec2-13-125-159-59.ap-northeast-2.compute.amazonaws.com";
+    public static final String SERVER_PORT      = ":3000/";
+    public static final String SERVER_TARGET    = "";
 
     @Override
     public String create(BaseRequest request)

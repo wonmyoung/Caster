@@ -16,16 +16,19 @@ import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
+import com.casting.view.ObserverView;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Observer;
 
 public class TrustGraph extends FrameLayout implements View.OnClickListener {
 
     private View            mLineView;
     private FrameLayout     mItemLayout;
 
-    private class Point {
+    public class Point {
 
         private String Name;
         private Object Value;
@@ -51,19 +54,23 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
     {
         private Point target;
 
-        public Point getPoint() {
+        public Point getPoint()
+        {
             return target;
         }
 
-        public void setPoint(Point p) {
+        public void setPoint(Point p)
+        {
             this.target = p;
 
             setChanged();
-            notifyObservers();
+            notifyObservers(target);
         }
     }
 
-    private ArrayList<Point> PointArrayList = new ArrayList<>();
+    private SelectedPoint       mSelectedPoint;
+
+    private ArrayList<Point>    PointArrayList = new ArrayList<>();
 
     public TrustGraph(@NonNull Context context)
     {
@@ -112,6 +119,8 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
         setClipChildren(false);
 
         setWillNotDraw(false);
+
+        mSelectedPoint = new SelectedPoint();
     }
 
     @Override
@@ -174,7 +183,11 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
     @Override
     public void onClick(View v)
     {
+        int selected = (int) v.getTag();
 
+        Point point = PointArrayList.get(selected);
+
+        mSelectedPoint.setPoint(point);
     }
 
     public ArrayList<Point> getPointArrayList()
@@ -187,8 +200,37 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
         return (PointArrayList == null ? 0 : PointArrayList.size());
     }
 
+    public void setDefaultSelected()
+    {
+        int size = (PointArrayList == null ? 0 : PointArrayList.size());
+        if (size > 0)
+        {
+            int middle = size / 2;
+
+            Point point = PointArrayList.get(middle);
+
+            mSelectedPoint.setPoint(point);
+        }
+    }
+
+    public void addObserver(Observer observer)
+    {
+        if (mSelectedPoint != null)
+        {
+            mSelectedPoint.addObserver(observer);
+        }
+    }
+
     public void addPoint(String name, Object value)
     {
+        int index = PointArrayList.size();
+
+        final Point point = new Point();
+        point.setName(name);
+        point.setValue(value);
+
+        PointArrayList.add(point);
+
         Context c = getContext();
 
         LayoutInflater layoutInflater = LayoutInflater.from(c);
@@ -199,17 +241,35 @@ public class TrustGraph extends FrameLayout implements View.OnClickListener {
         lp.gravity = Gravity.START;
 
         View view = layoutInflater.inflate(R.layout.view_item_trust_graph_point, null);
+        view.setTag(index);
+        view.setOnClickListener(this);
         view.setLayoutParams(lp);
         mItemLayout.addView(view);
 
         TextView textView = (TextView) view.findViewById(R.id.circlePointMessage);
         textView.setText(name);
 
-        Point point = new Point();
-        point.setName(name);
-        point.setValue(value);
+        View pointView = view.findViewById(R.id.circlePoint);
 
-        PointArrayList.add(point);
+        ObserverView<View> observerView = new ObserverView<View>(pointView) {
+
+            @Override
+            protected void updateView(Observable observable, Object o) throws Exception
+            {
+                if (o instanceof Point)
+                {
+                    boolean selected = o.equals(point);
+
+                    float scale = (selected ? 1.5f : 1.0f);
+
+                    mRoot.setSelected(selected);
+
+                    ViewHelper.setScaleX(mRoot, scale);
+                    ViewHelper.setScaleY(mRoot, scale);
+                }
+            }
+        };
+        mSelectedPoint.addObserver(observerView);
 
         invalidate();
     }

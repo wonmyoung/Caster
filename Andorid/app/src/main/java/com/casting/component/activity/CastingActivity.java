@@ -1,5 +1,6 @@
 package com.casting.component.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -43,6 +44,7 @@ import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestReplyList;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
+import com.casting.view.ObserverView;
 import com.casting.view.insert.TrustGraph;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -400,6 +402,29 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 TrustGraph trustGraph = holder.find(R.id.cardItemTrustGraph);
 
+                TextView textView = holder.find(R.id.cardItemTrustText);
+
+                ObserverView<TextView> observerView = new ObserverView<TextView>(textView) {
+                    @Override
+                    protected void updateView(Observable observable, Object o) throws Exception
+                    {
+                        if (o instanceof TrustGraph.Point)
+                        {
+                            TrustGraph.Point point = (TrustGraph.Point) o;
+
+                            Object value = point.getValue();
+
+                            if (value instanceof Integer)
+                            {
+                                int n = (int) value;
+
+                                mRoot.setText(Integer.toString(n));
+                            }
+                        }
+                    }
+                };
+                trustGraph.addObserver(observerView);
+
                 int size = trustGraph.getPointArrayListSize();
                 if (size == 0)
                 {
@@ -408,6 +433,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     trustGraph.addPoint("하프 앤 하프", 50);
                     trustGraph.addPoint("거의 틀림 없어요", 75);
                     trustGraph.addPoint("올인", 100);
+                    trustGraph.setDefaultSelected();
                 }
                 break;
             }

@@ -76,4 +76,12 @@
         android:layout_marginLeft="@dimen/dp15"
         android:layout_marginRight="@dimen/dp15" />
 
+    <View
+        android:id="@+id/main_seekBarControllerCover"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp60"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:background="@color/color_white50"/>
+
 </FrameLayout>

@@ -1,5 +1,7 @@
 package com.casting.component.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -169,6 +171,7 @@ public class MainActivity extends BaseFCActivity implements
 
     private SwipeStack  mSwipeStack;
     private SeekBar     mMainSeekBar;
+    private View        mMainSeekBarCover;
     private CardSwipeAdapter mSwipeStackAdapter;
 
     private Queue<CardSwipe> mSwipeExecutionQueue = new LinkedList<>();
@@ -206,6 +209,9 @@ public class MainActivity extends BaseFCActivity implements
 
         mMainSeekBar = find(R.id.main_seekBarController);
         mMainSeekBar.setOnSeekBarChangeListener(this);
+        mMainSeekBarCover = find(R.id.main_seekBarControllerCover);
+        mMainSeekBarCover.setAlpha(0.0f);
+        mMainSeekBarCover.setVisibility(View.GONE);
     }
 
     @Override
@@ -313,12 +319,16 @@ public class MainActivity extends BaseFCActivity implements
                 rollBackCardStack(rollBackCount);
             }
 
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) seekBar.getLayoutParams();
-            translationY += lp.bottomMargin;
-            translationY += seekBar.getMeasuredHeight();
-
-            seekBar.animate().translationY(translationY);
-            seekBar.setClickable(false);
+            mMainSeekBarCover.setClickable(true);
+            mMainSeekBarCover.animate().alpha(1.0f)
+                    .setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationStart(Animator animator)
+                        {
+                            mMainSeekBarCover.setVisibility(View.VISIBLE);
+                        }
+                    });
         }
     }
 
@@ -358,7 +368,18 @@ public class MainActivity extends BaseFCActivity implements
     public void onTabUnselected(TabLayout.Tab tab)
     {
         mMainSeekBar.setProgress(0);
-        mMainSeekBar.animate().translationY(0);
+
+        mMainSeekBarCover.setClickable(false);
+        mMainSeekBarCover.animate().alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        mMainSeekBarCover.setVisibility(View.GONE);
+                    }
+                });
 
         mSwipeStackAdapter.clear();
         mSwipeStackAdapter.notifyDataSetChanged();
@@ -388,7 +409,18 @@ public class MainActivity extends BaseFCActivity implements
     public void onStackEmpty()
     {
         mMainSeekBar.setProgress(0);
-        mMainSeekBar.animate().translationY(0);
+
+        mMainSeekBarCover.setClickable(false);
+        mMainSeekBarCover.animate().alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+
+                        mMainSeekBarCover.setVisibility(View.GONE);
+                    }
+                });
 
         mSwipeStack.resetStack();
 
@@ -407,8 +439,17 @@ public class MainActivity extends BaseFCActivity implements
             int queueSize = mSwipeExecutionQueue.size();
             if (queueSize == 0)
             {
-                mMainSeekBar.animate().translationY(0);
-                mMainSeekBar.setClickable(true);
+                mMainSeekBarCover.setClickable(false);
+                mMainSeekBarCover.animate().alpha(0.0f)
+                        .setListener(new AnimatorListenerAdapter()
+                        {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+
+                                mMainSeekBarCover.setVisibility(View.GONE);
+                            }
+                        });
             }
         }
         else

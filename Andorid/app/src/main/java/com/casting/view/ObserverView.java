@@ -5,13 +5,19 @@ import android.view.View;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ *
+ * 데코레이터 이면서 동시에 옵저버인 추상 객체
+ *
+ * @param <V>
+ */
 public abstract class ObserverView<V extends View> implements Observer {
 
-    private V v;
+    protected V mRoot;
 
     public ObserverView(V root)
     {
-        v = root;
+        mRoot = root;
     }
 
     @Override
