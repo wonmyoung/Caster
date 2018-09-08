@@ -19,7 +19,7 @@
         android:textSize="@dimen/dp20"
         android:textColor="@color/mainColor0"/>
 
-    <com.casting.view.InsertForm
+    <com.casting.view.insert.InsertForm
         android:id="@+id/registrationForm1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,7 +28,7 @@
         app:title="아이디"
         app:insertTextType="shortMessage"/>
 
-    <com.casting.view.InsertForm
+    <com.casting.view.insert.InsertForm
         android:id="@+id/registrationForm2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -37,7 +37,7 @@
         app:title="이메일"
         app:insertTextType="email"/>
 
-    <com.casting.view.InsertForm
+    <com.casting.view.insert.InsertForm
         android:id="@+id/registrationForm3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -46,7 +46,7 @@
         app:title="비밀번호를 입력해주세요"
         app:insertTextType="password"/>
 
-    <com.casting.view.InsertForm
+    <com.casting.view.insert.InsertForm
         android:id="@+id/registrationForm4"
         android:layout_width="match_parent"
         android:layout_height="0dp"

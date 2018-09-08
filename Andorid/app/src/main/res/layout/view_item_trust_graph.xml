@@ -20,12 +20,12 @@
         android:id="@+id/cardItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="얼마나 확신 하시나요?"
+        android:text=""
         android:textSize="@dimen/dp14"
         android:textStyle="bold"
         android:textColor="@color/mainColor0"/>
 
-    <com.casting.view.insert.TrustGraph
+    <com.casting.view.insert.InsertOptionsHorizontal
         android:id="@+id/cardItemTrustGraph"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp100"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="@dimen/dp30"
-            android:text="2,500"
+            android:text=""
             android:textColor="@color/color_black80"/>
 
         <TextView

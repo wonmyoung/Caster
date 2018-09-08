@@ -22,7 +22,7 @@ import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
-import com.casting.view.InsertForm;
+import com.casting.view.insert.InsertForm;
 
 import java.util.Observable;
 import java.util.Observer;

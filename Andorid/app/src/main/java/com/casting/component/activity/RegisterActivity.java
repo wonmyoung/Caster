@@ -19,7 +19,7 @@ import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.model.request.RegisterMember;
-import com.casting.view.InsertForm;
+import com.casting.view.insert.InsertForm;
 
 public class RegisterActivity extends CommonActivity implements TextView.OnEditorActionListener, IResponseListener {
 

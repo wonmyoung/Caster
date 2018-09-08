@@ -10,6 +10,7 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.global.ItemConstant;
+import com.casting.model.ItemInsert;
 
 public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConstant
 {
@@ -88,7 +89,7 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_line_graph, parent);
                 break;
 
-            case INSERT_TRUST_GRAPH:
+            case SELECT_HORIZONTAL_OPTIONS:
                 v = inflateView(R.layout.view_item_trust_graph, parent);
                 break;
 

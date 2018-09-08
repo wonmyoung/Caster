@@ -23,6 +23,7 @@
         android:layout_marginTop="@dimen/dp10"
         android:textColor="@color/color_505050"
         android:maxLines="3"
-        android:text="text Message text Message "/>
+        android:background="@color/color_white"
+        android:text="text Message text Message  text Message text Message text Message text Message"/>
 
 </LinearLayout>

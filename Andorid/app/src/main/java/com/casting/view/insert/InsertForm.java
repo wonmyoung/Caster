@@ -1,4 +1,4 @@
-package com.casting.view;
+package com.casting.view.insert;
 
 import android.content.Context;
 import android.content.res.TypedArray;

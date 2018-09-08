@@ -1,6 +1,5 @@
 package com.casting.component.activity;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -31,6 +30,7 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
+import com.casting.model.ItemSelectOptions;
 import com.casting.model.LineGraphItem;
 import com.casting.model.Member;
 import com.casting.model.News;
@@ -45,7 +45,8 @@ import com.casting.model.request.RequestReplyList;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
 import com.casting.view.ObserverView;
-import com.casting.view.insert.TrustGraph;
+import com.casting.view.insert.InsertOptionsHorizontal;
+import com.casting.model.ItemInsert;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -95,22 +96,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private class ItemInsert implements ICommonItem, ItemConstant
-    {
-        private int mItemType;
-
-        @Override
-        public int getItemType() {
-            return mItemType;
-        }
-
-        public void setItemType(int type)
-        {
-            this.mItemType = type;
-        }
-    }
-
-
     private ImageView    mCastImage;
     private TextView     mCastTitle;
     private TextView     mCastTopButton;
@@ -120,21 +105,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     private CommonRecyclerView      mItemListView;
     private ItemViewAdapter         mItemViewAdapter;
     private LinearLayoutManager     mItemLayoutManager;
-
-    private RecyclerView.OnScrollListener mScrollKeyboardFocus = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-
-            if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
-            {
-                if (mTextInsertView != null)
-                {
-                    UtilityUI.setForceKeyboardDown(CastingActivity.this, mTextInsertView);
-                }
-            }
-        }
-    };
 
     private Cast        mTargetCast;
 
@@ -398,43 +368,50 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 break;
             }
 
-            case INSERT_TRUST_GRAPH:
+            case SELECT_HORIZONTAL_OPTIONS:
             {
-                TrustGraph trustGraph = holder.find(R.id.cardItemTrustGraph);
+                ItemSelectOptions itemSelectOptions = (ItemSelectOptions) item;
+                itemSelectOptions.deleteObservers();
 
-                TextView textView = holder.find(R.id.cardItemTrustText);
+                InsertOptionsHorizontal insertOptionsHorizontal = holder.find(R.id.cardItemTrustGraph);
+                insertOptionsHorizontal.setSelectOptions(itemSelectOptions);
 
-                ObserverView<TextView> observerView = new ObserverView<TextView>(textView) {
+                TextView textView1 = holder.find(R.id.cardItemTitle);
+                textView1.setText(itemSelectOptions.getInsertTitle());
+
+                TextView textView2 = holder.find(R.id.cardItemTrustText);
+
+                ObserverView<TextView> observerView = new ObserverView<TextView>(textView2) {
                     @Override
                     protected void updateView(Observable observable, Object o) throws Exception
                     {
-                        if (o instanceof TrustGraph.Point)
+                        if (o instanceof ItemSelectOptions.Option)
                         {
-                            TrustGraph.Point point = (TrustGraph.Point) o;
+                            ItemSelectOptions.Option option = (ItemSelectOptions.Option) o;
 
-                            Object value = point.getValue();
+                            Object value = option.getValue();
 
                             if (value instanceof Integer)
                             {
                                 int n = (int) value;
 
-                                mRoot.setText(Integer.toString(n));
+                                String strValue = Integer.toString(n);
+
+                                mRoot.setText(strValue);
                             }
+                        }
+                        else if (o instanceof Integer)
+                        {
+                            int n = (int) o;
+
+                            String strValue = Integer.toString(n);
+
+                            mRoot.setText(strValue);
                         }
                     }
                 };
-                trustGraph.addObserver(observerView);
-
-                int size = trustGraph.getPointArrayListSize();
-                if (size == 0)
-                {
-                    trustGraph.addPoint("가망없음", 0);
-                    trustGraph.addPoint("조금 헷갈려요", 25);
-                    trustGraph.addPoint("하프 앤 하프", 50);
-                    trustGraph.addPoint("거의 틀림 없어요", 75);
-                    trustGraph.addPoint("올인", 100);
-                    trustGraph.setDefaultSelected();
-                }
+                itemSelectOptions.addObserver(observerView);
+                itemSelectOptions.notifySelectedData();
                 break;
             }
         }
@@ -580,10 +557,24 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     case ESSAY:
                         mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
 
-                        ItemInsert itemInsert = new ItemInsert();
-                        itemInsert.setItemType(INSERT_TRUST_GRAPH);
+                        ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
+                        itemSelectOptions1.setInsertTitle("내 캐스트는");
+                        itemSelectOptions1.setHorizontal(true);
+                        itemSelectOptions1.addOption("최소", 0);
+                        itemSelectOptions1.addScrollableOption("내 캐스트는");
+                        itemSelectOptions1.addOption("최대", 12500);
+                        mItemViewAdapter.addItem(itemSelectOptions1);
 
-                        mItemViewAdapter.addItem(itemInsert);
+                        ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();
+                        itemSelectOptions2.setInsertTitle("얼마나 확신하나요 ?");
+                        itemSelectOptions2.setHorizontal(true);
+                        itemSelectOptions2.addOption("가망없음", 0);
+                        itemSelectOptions2.addOption("조금 헷갈려요", 25);
+                        itemSelectOptions2.addOption("하프 앤 하프", 50);
+                        itemSelectOptions2.addOption("거의 틀림 없어요", 75);
+                        itemSelectOptions2.addOption("올인", 100);
+                        mItemViewAdapter.addItem(itemSelectOptions2);
+
                         mItemViewAdapter.notifyDataSetChanged();
                         break;
                 }
@@ -688,8 +679,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             case TIME_LINE_REPLY_LIST:
             {
                 mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
-
-                // mItemListView.removeOnScrollListener(mScrollKeyboardFocus);
 
                 mItemViewAdapter.clear();
                 mItemViewAdapter.notifyDataSetChanged();
