@@ -491,7 +491,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case SELECT_BOOLEAN_OPTION:
             {
-                ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
+                ItemBooleanOption itemBooleanOption = (ItemBooleanOption) item;
                 itemBooleanOption.deleteObservers();
 
                 InsertOptionsBoolean insertOptionsBoolean = holder.find(R.id.insertItemBoolean);
