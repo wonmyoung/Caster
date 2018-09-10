@@ -60,6 +60,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -381,6 +382,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 TextView textView1 = holder.find(R.id.insertItemTitle);
                 textView1.setText(itemScrollableOption.getInsertTitle());
 
+                TextView textView2 = holder.find(R.id.insertItemTextPrefix);
+                textView2.setText(itemScrollableOption.getBottomPrefix());
+
                 ObserverView<TextView> observerView = new ObserverView<TextView>(
                         (TextView) holder.find(R.id.insertItemText)) {
                     @Override
@@ -390,9 +394,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         {
                             int n = (int) o;
 
-                            String strValue = Integer.toString(n);
+                            DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
-                            mRoot.setText(strValue);
+                            mRoot.setText(decimalFormat.format(n));
                         }
                     }
                 };
@@ -411,6 +415,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 TextView textView1 = holder.find(R.id.insertItemTitle);
                 textView1.setText(itemSelectOptions.getInsertTitle());
+
+                TextView textView2 = holder.find(R.id.insertItemTextPrefix);
+                textView2.setText(itemSelectOptions.getBottomPrefix());
 
                 ObserverView<TextView> observerView = new ObserverView<TextView>(
                         (TextView) holder.find(R.id.insertItemText)) {
@@ -445,6 +452,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 TextView textView1 = holder.find(R.id.insertItemTitle);
                 textView1.setText(itemSelectOptions.getInsertTitle());
+
+                TextView textView2 = holder.find(R.id.insertItemTextPrefix);
+                textView2.setText(itemSelectOptions.getBottomPrefix());
 
                 ObserverView<TextView> observerView = new ObserverView<TextView>(
                         (TextView) holder.find(R.id.insertItemText)) {
@@ -617,12 +627,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                         ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
                         itemScrollableOption.setInsertTitle("내 캐스트는");
-                        itemScrollableOption.setInsertedData(-1);
                         itemScrollableOption.setMinValuePrefix("최소");
                         itemScrollableOption.setMinValue(0);
                         itemScrollableOption.setMaxValuePrefix("최대");
                         itemScrollableOption.setMaxValue(12500);
                         itemScrollableOption.setScrollPrefix("내 캐스트는");
+                        itemScrollableOption.setBottomPrefix("cap");
                         mItemViewAdapter.addItem(itemScrollableOption);
 
                         ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
@@ -643,6 +653,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         itemSelectOptions2.addOption("하프 앤 하프", 50);
                         itemSelectOptions2.addOption("거의 틀림 없어요", 75);
                         itemSelectOptions2.addOption("올인", 100);
+                        itemSelectOptions2.setBottomPrefix("%");
                         mItemViewAdapter.addItem(itemSelectOptions2);
 
                         mItemViewAdapter.notifyDataSetChanged();

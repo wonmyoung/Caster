@@ -78,8 +78,6 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
         addView(mItemLayout);
 
         setClipChildren(false);
-
-        setWillNotDraw(false);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
             lp2.gravity = Gravity.START;
             mMaxPointView.setLayoutParams(lp2);
 
-            mScrollEndX = lineWidth - mScrollableView.getMeasuredWidth();
+            mScrollEndX = lineWidth - mMaxPointView.getMeasuredWidth();
 
             mScrollableView.setOnTouchListener(this);
 
@@ -110,8 +108,8 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
             lp3.leftMargin = 0;
 
             int selectedValue = (mItemScrollableOption != null &&
-                                 mItemScrollableOption.getInsertedData() != null ?
-                                (int) mItemScrollableOption.getInsertedData() : -1);
+                    mItemScrollableOption.getInsertedData() != null ?
+                    (int) mItemScrollableOption.getInsertedData() : -1);
             if (selectedValue == -1)
             {
                 lp3.leftMargin += (lineWidth / 2);
@@ -137,6 +135,8 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
             lineParam.rightMargin = (mMaxPointView.getMeasuredWidth() / 2);
             mLineView.setLayoutParams(lineParam);
             mLineView.requestLayout();
+
+            setWillNotDraw(true);
         }
     }
 
@@ -166,7 +166,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
         mScrollableView = layoutInflater.inflate(R.layout.view_item_option, null);
         mScrollableView.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.dp40), LayoutParams.WRAP_CONTENT));
+                (int) getResources().getDimension(R.dimen.dp60), LayoutParams.WRAP_CONTENT));
         mItemLayout.addView(mScrollableView);
 
         TextView textView3 = (TextView) mScrollableView.findViewById(R.id.circlePointMessage);
@@ -179,9 +179,10 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
         ViewHelper.setScaleX(pointView, 1.5f);
         ViewHelper.setScaleY(pointView, 1.5f);
 
+        setWillNotDraw(false);
+
         invalidate();
     }
-
 
     @Override
     public boolean onTouch(View view, MotionEvent event)
@@ -201,11 +202,8 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
                 int pointerIndex = event.findPointerIndex(mPointerId);
                 if (pointerIndex < 0) return false;
 
-                int scrollableViewWidth = mScrollableView.getMeasuredWidth();
-
                 float dx = event.getX(pointerIndex) - mEventDownX;
                 float newX = mScrollableView.getX() + dx;
-                newX -= (scrollableViewWidth / 2);
 
                 if (newX < 0) {
                     newX = 0;

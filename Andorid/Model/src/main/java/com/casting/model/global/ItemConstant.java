@@ -19,5 +19,9 @@ public interface ItemConstant {
     int SELECT_HORIZONTAL_OPTIONS   = 1015;
     int SELECT_VERTICAL_OPTIONS     = 1016;
     int SELECT_SCROLLABLE_OPTION    = 1017;
-    int GRAPH_LINE                  = 1018;
+    int INSERT_BUYING_CAP           = 1018;
+    int INSERT_REASON_MESSAGE       = 1019;
+    int GRAPH_LINE                  = 1020;
+    int BAR_CHART                   = 1021;
+    int PIE_CHART                   = 1022;
 }
