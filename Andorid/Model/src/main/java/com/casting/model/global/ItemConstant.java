@@ -18,5 +18,6 @@ public interface ItemConstant {
     int CURRENT_CASTING_STATUS      = 1014;
     int SELECT_HORIZONTAL_OPTIONS   = 1015;
     int SELECT_VERTICAL_OPTIONS     = 1016;
-    int GRAPH_LINE                  = 1017;
+    int SELECT_SCROLLABLE_OPTION    = 1017;
+    int GRAPH_LINE                  = 1018;
 }

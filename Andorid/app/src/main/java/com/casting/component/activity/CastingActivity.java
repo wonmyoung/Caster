@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +29,10 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
-import com.casting.model.ItemSelectOptions;
+import com.casting.view.insert.InsertOptionsScrollable;
+import com.casting.view.insert.InsertOptionsVertical;
+import com.casting.view.insert.items.ItemScrollableOption;
+import com.casting.view.insert.items.ItemSelectOptions;
 import com.casting.model.LineGraphItem;
 import com.casting.model.Member;
 import com.casting.model.News;
@@ -46,7 +48,7 @@ import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
 import com.casting.view.ObserverView;
 import com.casting.view.insert.InsertOptionsHorizontal;
-import com.casting.model.ItemInsert;
+import com.casting.view.insert.items.ItemInsert;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -194,7 +196,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 News news = (News) item;
 
-                TextView textView1 = holder.find(R.id.cardItemTitle);
+                TextView textView1 = holder.find(R.id.insertItemTitle);
                 textView1.setText(news.getNewsTitle());
 
                 TextView textView2 = holder.find(R.id.newsHighlightText);
@@ -368,20 +370,84 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 break;
             }
 
+            case SELECT_SCROLLABLE_OPTION:
+            {
+                ItemScrollableOption itemScrollableOption = (ItemScrollableOption) item;
+                itemScrollableOption.deleteObservers();
+
+                InsertOptionsScrollable insertOptionsScrollable = holder.find(R.id.scrollableOptionsView);
+                insertOptionsScrollable.setScrollableOption(itemScrollableOption);
+
+                TextView textView1 = holder.find(R.id.insertItemTitle);
+                textView1.setText(itemScrollableOption.getInsertTitle());
+
+                ObserverView<TextView> observerView = new ObserverView<TextView>(
+                        (TextView) holder.find(R.id.insertItemText)) {
+                    @Override
+                    protected void updateView(Observable observable, Object o) throws Exception
+                    {
+                        if (o instanceof Integer)
+                        {
+                            int n = (int) o;
+
+                            String strValue = Integer.toString(n);
+
+                            mRoot.setText(strValue);
+                        }
+                    }
+                };
+                itemScrollableOption.addObserver(observerView);
+                itemScrollableOption.notifySelectedData();
+                break;
+            }
+
+            case SELECT_VERTICAL_OPTIONS:
+            {
+                ItemSelectOptions itemSelectOptions = (ItemSelectOptions) item;
+                itemSelectOptions.deleteObservers();
+
+                InsertOptionsVertical insertOptionsVertical = holder.find(R.id.insertOptionsVertical);
+                insertOptionsVertical.setSelectOptions(itemSelectOptions);
+
+                TextView textView1 = holder.find(R.id.insertItemTitle);
+                textView1.setText(itemSelectOptions.getInsertTitle());
+
+                ObserverView<TextView> observerView = new ObserverView<TextView>(
+                        (TextView) holder.find(R.id.insertItemText)) {
+                    @Override
+                    protected void updateView(Observable observable, Object o) throws Exception
+                    {
+                        if (o instanceof ItemSelectOptions.Option)
+                        {
+                            ItemSelectOptions.Option option = (ItemSelectOptions.Option) o;
+
+                            Object value = option.getValue();
+
+                            if (value instanceof String)
+                            {
+                                mRoot.setText((String) value);
+                            }
+                        }
+                    }
+                };
+                itemSelectOptions.addObserver(observerView);
+                itemSelectOptions.notifySelectedData();
+                break;
+            }
+
             case SELECT_HORIZONTAL_OPTIONS:
             {
                 ItemSelectOptions itemSelectOptions = (ItemSelectOptions) item;
                 itemSelectOptions.deleteObservers();
 
-                InsertOptionsHorizontal insertOptionsHorizontal = holder.find(R.id.cardItemTrustGraph);
+                InsertOptionsHorizontal insertOptionsHorizontal = holder.find(R.id.insertOptionsHorizontal);
                 insertOptionsHorizontal.setSelectOptions(itemSelectOptions);
 
-                TextView textView1 = holder.find(R.id.cardItemTitle);
+                TextView textView1 = holder.find(R.id.insertItemTitle);
                 textView1.setText(itemSelectOptions.getInsertTitle());
 
-                TextView textView2 = holder.find(R.id.cardItemTrustText);
-
-                ObserverView<TextView> observerView = new ObserverView<TextView>(textView2) {
+                ObserverView<TextView> observerView = new ObserverView<TextView>(
+                        (TextView) holder.find(R.id.insertItemText)) {
                     @Override
                     protected void updateView(Observable observable, Object o) throws Exception
                     {
@@ -399,14 +465,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                                 mRoot.setText(strValue);
                             }
-                        }
-                        else if (o instanceof Integer)
-                        {
-                            int n = (int) o;
-
-                            String strValue = Integer.toString(n);
-
-                            mRoot.setText(strValue);
                         }
                     }
                 };
@@ -557,12 +615,24 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     case ESSAY:
                         mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
 
+                        ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
+                        itemScrollableOption.setInsertTitle("내 캐스트는");
+                        itemScrollableOption.setInsertedData(-1);
+                        itemScrollableOption.setMinValuePrefix("최소");
+                        itemScrollableOption.setMinValue(0);
+                        itemScrollableOption.setMaxValuePrefix("최대");
+                        itemScrollableOption.setMaxValue(12500);
+                        itemScrollableOption.setScrollPrefix("내 캐스트는");
+                        mItemViewAdapter.addItem(itemScrollableOption);
+
                         ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
                         itemSelectOptions1.setInsertTitle("내 캐스트는");
-                        itemSelectOptions1.setHorizontal(true);
-                        itemSelectOptions1.addOption("최소", 0);
-                        itemSelectOptions1.addScrollableOption("내 캐스트는");
-                        itemSelectOptions1.addOption("최대", 12500);
+                        itemSelectOptions1.setVertical(true);
+                        itemSelectOptions1.addOption("한화 이글스", "한화 이글스");
+                        itemSelectOptions1.addOption("롯데 자이언츠", "롯데 자이언츠");
+                        itemSelectOptions1.addOption("SK 와이번즈", "SK 와이번즈");
+                        itemSelectOptions1.addOption("넥센 히어로즈", "넥센 히어로즈");
+                        itemSelectOptions1.addOption("두산 베어스", "두산 베어스");
                         mItemViewAdapter.addItem(itemSelectOptions1);
 
                         ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();

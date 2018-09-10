@@ -6,17 +6,15 @@ import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.model.ItemSelectOptions;
+import com.casting.view.insert.items.ItemSelectOptions;
 import com.casting.view.ObserverView;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -126,83 +124,6 @@ public class InsertOptionsHorizontal extends FrameLayout implements View.OnClick
                     remainingChild.setLayoutParams(lp);
                     remainingChild.requestLayout();
                 }
-
-
-                if (mOptionsData.isScrollable())
-                {
-                    int middle = (childCount / 2);
-
-                    final View scrollableView = mItemLayout.getChildAt(middle);
-
-                    final int scrollableViewWidth = scrollableView.getMeasuredWidth();
-                    final int scrollEndX = lineWidth - scrollableViewWidth;
-
-                    scrollableView.setOnTouchListener(new OnTouchListener() {
-
-                        private int     mPointerId;
-                        private float   mEventDownX;
-
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event)
-                        {
-                            switch (event.getAction())
-                            {
-                                case MotionEvent.ACTION_DOWN:
-
-                                    scrollableView.getParent().requestDisallowInterceptTouchEvent(true);
-
-                                    mPointerId = event.getPointerId(0);
-                                    mEventDownX = event.getX(mPointerId);
-                                    return true;
-
-                                case MotionEvent.ACTION_MOVE:
-
-                                    int pointerIndex = event.findPointerIndex(mPointerId);
-                                    if (pointerIndex < 0) return false;
-
-                                    float dx = event.getX(pointerIndex) - mEventDownX;
-                                    float newX = scrollableView.getX() + dx;
-                                    newX -= (scrollableViewWidth / 2);
-
-                                    if (newX < 0) {
-                                        newX = 0;
-                                    }
-                                    if (newX > scrollEndX) {
-                                        newX = scrollEndX;
-                                    }
-
-                                    scrollableView.setX(newX);
-
-                                    int percentage = (int) ((newX * 100) / scrollEndX);
-
-                                    int optionSize = mOptionsData.getOptionsSize();
-
-                                    ItemSelectOptions.Option option = mOptionsData.getOption((optionSize - 1));
-
-                                    int maxValue = (int) option.getValue();
-                                    int selectedValue = (maxValue * percentage) / 100;
-
-                                    mOptionsData.setInsertedData(selectedValue);
-                                    return true;
-
-                                case MotionEvent.ACTION_UP:
-
-                                    scrollableView.getParent().requestDisallowInterceptTouchEvent(false);
-
-                                    return true;
-                            }
-
-                            return false;
-                        }
-                    });
-
-                    View pointView = scrollableView.findViewById(R.id.circlePoint);
-
-                    pointView.setSelected(true);
-
-                    ViewHelper.setScaleX(pointView, 1.5f);
-                    ViewHelper.setScaleY(pointView, 1.5f);
-                }
             }
 
             mItemLayout.requestLayout();
@@ -242,36 +163,8 @@ public class InsertOptionsHorizontal extends FrameLayout implements View.OnClick
         {
             ItemSelectOptions.Option option = itemSelectOptions.getOption(i);
 
-            if (mOptionsData.isScrollable())
-            {
-                addFixedOption(option);
-            }
-            else
-            {
-                addSelectableOption(i, option);
-            }
+            addSelectableOption(i, option);
         }
-    }
-
-    private void addFixedOption(ItemSelectOptions.Option option)
-    {
-        Context c = getContext();
-
-        LayoutInflater layoutInflater = LayoutInflater.from(c);
-
-        FrameLayout.LayoutParams lp = new LayoutParams(
-                (int) getResources().getDimension(R.dimen.dp40),
-                LayoutParams.WRAP_CONTENT);
-        lp.gravity = Gravity.START;
-
-        View view = layoutInflater.inflate(R.layout.view_item_trust_graph_point, null);
-        view.setLayoutParams(lp);
-        mItemLayout.addView(view);
-
-        TextView textView = (TextView) view.findViewById(R.id.circlePointMessage);
-        textView.setText(option.getName());
-
-        invalidate();
     }
 
     private void addSelectableOption(int i, final ItemSelectOptions.Option option)
@@ -285,7 +178,7 @@ public class InsertOptionsHorizontal extends FrameLayout implements View.OnClick
                 LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.START;
 
-        View view = layoutInflater.inflate(R.layout.view_item_trust_graph_point, null);
+        View view = layoutInflater.inflate(R.layout.view_item_option, null);
         view.setTag(i);
         view.setOnClickListener(this);
         view.setLayoutParams(lp);

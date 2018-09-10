@@ -17,7 +17,7 @@
     card_view:cardMaxElevation="0dp">
 
     <TextView
-        android:id="@+id/cardItemTitle"
+        android:id="@+id/insertItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"

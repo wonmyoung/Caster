@@ -1,4 +1,4 @@
-package com.casting.model;
+package com.casting.view.insert.items;
 
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;
@@ -36,7 +36,8 @@ public class ItemInsert extends Observable implements ICommonItem, ItemConstant
         return InsertedData;
     }
 
-    public void setInsertedData(Object data) {
+    public void setInsertedData(Object data)
+    {
         InsertedData = data;
 
         setChanged();

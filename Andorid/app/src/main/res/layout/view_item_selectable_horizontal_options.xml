@@ -17,7 +17,7 @@
     card_view:contentPaddingBottom="@dimen/dp5">
 
     <TextView
-        android:id="@+id/cardItemTitle"
+        android:id="@+id/insertItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
@@ -26,7 +26,7 @@
         android:textColor="@color/mainColor0"/>
 
     <com.casting.view.insert.InsertOptionsHorizontal
-        android:id="@+id/cardItemTrustGraph"
+        android:id="@+id/insertOptionsHorizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp100"
         android:layout_marginTop="@dimen/dp30"/>
@@ -38,7 +38,7 @@
         android:layout_marginRight="@dimen/dp5">
 
         <TextView
-            android:id="@+id/cardItemTrustText"
+            android:id="@+id/insertItemText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -47,7 +47,7 @@
             android:textColor="@color/color_black80"/>
 
         <TextView
-            android:id="@+id/cardItemTrustTextPrefix"
+            android:id="@+id/insertItemTextPrefix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/dp12"

@@ -1,4 +1,4 @@
-package com.casting.model;
+package com.casting.view.insert.items;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,6 @@ public class ItemSelectOptions extends ItemInsert {
     }
 
     private boolean Horizontal;
-    private boolean Scrollable;
 
     private String BottomPrefix;
 
@@ -108,20 +107,10 @@ public class ItemSelectOptions extends ItemInsert {
             OptionArrayList = new ArrayList<>();
         }
 
-        setScrollable(true);
-
         Option option = new Option();
         option.setName(name);
 
         OptionArrayList.add(option);
-    }
-
-    public boolean isScrollable() {
-        return Scrollable;
-    }
-
-    public void setScrollable(boolean scrollable) {
-        Scrollable = scrollable;
     }
 
     public void notifySelectedData()
