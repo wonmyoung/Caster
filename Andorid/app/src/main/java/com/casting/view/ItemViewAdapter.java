@@ -100,6 +100,18 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_scrollable_options, parent);
                 break;
 
+            case SELECT_BOOLEAN_OPTION:
+                v = inflateView(R.layout.view_item_selectable_boolean_options, parent);
+                break;
+
+            case INSERT_BUYING_CAP:
+                v = inflateView(R.layout.view_item_betting_cap, parent);
+                break;
+
+            case INSERT_REASON_MESSAGE:
+                v = inflateView(R.layout.view_item_reason_write, parent);
+                break;
+
             default:
                 v = new View(c);
                 break;

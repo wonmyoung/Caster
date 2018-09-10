@@ -113,6 +113,7 @@ public class ItemSelectOptions extends ItemInsert {
         OptionArrayList.add(option);
     }
 
+    @SuppressWarnings("unchecked")
     public void notifySelectedData()
     {
         Object o = getInsertedData();

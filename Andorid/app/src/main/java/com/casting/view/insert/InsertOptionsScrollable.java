@@ -15,11 +15,8 @@ import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.view.ObserverView;
 import com.casting.view.insert.items.ItemScrollableOption;
 import com.nineoldandroids.view.ViewHelper;
-
-import java.util.Observable;
 
 public class InsertOptionsScrollable extends FrameLayout implements View.OnTouchListener {
 

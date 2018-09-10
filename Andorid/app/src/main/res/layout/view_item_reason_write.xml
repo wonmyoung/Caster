@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/dp15"
+    android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp5"
+    android:layout_marginBottom="@dimen/dp5"
+    card_view:cardCornerRadius="@dimen/dp15"
+    card_view:cardElevation="@dimen/dp5"
+    card_view:cardMaxElevation="0dp"
+    card_view:contentPaddingTop="@dimen/dp15"
+    card_view:contentPaddingLeft="@dimen/dp15"
+    card_view:contentPaddingRight="@dimen/dp15"
+    card_view:contentPaddingBottom="@dimen/dp15">
+
+    <EditText
+        android:id="@+id/insertReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp45"
+        android:textSize="@dimen/dp13"
+        android:hint="위와 같이 캐스트한 이유는 무엇인가요?"
+        android:paddingLeft="@dimen/dp5"
+        android:paddingRight="@dimen/dp5"/>
+
+</android.support.v7.widget.CardView>

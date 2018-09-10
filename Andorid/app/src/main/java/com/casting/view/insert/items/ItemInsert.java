@@ -5,13 +5,13 @@ import com.casting.model.global.ItemConstant;
 
 import java.util.Observable;
 
-public class ItemInsert extends Observable implements ICommonItem, ItemConstant
+public class ItemInsert<D extends Object> extends Observable implements ICommonItem, ItemConstant
 {
     private int mItemType;
 
     private String  InsertTitle;
 
-    private Object  InsertedData;
+    protected D  InsertedData;
 
     @Override
     public int getItemType() {
@@ -31,12 +31,12 @@ public class ItemInsert extends Observable implements ICommonItem, ItemConstant
         InsertTitle = title;
     }
 
-    public Object getInsertedData()
+    public D getInsertedData()
     {
         return InsertedData;
     }
 
-    public void setInsertedData(Object data)
+    public void setInsertedData(D data)
     {
         InsertedData = data;
 

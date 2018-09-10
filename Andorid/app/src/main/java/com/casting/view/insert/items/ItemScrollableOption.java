@@ -1,6 +1,6 @@
 package com.casting.view.insert.items;
 
-public class ItemScrollableOption extends ItemInsert {
+public class ItemScrollableOption extends ItemInsert<Integer> {
 
     private int     MaxValue;
     private String  MaxValuePrefix;
@@ -9,6 +9,11 @@ public class ItemScrollableOption extends ItemInsert {
 
     private String  ScrollPrefix;
     private String  BottomPrefix;
+
+    public ItemScrollableOption()
+    {
+        InsertedData = -1;
+    }
 
     public int getMaxValue() {
         return MaxValue;
@@ -65,11 +70,9 @@ public class ItemScrollableOption extends ItemInsert {
 
     public void notifySelectedData()
     {
-        int data = -1;
+        int data = getInsertedData();
 
-        Object o = getInsertedData();
-
-        if (o == null)
+        if (data == -1)
         {
             data = 0;
             data += (MaxValue - MinValue) / 2;

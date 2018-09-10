@@ -33,4 +33,10 @@ public class ActiveMember extends Observable {
     {
         return (mMember == null ? null : mMember.getEmail());
     }
+
+    public int getUserCap()
+    {
+        // return (mMember == null ? 0 : mMember.getUserCap());
+        return 12500;
+    }
 }

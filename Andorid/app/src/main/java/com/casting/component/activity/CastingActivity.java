@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityData;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CommonRecyclerView;
@@ -29,8 +32,10 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
+import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
 import com.casting.view.insert.InsertOptionsVertical;
+import com.casting.view.insert.items.ItemBooleanOption;
 import com.casting.view.insert.items.ItemScrollableOption;
 import com.casting.view.insert.items.ItemSelectOptions;
 import com.casting.model.LineGraphItem;
@@ -184,6 +189,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void bindBodyItemView
             (CompositeViewHolder holder, int position, int viewType, ICommonItem item) throws Exception
@@ -482,6 +488,113 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 itemSelectOptions.notifySelectedData();
                 break;
             }
+
+            case SELECT_BOOLEAN_OPTION:
+            {
+                ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
+                itemBooleanOption.deleteObservers();
+
+                InsertOptionsBoolean insertOptionsBoolean = holder.find(R.id.insertItemBoolean);
+                insertOptionsBoolean.setSelectedBoolean(itemBooleanOption);
+
+                itemBooleanOption.notifySelectedData();
+                break;
+            }
+
+            case INSERT_BUYING_CAP:
+            {
+                final ItemInsert itemInsert = (ItemInsert) item;
+
+                int cap = ActiveMember.getInstance().getUserCap();
+
+                DecimalFormat decimalFormat = new DecimalFormat("#,### cap 남음");
+
+                final TextView textView = holder.find(R.id.remainingCapText);
+                textView.setText(decimalFormat.format(cap));
+
+                EditText editText = holder.find(R.id.insertCap);
+
+                if (itemInsert.getInsertedData() == null)
+                {
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                        {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count)
+                        {
+                            int cap = ActiveMember.getInstance().getUserCap();
+
+                            int remainingCap = 0 , insertedCap = 0;
+
+                            String string = s.toString();
+
+                            if (!TextUtils.isEmpty(string))
+                            {
+                                insertedCap = Integer.parseInt(string);
+
+                                remainingCap = (cap - insertedCap);
+
+                                if (remainingCap < 0) {
+                                    remainingCap = 0;
+                                }
+                            }
+                            else
+                            {
+                                remainingCap = cap;
+                            }
+
+                            DecimalFormat decimalFormat = new DecimalFormat("#,### cap 남음");
+
+                            textView.setText(decimalFormat.format(remainingCap));
+
+                            itemInsert.setInsertedData(insertedCap);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s)
+                        {
+
+                        }
+                    });
+                }
+
+                break;
+            }
+
+            case INSERT_REASON_MESSAGE:
+            {
+                final ItemInsert itemInsert = (ItemInsert) item;
+
+                EditText editText = holder.find(R.id.insertReason);
+
+                if (itemInsert.getInsertedData() == null)
+                {
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                        {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count)
+                        {
+                            itemInsert.setInsertedData(s.toString());
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s)
+                        {
+
+                        }
+                    });
+                }
+                break;
+            }
         }
     }
 
@@ -625,6 +738,10 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     case ESSAY:
                         mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
 
+                        ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
+                        itemBooleanOption.setInsertTitle("내 캐스트는");
+                        mItemViewAdapter.addItem(itemBooleanOption);
+
                         ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
                         itemScrollableOption.setInsertTitle("내 캐스트는");
                         itemScrollableOption.setMinValuePrefix("최소");
@@ -655,6 +772,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         itemSelectOptions2.addOption("올인", 100);
                         itemSelectOptions2.setBottomPrefix("%");
                         mItemViewAdapter.addItem(itemSelectOptions2);
+
+                        ItemInsert<String> itemInsert1 = new ItemInsert<>();
+                        itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
+                        mItemViewAdapter.addItem(itemInsert1);
+
+                        ItemInsert<String> itemInsert2 = new ItemInsert<>();
+                        itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
+                        mItemViewAdapter.addItem(itemInsert2);
 
                         mItemViewAdapter.notifyDataSetChanged();
                         break;
