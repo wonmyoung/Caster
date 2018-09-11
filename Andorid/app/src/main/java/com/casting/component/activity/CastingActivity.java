@@ -1,5 +1,6 @@
 package com.casting.component.activity;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -23,7 +24,6 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.EasyLog;
-import com.casting.commonmodule.utility.UtilityData;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CommonRecyclerView;
@@ -32,12 +32,15 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
+import com.casting.model.DoublePieChartItem;
+import com.casting.model.PieChartItem;
+import com.casting.model.request.PostCast;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
 import com.casting.view.insert.InsertOptionsVertical;
-import com.casting.view.insert.items.ItemBooleanOption;
-import com.casting.view.insert.items.ItemScrollableOption;
-import com.casting.view.insert.items.ItemSelectOptions;
+import com.casting.model.insert.ItemBooleanOption;
+import com.casting.model.insert.ItemScrollableOption;
+import com.casting.model.insert.ItemSelectOptions;
 import com.casting.model.LineGraphItem;
 import com.casting.model.Member;
 import com.casting.model.News;
@@ -53,16 +56,21 @@ import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.ItemViewAdapter;
 import com.casting.view.ObserverView;
 import com.casting.view.insert.InsertOptionsHorizontal;
-import com.casting.view.insert.items.ItemInsert;
+import com.casting.model.insert.ItemInsert;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -70,6 +78,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_CHOICE;
+import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_ESSAY;
+import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_TWO_CHOICE;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_INFO;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_DONE;
 
@@ -101,6 +112,13 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             setChanged();
             notifyObservers();
+        }
+
+        public boolean isCastingMode()
+        {
+            return (mPageMode == CAST_AS_ESSAY ||
+                    mPageMode == CAST_AS_CHOICE ||
+                    mPageMode == CAST_AS_TWO_CHOICE);
         }
     }
 
@@ -595,6 +613,68 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 }
                 break;
             }
+
+            case DOUBLE_PIE_CHART:
+            {
+                DoublePieChartItem doublePieChartItem = (DoublePieChartItem) item;
+
+                TextView textView1 = holder.find(R.id.insertItemTitle);
+                textView1.setText(doublePieChartItem.getItemTitle());
+
+                TextView textView2 = holder.find(R.id.insertItemBottomTitle);
+                textView2.setText(doublePieChartItem.getItemBottomTitle());
+
+                PieChartItem pieChartItem1 = doublePieChartItem.getPieChartItem1();
+
+                PieDataSet dataSet1 = new PieDataSet(pieChartItem1.getPointEntries(),"Countries");
+                dataSet1.setSliceSpace(3f);
+                dataSet1.setSelectionShift(5f);
+                dataSet1.setColors(
+                        UtilityUI.getColor(this, R.color.mainColor0),
+                        UtilityUI.getColor(this, R.color.color_999999));
+
+                PieData pieData1 = new PieData((dataSet1));
+                pieData1.setDrawValues(false);
+
+                PieChart pieChart1 = holder.find(R.id.pieChart1);
+                pieChart1.setUsePercentValues(true);
+                pieChart1.getDescription().setEnabled(false);
+                pieChart1.getLegend().setEnabled(false);
+                pieChart1.setDrawEntryLabels(false);
+                pieChart1.setDrawHoleEnabled(true);
+                pieChart1.setDragDecelerationFrictionCoef(0.95f);
+                pieChart1.setHoleColor(Color.WHITE);
+                pieChart1.setTransparentCircleRadius(0f);
+                pieChart1.setHoleRadius(80f);
+                pieChart1.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+                pieChart1.setData(pieData1);
+
+                PieChartItem pieChartItem2 = doublePieChartItem.getPieChartItem2();
+
+                PieDataSet dataSet2 = new PieDataSet(pieChartItem2.getPointEntries(),"Countries");
+                dataSet2.setSliceSpace(3f);
+                dataSet2.setSelectionShift(5f);
+                dataSet2.setColors(
+                        UtilityUI.getColor(this, R.color.mainColor0),
+                        UtilityUI.getColor(this, R.color.color_999999));
+
+                PieData pieData2 = new PieData((dataSet2));
+                pieData2.setDrawValues(false);
+
+                PieChart pieChart2 = holder.find(R.id.pieChart2);
+                pieChart2.setUsePercentValues(true);
+                pieChart2.getDescription().setEnabled(false);
+                pieChart2.getLegend().setEnabled(false);
+                pieChart2.setDrawEntryLabels(false);
+                pieChart2.setDrawHoleEnabled(true);
+                pieChart2.setDragDecelerationFrictionCoef(0.95f);
+                pieChart2.setHoleColor(Color.WHITE);
+                pieChart2.setTransparentCircleRadius(0f);
+                pieChart2.setHoleRadius(80f);
+                pieChart2.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+                pieChart2.setData(pieData2);
+                break;
+            }
         }
     }
 
@@ -725,64 +805,84 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 mItemViewAdapter.clear();
                 mItemViewAdapter.notifyDataSetChanged();
 
-                switch (type)
+                if (mPageCurrentMode.isCastingMode())
                 {
-                    case CHOICE:
-                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_CHOICE);
-                        break;
+                    // TODO 캐스팅
 
-                    case TWO_CHOICE:
-                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_TWO_CHOICE);
-                        break;
+                    PostCast postCast = new PostCast();
+                    postCast.setResponseListener(this);
 
-                    case ESSAY:
-                        mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
+                    for (ICommonItem commonItem : mItemViewAdapter.getItemList())
+                    {
+                        if (commonItem instanceof ItemInsert)
+                        {
+                            postCast.addInsertItem((ItemInsert) commonItem);
+                        }
+                    }
 
-                        ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
-                        itemBooleanOption.setInsertTitle("내 캐스트는");
-                        mItemViewAdapter.addItem(itemBooleanOption);
+                    RequestHandler.getInstance().request(postCast);
+                }
+                else
+                {
+                    switch (type)
+                    {
+                        case CHOICE:
+                            mPageCurrentMode.setPageMode(CAST_AS_CHOICE);
+                            break;
 
-                        ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
-                        itemScrollableOption.setInsertTitle("내 캐스트는");
-                        itemScrollableOption.setMinValuePrefix("최소");
-                        itemScrollableOption.setMinValue(0);
-                        itemScrollableOption.setMaxValuePrefix("최대");
-                        itemScrollableOption.setMaxValue(12500);
-                        itemScrollableOption.setScrollPrefix("내 캐스트는");
-                        itemScrollableOption.setBottomPrefix("cap");
-                        mItemViewAdapter.addItem(itemScrollableOption);
+                        case TWO_CHOICE:
+                            mPageCurrentMode.setPageMode(CAST_AS_TWO_CHOICE);
+                            break;
 
-                        ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
-                        itemSelectOptions1.setInsertTitle("내 캐스트는");
-                        itemSelectOptions1.setVertical(true);
-                        itemSelectOptions1.addOption("한화 이글스", "한화 이글스");
-                        itemSelectOptions1.addOption("롯데 자이언츠", "롯데 자이언츠");
-                        itemSelectOptions1.addOption("SK 와이번즈", "SK 와이번즈");
-                        itemSelectOptions1.addOption("넥센 히어로즈", "넥센 히어로즈");
-                        itemSelectOptions1.addOption("두산 베어스", "두산 베어스");
-                        mItemViewAdapter.addItem(itemSelectOptions1);
+                        case ESSAY:
+                            mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
 
-                        ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();
-                        itemSelectOptions2.setInsertTitle("얼마나 확신하나요 ?");
-                        itemSelectOptions2.setHorizontal(true);
-                        itemSelectOptions2.addOption("가망없음", 0);
-                        itemSelectOptions2.addOption("조금 헷갈려요", 25);
-                        itemSelectOptions2.addOption("하프 앤 하프", 50);
-                        itemSelectOptions2.addOption("거의 틀림 없어요", 75);
-                        itemSelectOptions2.addOption("올인", 100);
-                        itemSelectOptions2.setBottomPrefix("%");
-                        mItemViewAdapter.addItem(itemSelectOptions2);
+                            ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
+                            itemBooleanOption.setInsertTitle("내 캐스트는");
+                            mItemViewAdapter.addItem(itemBooleanOption);
 
-                        ItemInsert<String> itemInsert1 = new ItemInsert<>();
-                        itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
-                        mItemViewAdapter.addItem(itemInsert1);
+                            ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
+                            itemScrollableOption.setInsertTitle("내 캐스트는");
+                            itemScrollableOption.setMinValuePrefix("최소");
+                            itemScrollableOption.setMinValue(0);
+                            itemScrollableOption.setMaxValuePrefix("최대");
+                            itemScrollableOption.setMaxValue(12500);
+                            itemScrollableOption.setScrollPrefix("내 캐스트는");
+                            itemScrollableOption.setBottomPrefix("cap");
+                            mItemViewAdapter.addItem(itemScrollableOption);
 
-                        ItemInsert<String> itemInsert2 = new ItemInsert<>();
-                        itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
-                        mItemViewAdapter.addItem(itemInsert2);
+                            ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
+                            itemSelectOptions1.setInsertTitle("내 캐스트는");
+                            itemSelectOptions1.setVertical(true);
+                            itemSelectOptions1.addOption("한화 이글스", "한화 이글스");
+                            itemSelectOptions1.addOption("롯데 자이언츠", "롯데 자이언츠");
+                            itemSelectOptions1.addOption("SK 와이번즈", "SK 와이번즈");
+                            itemSelectOptions1.addOption("넥센 히어로즈", "넥센 히어로즈");
+                            itemSelectOptions1.addOption("두산 베어스", "두산 베어스");
+                            mItemViewAdapter.addItem(itemSelectOptions1);
 
-                        mItemViewAdapter.notifyDataSetChanged();
-                        break;
+                            ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();
+                            itemSelectOptions2.setInsertTitle("얼마나 확신하나요 ?");
+                            itemSelectOptions2.setHorizontal(true);
+                            itemSelectOptions2.addOption("가망없음", 0);
+                            itemSelectOptions2.addOption("조금 헷갈려요", 25);
+                            itemSelectOptions2.addOption("하프 앤 하프", 50);
+                            itemSelectOptions2.addOption("거의 틀림 없어요", 75);
+                            itemSelectOptions2.addOption("올인", 100);
+                            itemSelectOptions2.setBottomPrefix("%");
+                            mItemViewAdapter.addItem(itemSelectOptions2);
+
+                            ItemInsert<String> itemInsert1 = new ItemInsert<>();
+                            itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
+                            mItemViewAdapter.addItem(itemInsert1);
+
+                            ItemInsert<String> itemInsert2 = new ItemInsert<>();
+                            itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
+                            mItemViewAdapter.addItem(itemInsert2);
+
+                            mItemViewAdapter.notifyDataSetChanged();
+                            break;
+                    }
                 }
             }
         }
@@ -967,6 +1067,15 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             mItemViewAdapter.setItemList(itemArrayList);
             mItemViewAdapter.notifyDataSetChanged();
         }
+        else if (request.isRight(PostCast.class))
+        {
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyDoneCastInfoList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
     }
 
     private void loadDummyItemList(ArrayList<ICommonItem> commonItems)
@@ -1029,6 +1138,67 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             Reply reply = new Reply();
 
             commonItems.add(reply);
+        }
+    }
+
+    private void loadDummyDoneCastInfoList(ArrayList<ICommonItem> commonItems)
+    {
+        {
+            PieChartItem pieChartItem1 = new PieChartItem();
+            pieChartItem1.addPointEntrie(new PieEntry(80f,"Japan"));
+            pieChartItem1.addPointEntrie(new PieEntry(20f,"USA"));
+
+            PieChartItem pieChartItem2 = new PieChartItem();
+            pieChartItem2.addPointEntrie(new PieEntry(90f,"아이템1"));
+            pieChartItem2.addPointEntrie(new PieEntry(120f,"아이템2"));
+
+            DoublePieChartItem doublePieChartItem = new DoublePieChartItem();
+            doublePieChartItem.setPieChartItem1(pieChartItem1);
+            doublePieChartItem.setPieChartItem2(pieChartItem2);
+            doublePieChartItem.setItemTitle("내 캐스트는");
+            doublePieChartItem.setItemBottomTitle("7,500");
+            commonItems.add(doublePieChartItem);
+        }
+
+        {
+            PieChartItem pieChartItem1 = new PieChartItem();
+            pieChartItem1.addPointEntrie(new PieEntry(80f,"Japan"));
+            pieChartItem1.addPointEntrie(new PieEntry(20f,"USA"));
+
+            PieChartItem pieChartItem2 = new PieChartItem();
+            pieChartItem2.addPointEntrie(new PieEntry(40f,"아이템1"));
+            pieChartItem2.addPointEntrie(new PieEntry(20f,"아이템2"));
+
+            DoublePieChartItem doublePieChartItem = new DoublePieChartItem();
+            doublePieChartItem.setPieChartItem1(pieChartItem1);
+            doublePieChartItem.setPieChartItem2(pieChartItem2);
+            doublePieChartItem.setItemTitle("캐스트 결과");
+            doublePieChartItem.setItemBottomTitle("8,500");
+            commonItems.add(doublePieChartItem);
+        }
+
+        News news = new News();
+        news.setNewsTitle("주요 뉴스");
+        news.setNews("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
+        news.setNewsTime("1시간전");
+
+        commonItems.add(news);
+
+        {
+            PieChartItem pieChartItem1 = new PieChartItem();
+            pieChartItem1.addPointEntrie(new PieEntry(80f,"Japan"));
+            pieChartItem1.addPointEntrie(new PieEntry(20f,"USA"));
+
+            PieChartItem pieChartItem2 = new PieChartItem();
+            pieChartItem2.addPointEntrie(new PieEntry(70f,"아이템1"));
+            pieChartItem2.addPointEntrie(new PieEntry(20f,"아이템2"));
+
+            DoublePieChartItem doublePieChartItem = new DoublePieChartItem();
+            doublePieChartItem.setPieChartItem1(pieChartItem1);
+            doublePieChartItem.setPieChartItem2(pieChartItem2);
+            doublePieChartItem.setItemTitle("내가 얻은 Cap");
+            doublePieChartItem.setItemBottomTitle("7,500");
+            commonItems.add(doublePieChartItem);
         }
     }
 }

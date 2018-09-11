@@ -88,6 +88,10 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_line_graph, parent);
                 break;
 
+            case DOUBLE_PIE_CHART:
+                v = inflateView(R.layout.view_item_pie_chart, parent);
+                break;
+
             case SELECT_HORIZONTAL_OPTIONS:
                 v = inflateView(R.layout.view_item_selectable_horizontal_options, parent);
                 break;

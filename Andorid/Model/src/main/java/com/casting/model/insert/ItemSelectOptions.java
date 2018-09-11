@@ -1,4 +1,4 @@
-package com.casting.view.insert.items;
+package com.casting.model.insert;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.casting.view.insert.items;
+package com.casting.model.insert;
 
 public class ItemBooleanOption extends ItemInsert<Boolean> {
 

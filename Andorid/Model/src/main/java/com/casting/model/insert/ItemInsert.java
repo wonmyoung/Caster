@@ -1,4 +1,4 @@
-package com.casting.view.insert.items;
+package com.casting.model.insert;
 
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;

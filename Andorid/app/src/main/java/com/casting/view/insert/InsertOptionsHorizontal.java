@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.view.insert.items.ItemSelectOptions;
+import com.casting.model.insert.ItemSelectOptions;
 import com.casting.view.ObserverView;
 import com.nineoldandroids.view.ViewHelper;
 

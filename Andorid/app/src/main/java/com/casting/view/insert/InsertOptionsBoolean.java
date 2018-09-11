@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.casting.R;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.view.ObserverView;
-import com.casting.view.insert.items.ItemBooleanOption;
+import com.casting.model.insert.ItemBooleanOption;
 
 import java.util.Observable;
 

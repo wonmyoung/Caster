@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.view.ObserverView;
-import com.casting.view.insert.items.ItemSelectOptions;
+import com.casting.model.insert.ItemSelectOptions;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.Observable;

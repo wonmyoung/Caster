@@ -33,7 +33,7 @@
                 android:id="@+id/insertItemTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:text=""
                 android:textSize="@dimen/dp16"
                 android:textColor="@color/mainColor0"
                 android:textStyle="bold" />
@@ -42,7 +42,7 @@
                 android:id="@+id/insertItemBottomTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12,500"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="@dimen/dp20"
                 android:layout_marginTop="@dimen/dp5"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dp11"
                 android:layout_gravity="center"
-                android:text="pieChartName"
+                android:text=""
                 android:textColor="@color/color_999999"/>
 
         </FrameLayout>
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dp11"
                 android:layout_gravity="center"
-                android:text="pieChartName"
+                android:text=""
                 android:textColor="@color/color_999999"/>
 
         </FrameLayout>
