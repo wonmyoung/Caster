@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp430"
+    android:layout_marginLeft="@dimen/dp15"
+    android:layout_marginRight="@dimen/dp15"
+    android:layout_marginTop="@dimen/dp5"
+    android:layout_marginBottom="@dimen/dp5"
+    card_view:cardCornerRadius="@dimen/dp15"
+    card_view:cardElevation="@dimen/dp5"
+    card_view:cardMaxElevation="0dp"
+    card_view:contentPaddingTop="@dimen/dp15"
+    card_view:contentPaddingLeft="@dimen/dp15"
+    card_view:contentPaddingRight="@dimen/dp15"
+    card_view:contentPaddingBottom="@dimen/dp5">
+
+    <TextView
+        android:id="@+id/insertItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/dp14"
+        android:textStyle="bold"
+        android:textColor="@color/mainColor0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp30"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40"
+            android:weightSum="100">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="60"
+                android:layout_height="match_parent"
+                android:textColor="@color/color_7c7c7c"
+                android:text="캐스터 이름"
+                android:textSize="@dimen/dp12"
+                android:gravity="center_vertical"/>
+
+            <com.casting.view.CustomTabLayout
+                style="@style/CustomTabLayoutStyle"
+                android:id="@+id/rankingListTab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="40"
+                app:tabBackground="@drawable/selector_tab_indicator"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/mainColor0"
+                app:tabIndicatorHeight="@dimen/dp3"
+                app:tabMaxWidth="0dp"
+                app:tabMode="fixed"
+                app:tabTextAppearance="@style/CustomTabTexStyle"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rankingList"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp380"
+            android:textSize="@dimen/dp14"
+            android:maxLines="4"
+            android:textColor="@color/color_666666"
+            android:text=""/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rankingListTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_gravity="right|top"
+        android:textSize="@dimen/dp12"
+        android:textColor="@color/color_adadad"/>
+
+</android.support.v7.widget.CardView>

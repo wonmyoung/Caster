@@ -10,11 +10,10 @@ import android.widget.TextView;
 import com.casting.R;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonFragment;
-import com.casting.component.activity.CastChartActivity;
+import com.casting.component.activity.RankingListActivity;
 import com.casting.component.activity.ProfileActivity;
 import com.casting.component.activity.SettingActivity;
 import com.casting.model.global.ActiveMember;
-import com.kakao.usermgmt.response.model.UserProfile;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -60,7 +59,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
 
             case R.id.leftMenuButton2:
             {
-                Intent intent = new Intent(getContext(), CastChartActivity.class);
+                Intent intent = new Intent(getContext(), RankingListActivity.class);
 
                 startActivity(intent);
                 break;

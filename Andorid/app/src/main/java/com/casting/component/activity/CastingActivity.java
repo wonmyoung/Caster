@@ -1,13 +1,14 @@
 package com.casting.component.activity;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,9 +33,12 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
+import com.casting.model.Ranking;
+import com.casting.model.RankingList;
 import com.casting.model.DoublePieChartItem;
 import com.casting.model.PieChartItem;
 import com.casting.model.request.PostCast;
+import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
 import com.casting.view.insert.InsertOptionsVertical;
@@ -70,7 +74,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.text.DecimalFormat;
@@ -675,6 +678,73 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 pieChart2.setData(pieData2);
                 break;
             }
+
+            case RANKING_LIST:
+            {
+                RankingList rankingList = (RankingList) item;
+
+                TextView textView = holder.find(R.id.insertItemTitle);
+                textView.setText(rankingList.getItemListTitle());
+
+                final RecyclerView recyclerView = holder.find(R.id.rankingList);
+
+                recyclerView.setNestedScrollingEnabled(true);
+                recyclerView.setHasFixedSize(true);
+
+                ItemViewAdapter adapter = (recyclerView.getAdapter() == null ? null :
+                        (ItemViewAdapter) recyclerView.getAdapter());
+
+                if (adapter == null)
+                {
+                    adapter = new ItemViewAdapter(this, this);
+
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    recyclerView.setAdapter(adapter);
+                }
+
+                ArrayList<Ranking> itemList = rankingList.getRankingList();
+
+                adapter.setItemList(itemList);
+                adapter.notifyDataSetChanged();
+
+                CustomTabLayout customTabLayout = holder.find(R.id.rankingListTab);
+                customTabLayout.addTextTab("적중률");
+                customTabLayout.addTextTab("리워드");
+                customTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+                {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab)
+                    {
+
+                    }
+                });
+
+                break;
+            }
+
+            case RANKING:
+            {
+                DecimalFormat decimalFormat = new DecimalFormat("#.");
+
+                TextView textView1 = holder.find(R.id.rankingIndex);
+                textView1.setText(decimalFormat.format((position + 1)));
+
+                Ranking ranking = (Ranking) item;
+
+                break;
+            }
         }
     }
 
@@ -1199,6 +1269,28 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             doublePieChartItem.setItemTitle("내가 얻은 Cap");
             doublePieChartItem.setItemBottomTitle("7,500");
             commonItems.add(doublePieChartItem);
+        }
+
+        RankingList rankingList = new RankingList();
+        rankingList.setItemListTitle("캐스트 순위");
+
+        ArrayList<Ranking> itemList = new ArrayList<>();
+
+        loadDummyChartItemList(itemList);
+
+        rankingList.setRankingList(itemList);
+
+        commonItems.add(rankingList);
+    }
+
+    private void loadDummyChartItemList(ArrayList<Ranking> list)
+    {
+        for (int i = 0 ; i < 10 ; i ++)
+        {
+            Ranking ranking = new Ranking();
+            ranking.setItemType(ItemConstant.RANKING);
+
+            list.add(ranking);
         }
     }
 }

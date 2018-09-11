@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/rankingIndex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="99."
@@ -25,6 +26,7 @@
             android:layout_marginLeft="@dimen/dp10"/>
 
         <TextView
+            android:id="@+id/rankingName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="조감독"
@@ -32,6 +34,7 @@
             android:textColor="@color/color_7c7c7c"/>
 
         <TextView
+            android:id="@+id/userGrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="골드"
@@ -55,6 +58,7 @@
         android:layout_gravity="center_vertical|right">
 
         <TextView
+            android:id="@+id/userCastCorrectRate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -64,6 +68,7 @@
             android:textColor="@color/mainColor0"/>
 
         <TextView
+            android:id="@+id/userCash"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

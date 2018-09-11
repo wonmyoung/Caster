@@ -44,8 +44,8 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
                 v = inflateView(R.layout.view_item_cast_card_wide, parent);
                 break;
 
-            case CHART_ITEM:
-                v = inflateView(R.layout.view_item_chart, parent);
+            case RANKING:
+                v = inflateView(R.layout.view_item_cast_ranking, parent);
                 break;
 
             case NEWS:
@@ -114,6 +114,10 @@ public class ItemViewAdapter extends CommonRecyclerAdapter implements ItemConsta
 
             case INSERT_REASON_MESSAGE:
                 v = inflateView(R.layout.view_item_reason_write, parent);
+                break;
+
+            case RANKING_LIST:
+                v = inflateView(R.layout.view_item_cast_ranking_list, parent);
                 break;
 
             default:

@@ -13,7 +13,7 @@ import com.casting.commonmodule.view.list.CommonRecyclerView;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
-import com.casting.model.ChartItem;
+import com.casting.model.Ranking;
 import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestChartList;
 import com.casting.view.CustomTabLayout;
@@ -21,7 +21,7 @@ import com.casting.view.ItemViewAdapter;
 
 import java.util.ArrayList;
 
-public class CastChartActivity extends CommonActivity implements ItemBindStrategy, IResponseListener {
+public class RankingListActivity extends CommonActivity implements ItemBindStrategy, IResponseListener {
 
     private CustomTabLayout     mCustomTabLayout;
 
@@ -78,10 +78,10 @@ public class CastChartActivity extends CommonActivity implements ItemBindStrateg
     {
         for (int i = 0 ; i < 100 ; i ++)
         {
-            ChartItem chartItem  = new ChartItem();
-            chartItem.setItemType(ItemConstant.CHART_ITEM);
+            Ranking ranking = new Ranking();
+            ranking.setItemType(ItemConstant.RANKING);
 
-            list.add(chartItem);
+            list.add(ranking);
         }
     }
 }

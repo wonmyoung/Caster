@@ -82,7 +82,7 @@
             android:theme="@style/AppTheme.baseActivity" />
 
         <activity
-            android:name=".component.activity.CastChartActivity"
+            android:name=".component.activity.RankingListActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.baseActivity" />
