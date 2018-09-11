@@ -547,32 +547,39 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count)
                         {
-                            int cap = ActiveMember.getInstance().getUserCap();
-
-                            int remainingCap = 0 , insertedCap = 0;
-
-                            String string = s.toString();
-
-                            if (!TextUtils.isEmpty(string))
+                            try
                             {
-                                insertedCap = Integer.parseInt(string);
+                                int cap = ActiveMember.getInstance().getUserCap();
 
-                                remainingCap = (cap - insertedCap);
+                                int remainingCap = 0 , insertedCap = 0;
 
-                                if (remainingCap < 0) {
-                                    remainingCap = 0;
+                                String string = s.toString();
+
+                                if (!TextUtils.isEmpty(string))
+                                {
+                                    insertedCap = Integer.parseInt(string);
+
+                                    remainingCap = (cap - insertedCap);
+
+                                    if (remainingCap < 0) {
+                                        remainingCap = 0;
+                                    }
                                 }
+                                else
+                                {
+                                    remainingCap = cap;
+                                }
+
+                                DecimalFormat decimalFormat = new DecimalFormat("#,### cap 남음");
+
+                                textView.setText(decimalFormat.format(remainingCap));
+
+                                itemInsert.setInsertedData(insertedCap);
                             }
-                            else
+                            catch (Exception e)
                             {
-                                remainingCap = cap;
+                                e.printStackTrace();
                             }
-
-                            DecimalFormat decimalFormat = new DecimalFormat("#,### cap 남음");
-
-                            textView.setText(decimalFormat.format(remainingCap));
-
-                            itemInsert.setInsertedData(insertedCap);
                         }
 
                         @Override
