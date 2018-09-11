@@ -184,7 +184,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mItemListView.setAdapter(mItemViewAdapter);
         mItemListView.setLayoutManager(mItemLayoutManager);
 
-        mTargetCast = (Cast) getIntent().getSerializableExtra(CAST);
+        mTargetCast = (Cast) getIntent().getSerializableExtra(DEFINE_CAST);
 
         if (mTargetCast != null)
         {

@@ -93,6 +93,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.baseActivity" />
 
+        <activity
+            android:name=".component.activity.AlarmActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.baseActivity" />
+
     </application>
 
 </manifest>

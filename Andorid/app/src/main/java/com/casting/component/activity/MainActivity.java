@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -131,7 +130,7 @@ public class MainActivity extends BaseFCActivity implements
                 Cast cast = getItem(position);
 
                 Intent intent = new Intent(MainActivity.this, CastingActivity.class);
-                intent.putExtra(CAST, cast);
+                intent.putExtra(DEFINE_CAST, cast);
 
                 startActivity(intent);
             }
