@@ -278,7 +278,7 @@ public class ProfileActivity extends CommonActivity
 
                 int radius = (int) getResources().getDimension(R.dimen.dp25);
 
-                ImageLoader.loadRoundImage(this, imageView, cast.getThumbnails()[0], radius);
+                ImageLoader.loadRoundImage(this, imageView, cast.getThumbnail(0), radius);
                 break;
             }
 
@@ -345,7 +345,7 @@ public class ProfileActivity extends CommonActivity
             Cast cast = new Cast();
             cast.setItemType(ItemConstant.CAST_CARD_WIDE_THIN);
             cast.setRemainingTime(60 * 60 * 1000);
-            cast.setRewardCash(20000);
+            cast.setTotalReward(20000);
             cast.setTitle("비트코인의 7월 25일 지정가격은 얼마일까요 ?");
             cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
             cast.setThumbnails(

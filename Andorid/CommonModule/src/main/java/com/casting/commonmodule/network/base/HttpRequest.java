@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 public class HttpRequest<M extends BaseModel> implements NetworkConstant {
@@ -60,7 +61,8 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             StringBuilder strUrlBuilder = new StringBuilder();
             strUrlBuilder.append(mUrlData);
 
-            if (HttpGet.equalsIgnoreCase(mHttpMethod)) {
+            if (HttpGet.equalsIgnoreCase(mHttpMethod))
+            {
                 strUrlBuilder.append(buildParameter());
             }
 
@@ -85,9 +87,8 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             connection.setDoInput(true);
             connection.connect();
 
-            if (HttpPost.equalsIgnoreCase(mHttpMethod)) {
-
-
+            if (HttpPost.equalsIgnoreCase(mHttpMethod))
+            {
                 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
 
                 if (mNetworkRequest instanceof IFileUpLoader)
@@ -145,6 +146,17 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
             if (isValidHttpConnection(connection.getResponseCode()))
             {
+
+                List<String> cookies = (connection.getHeaderFields() != null ?
+                                        connection.getHeaderFields().get("Set-Cookie") : null);
+                int cookiesSize = (cookies == null ? 0 : cookies.size());
+                if (cookiesSize > 0)
+                {
+                    for (String s : cookies)
+                    {
+                        EasyLog.LogMessage(this, "++ cookie = " + s);
+                    }
+                }
 
                 InputStream inputStream = connection.getInputStream();
 

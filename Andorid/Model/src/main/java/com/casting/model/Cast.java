@@ -1,8 +1,14 @@
 package com.casting.model;
 
+import android.text.TextUtils;
+
 import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
@@ -15,14 +21,26 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
 
     private String      CastId;
+    private String      SurveyId;
 
     private double      RemainingTime;
     private String      Title;
     private String[]    Tags;
-    private int         RewardCash;
+    private int         TotalReward;
+    private int         CasterNum;
     private String[]    Thumbnails;
+    private String      Link;
+    private int         Participants;
+    private String      Reference;
+    private String      Description;
+    private String      EndDate;
+    private String      StartDate;
+    private String      Status;
 
-    private int   mItemType;
+    private NewsList       NewsList;
+    private TimeLineList   TimeLineList;
+
+    private int   ItemType;
 
     private boolean Done;
 
@@ -52,16 +70,29 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
         Tags = tags;
     }
 
-    public int getRewardCash() {
-        return RewardCash;
+    public int getTotalReward() {
+        return TotalReward;
     }
 
-    public void setRewardCash(int rewardCash) {
-        RewardCash = rewardCash;
+    public void setTotalReward(int totalReward) {
+        TotalReward = totalReward;
     }
 
-    public String[] getThumbnails() {
-        return Thumbnails;
+    public String getThumbnail(int i)
+    {
+        String s = (Thumbnails != null && Thumbnails.length > i ? Thumbnails[i] : null);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (!TextUtils.isEmpty(s))
+        {
+            stringBuilder.append("http://ec2-13-125-159-59.ap-northeast-2.compute.amazonaws.com");
+            stringBuilder.append(":3000");
+            stringBuilder.append("/uploads/survey/");
+            stringBuilder.append(s);
+        }
+
+        return stringBuilder.toString();
     }
 
     public void setThumbnails(String ... thumbnails) {
@@ -70,13 +101,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setItemType(int itemType)
     {
-        mItemType = itemType;
+        ItemType = itemType;
     }
 
     @Override
     public int getItemType()
     {
-        return mItemType;
+        return ItemType;
     }
 
     public String getCastId() {
@@ -101,5 +132,113 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setCastType(Type castType) {
         CastType = castType;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getEndDate() {
+        return EndDate;
+    }
+
+    public void setEndDate(String endDate) {
+        EndDate = endDate;
+    }
+
+    public int getCasterNum() {
+        return CasterNum;
+    }
+
+    public void setCasterNum(int casterNum) {
+        CasterNum = casterNum;
+    }
+
+    public String getReference() {
+        return Reference;
+    }
+
+    public void setReference(String reference) {
+        Reference = reference;
+    }
+
+    public String getLink() {
+        return Link;
+    }
+
+    public void setLink(String link) {
+        Link = link;
+    }
+
+    public int getParticipants() {
+        return Participants;
+    }
+
+    public void setParticipants(int participants) {
+        Participants = participants;
+    }
+
+    public String getSurveyId() {
+        return SurveyId;
+    }
+
+    public void setSurveyId(String surveyId) {
+        SurveyId = surveyId;
+    }
+
+    public NewsList getNewsList() {
+        return NewsList;
+    }
+
+    public void setNewsList(NewsList newsList) {
+        NewsList = newsList;
+    }
+
+    public void addNews(News news)
+    {
+        if (NewsList == null)
+        {
+            NewsList = new NewsList();
+        }
+
+        NewsList.addNews(news);
+    }
+
+    public TimeLineList getTimeLineList() {
+        return TimeLineList;
+    }
+
+    public void setTimeLineList(TimeLineList timeLineList) {
+        TimeLineList = timeLineList;
+    }
+
+    public void addTimeLine(TimeLine timeLine)
+    {
+        if (TimeLineList == null)
+        {
+            TimeLineList = new TimeLineList();
+        }
+
+        TimeLineList.addTimeLine(timeLine);
+    }
+
+    public String getStartDate() {
+        return StartDate;
+    }
+
+    public void setStartDate(String startDate) {
+        StartDate = startDate;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

@@ -3,11 +3,20 @@ package com.casting.component.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
+import android.text.TextUtils;
 
 import com.casting.R;
+import com.casting.commonmodule.IResponseListener;
+import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseRequest;
+import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.model.Member;
+import com.casting.model.global.ActiveMember;
+import com.casting.model.request.Login;
 
-public class IntroActivity extends BaseFCActivity {
+public class IntroActivity extends BaseFCActivity implements IResponseListener {
 
     @Override
     protected void init(@Nullable Bundle savedInstanceState) throws Exception
@@ -16,7 +25,7 @@ public class IntroActivity extends BaseFCActivity {
 
         if (isRuntimePermissionAllowed())
         {
-            loadLoginPage();
+            load();
         }
     }
 
@@ -34,13 +43,30 @@ public class IntroActivity extends BaseFCActivity {
     {
         super.onPermissionsGranted();
 
-        loadLoginPage();
+        load();
     }
 
-    @Override
-    protected void onClickEvent(View v)
+    private void load()
     {
+        CommonPreference commonPreference = CommonPreference.getInstance();
 
+        String memberId = commonPreference.getSharedValueByString(MEMBER_EMAIL, "");
+        String memberPw = commonPreference.getSharedValueByString(MEMBER_PW, "");
+
+        EasyLog.LogMessage(this, "++ load memberId = ", memberId);
+        EasyLog.LogMessage(this, "++ load memberPw = ", memberPw);
+
+        if (!TextUtils.isEmpty(memberId) && !TextUtils.isEmpty(memberPw))
+        {
+            Login login = new Login();
+            login.setResponseListener(this);
+
+            RequestHandler.getInstance().request(login);
+        }
+        else
+        {
+            loadLoginPage();
+        }
     }
 
     private void loadLoginPage()
@@ -57,4 +83,31 @@ public class IntroActivity extends BaseFCActivity {
         post(runnable, 1000 * 3);
     }
 
+    @Override
+    public void onThreadResponseListen(BaseResponse response)
+    {
+        BaseRequest request = response.getSourceRequest();
+
+        if (request.isRight(Login.class))
+        {
+            Login login = (Login) request;
+
+            if (login.isSuccessResponse())
+            {
+                Member member = (Member) response.getResponseModel();
+
+                ActiveMember.getInstance().setMember(member);
+
+                Intent intent = new Intent(this, MainActivity.class);
+
+                startActivity(intent);
+
+                finish();
+            }
+            else
+            {
+                loadLoginPage();
+            }
+        }
+    }
 }

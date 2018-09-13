@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.casting.FutureCasting;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
@@ -33,10 +34,12 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastingStatus;
+import com.casting.model.NewsList;
 import com.casting.model.Ranking;
 import com.casting.model.RankingList;
 import com.casting.model.DoublePieChartItem;
 import com.casting.model.PieChartItem;
+import com.casting.model.TimeLineList;
 import com.casting.model.request.PostCast;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
@@ -50,7 +53,6 @@ import com.casting.model.Member;
 import com.casting.model.News;
 import com.casting.model.Reply;
 import com.casting.model.TimeLine;
-import com.casting.model.TimeLineGroup;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestDetailedCast;
@@ -127,6 +129,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
     private ImageView    mCastImage;
     private TextView     mCastTitle;
+    private TextView     mCastDescription;
     private TextView     mCastTopButton;
     private Button       mCastButton;
     private EditText     mTextInsertView;
@@ -146,6 +149,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
+        mCastDescription = find(R.id.castCardDescription);
 
         mCastTopButton = find(R.id.castCardTopButton);
         mCastTopButton.setOnClickListener(new View.OnClickListener() {
@@ -191,16 +195,24 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             mPageCurrentMode.addObserver(this);
             mPageCurrentMode.setPageMode((mTargetCast.isDone() ? CAST_DONE : CAST_INFO));
 
-            String thumbNailPath = mTargetCast.getThumbnails()[0];
+            String thumbNailPath = mTargetCast.getThumbnail(0);
 
             EasyLog.LogMessage(this, "++ confirm getCastId = ", mTargetCast.getCastId());
             EasyLog.LogMessage(this, "++ confirm thumbNailPath = ", thumbNailPath);
 
-            int radius = (int) getResources().getDimension(R.dimen.dp25);
+            if (!TextUtils.isEmpty(thumbNailPath))
+            {
+                int radius = (int) getResources().getDimension(R.dimen.dp25);
 
-            ImageLoader.loadRoundImage(this, mCastImage, mTargetCast.getThumbnails()[0], radius);
+                ImageLoader.loadRoundImage(this, mCastImage, thumbNailPath, radius);
+            }
+            else
+            {
+                UtilityUI.setBackGroundDrawable(mCastImage, R.drawable.shape_gray_color_alpha80_round10);
+            }
 
             mCastTitle.setText(mTargetCast.getTitle());
+            mCastDescription.setText(mTargetCast.getDescription());
 
             RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
             requestDetailedCast.setResponseListener(this);
@@ -228,10 +240,31 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 textView1.setText(news.getNewsTitle());
 
                 TextView textView2 = holder.find(R.id.newsHighlightText);
-                textView2.setText(news.getNews());
+                textView2.setText(news.getContents());
 
                 TextView textView3 = holder.find(R.id.newsTime);
                 textView3.setText(news.getNewsTime());
+                break;
+            }
+
+            case NEWS_GROUP:
+            {
+                NewsList newsList = (NewsList) item;
+
+                int size = newsList.getNewsSize();
+                if (size > 0)
+                {
+                    News news = newsList.getNewsArrayList().get(0);
+
+                    TextView textView1 = holder.find(R.id.insertItemTitle);
+                    textView1.setText("주요 뉴스");
+
+                    TextView textView2 = holder.find(R.id.newsHighlightText);
+                    textView2.setText(news.getContents());
+
+                    TextView textView3 = holder.find(R.id.newsTime);
+                    textView3.setText(news.getNewsTime());
+                }
                 break;
             }
 
@@ -245,6 +278,61 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 Button button2 = holder.find(R.id.shareTimeLineButton);
                 button2.setTag(R.id.position, position);
                 button2.setOnClickListener(this);
+                break;
+            }
+
+            case TIME_LINE_GROUP:
+            {
+                TimeLineList timeLineList = (TimeLineList) item;
+
+                int size = timeLineList.getTimeLineListSize();
+                if (size > 0)
+                {
+                    Resources res = getResources();
+
+                    for (int i = 1 ; i <= 3 ; i++)
+                    {
+                        int lineId = res.getIdentifier("timeLine"+i, "id", getPackageName());
+
+                        View lineView = holder.find(lineId);
+
+                        TimeLine timeLine = timeLineList.getTimeLine(i);
+
+                        if (timeLine != null)
+                        {
+                            lineView.setVisibility(View.VISIBLE);
+
+                            int textId = res.getIdentifier("user"+i+"TimeLine", "id", getPackageName());
+
+                            TextView textView = holder.find(textId);
+                            textView.setText(timeLine.getComments());
+
+                            String userId = timeLine.getUserId();
+
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                            stringBuilder.append(FutureCasting.SERVER_PORT);
+                            stringBuilder.append("/uploads/account/");
+                            stringBuilder.append(userId);
+
+                            EasyLog.LogMessage(this, "++ timeLine Group thumbNail path = ", stringBuilder.toString());
+
+                            int imageId = res.getIdentifier("user"+i+"Image", "id", getPackageName());
+
+                            ImageView imageView = holder.find(imageId);
+
+                            int radius = UtilityUI.getDimension(this, R.dimen.dp25);
+
+                            UtilityUI.setThumbNailRoundedImageView(this, imageView, stringBuilder.toString(), radius);
+                        }
+                        else
+                        {
+                            lineView.setVisibility(View.GONE);
+                        }
+
+                    }
+                }
                 break;
             }
 
@@ -824,6 +912,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         switch (itemType)
         {
+            case NEWS_GROUP:
+            {
+                NewsList newsList = (NewsList) item;
+
+                onClickEventNewsGroup(newsList);
+                break;
+            }
+
             case NEWS:
             {
                 News news = (News) item;
@@ -834,9 +930,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case TIME_LINE_GROUP:
             {
-                TimeLineGroup timeLineGroup = (TimeLineGroup) item;
+                TimeLineList timeLineList = (TimeLineList) item;
 
-                onClickEventTimeLineGroup(v, timeLineGroup);
+                onClickEventTimeLineGroup(v, timeLineList);
                 break;
             }
 
@@ -965,13 +1061,35 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
+    private void onClickEventNewsGroup(NewsList newsList)
+    {
+        if (mPageCurrentMode.mPageMode == PageMode.CAST_INFO)
+        {
+            String castId = (mTargetCast == null ? null : mTargetCast.getCastId());
+
+            EasyLog.LogMessage(this, "++ onClickEventNews ");
+            EasyLog.LogMessage(this, "++ onClickEventNews castId = " + castId);
+
+            if (!TextUtils.isEmpty(castId))
+            {
+                mPageCurrentMode.setPageMode(PageMode.NEWS_LIST);
+
+                mItemViewAdapter.setItemList(newsList.getNewsArrayList());
+                mItemViewAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void onClickEventNews(View v, News news)
     {
         if (mPageCurrentMode.mPageMode == PageMode.CAST_INFO)
         {
             String castId = (mTargetCast == null ? null : mTargetCast.getCastId());
 
-            if (TextUtils.isEmpty(castId))
+            EasyLog.LogMessage(this, "++ onClickEventNews ");
+            EasyLog.LogMessage(this, "++ onClickEventNews castId = " + castId);
+
+            if (!TextUtils.isEmpty(castId))
             {
                 mPageCurrentMode.setPageMode(PageMode.NEWS_LIST);
 
@@ -987,18 +1105,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private void onClickEventTimeLineGroup(View v, TimeLineGroup timeLineGroup)
+    private void onClickEventTimeLineGroup(View v, TimeLineList timeLineGroup)
     {
         mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
 
-        mItemViewAdapter.clear();
+        mItemViewAdapter.setItemList(timeLineGroup.getTimeLineList());
         mItemViewAdapter.notifyDataSetChanged();
-
-        RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
-        requestTimeLineList.setCast(mTargetCast);
-        requestTimeLineList.setResponseListener(this);
-
-        RequestHandler.getInstance().request(requestTimeLineList);
     }
 
     private void onClickEventTimeLine(View v, TimeLine timeLine)
@@ -1096,26 +1208,16 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     {
         BaseRequest request = response.getSourceRequest();
 
+        EasyLog.LogMessage(this, ">> onThreadResponseListen");
+        EasyLog.LogMessage(this, ">> onThreadResponseListen " + request.getClass().getSimpleName());
+
         if (request.isRight(RequestDetailedCast.class))
         {
-            // TODO
-
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyItemList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+            onCastDetailedResponse(response);
         }
         else if (request.isRight(RequestNewsList.class))
         {
-
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyNewsList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+            onNewsListResponse(response);
         }
         else if (request.isRight(RequestTimeLineList.class))
         {
@@ -1155,15 +1257,47 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
+    private void onCastDetailedResponse(BaseResponse response)
+    {
+        int responseCode = response.getResponseCode();
+        if (responseCode > 0)
+        {
+            mTargetCast = (Cast) response.getResponseModel();
+
+            NewsList newsList = mTargetCast.getNewsList();
+
+            TimeLineList timeLineList = mTargetCast.getTimeLineList();
+
+            EasyLog.LogMessage(this, "++ onCastDetailedResponse newsList is null ?" + (newsList == null));
+            EasyLog.LogMessage(this, "++ onCastDetailedResponse timeLineList is null ?" + (timeLineList == null));
+
+            mItemViewAdapter.addItem(newsList);
+            mItemViewAdapter.addItem(timeLineList);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onNewsListResponse(BaseResponse response)
+    {
+        NewsList newsList = (NewsList) response.getResponseModel();
+
+        int size = newsList.getNewsSize();
+        if (size > 0)
+        {
+            mItemViewAdapter.setItemList(newsList.getNewsArrayList());
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void loadDummyItemList(ArrayList<ICommonItem> commonItems)
     {
         News news = new News();
         news.setNewsTitle("주요 뉴스");
-        news.setNews("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
+        news.setContents("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
         news.setNewsTime("1시간전");
         commonItems.add(news);
 
-        TimeLineGroup timeLineGroup = new TimeLineGroup();
+        TimeLineList timeLineGroup = new TimeLineList();
         commonItems.add(timeLineGroup);
 
         LineGraphItem lineGraphItem = new LineGraphItem();
@@ -1191,7 +1325,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         {
             News news = new News();
             news.setNewsTitle("주요 뉴스");
-            news.setNews("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
+            news.setContents("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
             news.setNewsTime("1시간전");
 
             commonItems.add(news);
@@ -1256,7 +1390,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         News news = new News();
         news.setNewsTitle("주요 뉴스");
-        news.setNews("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
+        news.setContents("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
         news.setNewsTime("1시간전");
 
         commonItems.add(news);

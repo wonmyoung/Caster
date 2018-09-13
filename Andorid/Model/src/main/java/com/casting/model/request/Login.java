@@ -3,9 +3,10 @@ package com.casting.model.request;
 import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
-import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.commonmodule.session.SessionType;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Member;
 
 import org.json.JSONObject;
@@ -17,6 +18,8 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     private SessionType mSessionType;
 
+    private boolean SuccessResponse = false;
+
     @Override
     public String getHttpMethod() {
         return HttpGet;
@@ -24,7 +27,12 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     @Override
     public ContentValues getHttpRequestHeader() {
-        return null;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("email", EmailAddress);
+        contentValues.put("password", Password);
+
+        return contentValues;
     }
 
     @Override
@@ -40,6 +48,20 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     @Override
     public Member parse(JSONObject jsonObject) {
+
+        SuccessResponse = UtilityData.convertBooleanFromJSON(jsonObject, "success");
+
+        EasyLog.LogMessage(this, "++ SuccessResponse = " + SuccessResponse);
+
+        if (SuccessResponse)
+        {
+            Member member = new Member();
+            member.setEmail(EmailAddress);
+            member.setPassWord(Password);
+
+            return member;
+        }
+
         return null;
     }
 
@@ -65,5 +87,9 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public boolean isSuccessResponse() {
+        return SuccessResponse;
     }
 }

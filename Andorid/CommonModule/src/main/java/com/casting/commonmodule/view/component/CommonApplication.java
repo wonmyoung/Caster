@@ -6,6 +6,7 @@ import com.casting.commonmodule.network.NetworkRequestHandler;
 import com.casting.commonmodule.network.NetworkState;
 import com.casting.commonmodule.network.base.URLGeneratorStrategy;
 import com.casting.commonmodule.session.SessionRequestHandler;
+import com.casting.commonmodule.utility.CommonPreference;
 
 public abstract class CommonApplication extends Application implements URLGeneratorStrategy {
 
@@ -13,6 +14,8 @@ public abstract class CommonApplication extends Application implements URLGenera
     public void onCreate()
     {
         super.onCreate();
+
+        CommonPreference.init(this);
 
         NetworkState.getInstance().registerReceiver(this);
 

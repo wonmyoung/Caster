@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -103,12 +104,19 @@ public class MainActivity extends BaseFCActivity implements
 
             ImageView imageView = viewHolder.find(R.id.castCardBack);
 
-            String thumbNailPath = (item.getThumbnails() != null && item.getThumbnails().length > 0 ?
-                                    item.getThumbnails()[0] : null);
+            String thumbNailPath = item.getThumbnail(0);
 
-            int radius = (int) c.getResources().getDimension(R.dimen.dp25);
+            if (!TextUtils.isEmpty(thumbNailPath))
+            {
+                int radius = (int) c.getResources().getDimension(R.dimen.dp25);
 
-            ImageLoader.loadRoundImage(c, imageView, thumbNailPath, radius);
+                ImageLoader.loadRoundImage(c, imageView, thumbNailPath, radius);
+            }
+            else
+            {
+                UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_gray_color_alpha80_round10);
+            }
+
 
             TextView textView = viewHolder.find(R.id.castCardTitle);
             textView.setText(item.getTitle());
@@ -230,42 +238,33 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        try
-        {
-            BaseRequest request = response.getSourceRequest();
+        BaseRequest request = response.getSourceRequest();
 
-            if (request instanceof RequestCastList)
-            {
-                onCastListResponse(response);
-            }
-        }
-        catch (Exception e)
+        if (request.isRight(RequestCastList.class))
         {
-            e.printStackTrace();
+            onCastListResponse(response);
         }
     }
 
-    private void onCastListResponse(BaseResponse<CastList> response) throws Exception
+    private void onCastListResponse(BaseResponse<CastList> response)
     {
+        EasyLog.LogMessage(this, ">> onCastListResponse ");
+
         int responseCode = response.getResponseCode();
         if (responseCode > 0)
         {
             CastList castList = response.getResponseModel();
 
-            mSwipeStackAdapter.setItemList(castList.getCastList());
-            mSwipeStackAdapter.notifyDataSetChanged();
+            int size = castList.getSize();
+            if (size > 0)
+            {
+                mSwipeStackAdapter.setItemList(castList.getCastList());
+                mSwipeStackAdapter.notifyDataSetChanged();
+            }
         }
-        else
-        {
-            //TODO 에러 처리 정의 필요
-            // 더미 데이터 로드
-            ArrayList<Cast> castList = new ArrayList<>();
 
-            loadDummyCastList(castList);
-
-            mSwipeStackAdapter.setItemList(castList);
-            mSwipeStackAdapter.notifyDataSetChanged();
-        }
+        EasyLog.LogMessage(this, "-- onCastListResponse responseCode = " + responseCode);
+        EasyLog.LogMessage(this, "-- onCastListResponse getCount = " + mSwipeStackAdapter.getCount());
     }
 
     @Override
@@ -315,7 +314,7 @@ public class MainActivity extends BaseFCActivity implements
             {
                 int rollBackCount = (currentPosition - selectedCard);
 
-                rollBackCardStack(rollBackCount);
+                swipeRollBackCardStack(rollBackCount);
             }
 
             mMainSeekBarCover.setClickable(true);
@@ -454,10 +453,16 @@ public class MainActivity extends BaseFCActivity implements
         else
         {
             int itemCount = (mSwipeStackAdapter.getCount() - 1);
+            if (itemCount > 0)
+            {
+                int progress = (position * 100) / itemCount;
 
-            int progress = (position * 100) / itemCount;
-
-            mMainSeekBar.setProgress(progress);
+                mMainSeekBar.setProgress(progress);
+            }
+            else
+            {
+                mMainSeekBar.setProgress(100);
+            }
         }
     }
 
@@ -495,7 +500,7 @@ public class MainActivity extends BaseFCActivity implements
         }
     }
 
-    private void rollBackCardStack(int rollbackCount)
+    private void swipeRollBackCardStack(int rollbackCount)
     {
         if (rollbackCount > 0)
         {
@@ -520,26 +525,6 @@ public class MainActivity extends BaseFCActivity implements
             {
                 mSwipeExecutionQueue.poll().run();
             }
-        }
-    }
-
-    private void loadDummyCastList(ArrayList<Cast> list)
-    {
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            Cast cast = new Cast();
-            cast.setRemainingTime(60 * 60 * 1000);
-            cast.setRewardCash(20000);
-            cast.setTitle(" 비트코인의 7월25일의 자정가격은 얼마일까요 ? [" + i + "]");
-            cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
-            cast.setThumbnails(
-                    "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");
-            cast.setCastType(Cast.Type.ESSAY);
-            list.add(cast);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.casting.commonmodule.utility;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -18,6 +19,11 @@ public class CommonPreference extends Observable {
     public static CommonPreference getInstance()
     {
         return LazyHolder.mInstance;
+    }
+
+    public static void init(Application application)
+    {
+        moPref = application.getSharedPreferences(CommonPreference.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     /**
@@ -152,11 +158,15 @@ public class CommonPreference extends Observable {
      *
      * @return {@link SharedPreferences.Editor}
      */
-    public SharedPreferences.Editor getSharedPreferencesEditor() {
+    public SharedPreferences.Editor getSharedPreferencesEditor()
+    {
         SharedPreferences.Editor editor = null;
-        if (moPref != null) {
+
+        if (moPref != null)
+        {
             editor = moPref.edit();
         }
+
         return editor;
     }
 
@@ -335,10 +345,12 @@ public class CommonPreference extends Observable {
     {
         if (TextUtils.isEmpty(strShareKey))
         {
+            EasyLog.LogMessage(this, "-- checkParam strShareKey is null ");
             return false;
         }
         if (moPref == null)
         {
+            EasyLog.LogMessage(this, "-- checkParam moPref is null ");
             return false;
         }
 

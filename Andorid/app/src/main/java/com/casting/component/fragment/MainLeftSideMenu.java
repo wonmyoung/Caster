@@ -8,17 +8,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.casting.R;
+import com.casting.commonmodule.IResponseListener;
+import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonFragment;
 import com.casting.component.activity.RankingListActivity;
 import com.casting.component.activity.ProfileActivity;
 import com.casting.component.activity.SettingActivity;
 import com.casting.model.global.ActiveMember;
+import com.casting.model.request.RequestMember;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainLeftSideMenu extends CommonFragment implements Observer {
+public class MainLeftSideMenu extends CommonFragment implements Observer, IResponseListener {
 
     private CircleImageView mProfileUserPic;
     private TextView        mProfileUserGrade;
@@ -42,6 +45,8 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
         mProfileUserName = find(R.id.userNickName);
         mProfileUserId = find(R.id.userIdView);
 
+        RequestMember requestMember = new RequestMember();
+        requestMember.setResponseListener(this);
     }
 
     @Override
@@ -89,5 +94,11 @@ public class MainLeftSideMenu extends CommonFragment implements Observer {
         {
 
         }
+    }
+
+    @Override
+    public void onThreadResponseListen(BaseResponse response)
+    {
+
     }
 }

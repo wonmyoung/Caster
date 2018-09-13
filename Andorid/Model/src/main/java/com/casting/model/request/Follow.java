@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 
-public class RequestChartList extends NetworkRequest {
+public class Follow extends NetworkRequest {
+
+    private String UserId;
 
     @Override
     public String getHttpMethod() {
@@ -25,5 +27,13 @@ public class RequestChartList extends NetworkRequest {
     @Override
     public <P extends NetworkParcelable> P getNetworkParcelable() {
         return null;
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 }

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
 
+    private String      CastId;
+
     private ArrayList<ItemInsert> InsertArrayList = new ArrayList<>();
 
     @Override
@@ -66,5 +68,13 @@ public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
         {
             InsertArrayList.addAll(insertArrayList);
         }
+    }
+
+    public String getCastId() {
+        return CastId;
+    }
+
+    public void setCastId(String castId) {
+        CastId = castId;
     }
 }

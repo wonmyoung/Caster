@@ -3,6 +3,7 @@ package com.casting.model.global;
 public interface ItemConstant {
 
     int NEWS                        = 1000;
+    int NEWS_GROUP                  = 1001;
     int TIME_LINE                   = 1002;
     int TIME_LINE_WRITE             = 1003;
     int TIME_LINE_GROUP             = 1004;

@@ -14,14 +14,19 @@ import android.widget.Toast;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.model.Member;
+import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RegisterMember;
 import com.casting.view.insert.InsertForm;
 
-public class RegisterActivity extends CommonActivity implements TextView.OnEditorActionListener, IResponseListener {
+public class RegisterActivity extends BaseFCActivity implements TextView.OnEditorActionListener, IResponseListener {
 
     private InsertForm mInsertForm1;
     private InsertForm  mInsertForm2;
@@ -133,13 +138,31 @@ public class RegisterActivity extends CommonActivity implements TextView.OnEdito
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        if (response instanceof NetworkResponse)
+        BaseRequest request = response.getSourceRequest();
+
+        if (request.isRight(RegisterMember.class))
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            RegisterMember registerMember = (RegisterMember) request;
 
-            startActivity(intent);
+            if (registerMember.isResponse())
+            {
+                Member member = (Member) response.getResponseModel();
 
-            finish();
+                CommonPreference commonPreference = CommonPreference.getInstance();
+                commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
+                commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+
+                ActiveMember.getInstance().setMember(member);
+
+                Intent intent = new Intent(this, MainActivity.class);
+
+                startActivity(intent);
+
+                finish();
+            }
+
+            Toast.makeText(this, registerMember.getResponseMessage(), Toast.LENGTH_SHORT).show();
         }
+
     }
 }

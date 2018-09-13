@@ -3,9 +3,10 @@ package com.casting.model.request;
 import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
-import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.commonmodule.session.SessionType;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Member;
 
 import org.json.JSONObject;
@@ -16,6 +17,9 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
     private String UserId;
     private String EmailAddress;
     private String Password;
+
+    private boolean Response = false;
+    private String  ResponseMessage;
 
     private SessionType     mSessionType;
 
@@ -35,9 +39,10 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
     public ContentValues getHttpRequestParameter()
     {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("email", getEmailAddress());
-        contentValues.put("userId", getUserId());
-        contentValues.put("password", getEmailAddress());
+        contentValues.put("email", EmailAddress);
+        contentValues.put("userId", UserId);
+        contentValues.put("password", Password);
+        contentValues.put("password2", Password);
 
         return contentValues;
     }
@@ -51,7 +56,26 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
     @Override
     public Member parse(JSONObject jsonObject)
     {
-        return null;
+
+        Response = UtilityData.convertBooleanFromJSON(jsonObject, "success");
+        ResponseMessage = UtilityData.convertStringFromJSON(jsonObject, "message");
+        String error = UtilityData.convertStringFromJSON(jsonObject, "error");
+
+        EasyLog.LogMessage(this, "++ parse Response = " + Response);
+        EasyLog.LogMessage(this, "++ parse ResponseMessage = " + ResponseMessage);
+        EasyLog.LogMessage(this, "++ parse error = " + error);
+
+        Member member = null;
+
+        if (Response)
+        {
+            member = new Member();
+            member.setUserId(UserId);
+            member.setPassWord(Password);
+            member.setEmail(EmailAddress);
+        }
+
+        return member;
     }
 
     public SessionType getSessionType() {
@@ -92,5 +116,13 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
 
     public void setUserId(String userId) {
         UserId = userId;
+    }
+
+    public boolean isResponse() {
+        return Response;
+    }
+
+    public String getResponseMessage() {
+        return ResponseMessage;
     }
 }

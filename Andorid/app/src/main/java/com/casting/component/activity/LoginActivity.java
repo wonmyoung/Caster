@@ -11,14 +11,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
+import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.model.Member;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
@@ -27,7 +31,7 @@ import com.casting.view.insert.InsertForm;
 import java.util.Observable;
 import java.util.Observer;
 
-public class LoginActivity extends CommonActivity implements IResponseListener, TextView.OnEditorActionListener, Observer {
+public class LoginActivity extends BaseFCActivity implements IResponseListener, TextView.OnEditorActionListener, Observer {
 
     private ViewGroup   mRegisterFrame;
     private Button      mButton0;
@@ -114,13 +118,32 @@ public class LoginActivity extends CommonActivity implements IResponseListener, 
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        if (response instanceof NetworkResponse)
+        BaseRequest request = response.getSourceRequest();
+
+        if (request.isRight(Login.class))
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            Login login = (Login) request;
 
-            startActivity(intent);
+            if (login.isSuccessResponse())
+            {
+                Member member = (Member) response.getResponseModel();
 
-            finish();
+                CommonPreference commonPreference = CommonPreference.getInstance();
+                commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
+                commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+
+                ActiveMember.getInstance().setMember(member);
+
+                Intent intent = new Intent(this, MainActivity.class);
+
+                startActivity(intent);
+
+                finish();
+            }
+            else
+            {
+                Toast.makeText(this, "계정 정보를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

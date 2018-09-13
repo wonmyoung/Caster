@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ReplyList extends BaseModel {
 
-    private ArrayList<Reply> ReplyArrayList;
+    private ArrayList<Reply> ReplyArrayList = new ArrayList<>();
 
     public ArrayList<Reply> getReplyArrayList()
     {
@@ -25,4 +25,10 @@ public class ReplyList extends BaseModel {
             ReplyArrayList.add(reply);
         }
     }
+
+    public int getReplyListSize()
+    {
+        return (ReplyArrayList != null ? ReplyArrayList.size() : 0);
+    }
+
 }

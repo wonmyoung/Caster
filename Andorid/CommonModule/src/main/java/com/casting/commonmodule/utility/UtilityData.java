@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -73,10 +74,14 @@ public class UtilityData {
         return "MNC".equals(Build.VERSION.CODENAME);
     }
 
-    public static String confirmMobileNumber(Context context) {
-        if (context != null) {
-            try {
+    public static String confirmMobileNumber(Context context)
+    {
+        if (context != null)
+        {
+            try
+            {
                 TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
                 String mdn = telephonyManager.getLine1Number();
 
                 if (!TextUtils.isEmpty(mdn) && mdn.contains("+82")) {
@@ -227,18 +232,84 @@ public class UtilityData {
     }
 
     public static String convertStringFromJSON(JSONObject jsonObject , String jsonField) {
-        try {
+        try
+        {
             return jsonObject.getString(jsonField);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return null;
         }
     }
 
-    public static int convertIntegerFromJSON(JSONObject jsonObject , String jsonField) {
-        try {
+    public static String[] convertStringArrayFromJSON(JSONObject jsonObject , String jsonField) {
+        try
+        {
+            String data = jsonObject.getString(jsonField);
+
+            if (!TextUtils.isEmpty(data) && (data.contains("[") || data.contains("]") || data.contains(",")))
+            {
+                data = data.replace("[", "");
+                data = data.replace("]", "");
+
+                return data.split(",");
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public static int convertIntegerFromJSON(JSONObject jsonObject , String jsonField)
+    {
+        try
+        {
             return jsonObject.getInt(jsonField);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return 0;
+        }
+    }
+
+    public static boolean convertBooleanFromJSON(JSONObject jsonObject , String jsonField)
+    {
+        try
+        {
+            return jsonObject.getBoolean(jsonField);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    public static JSONArray convertJsonArrayFromJson(JSONObject jsonObject , String jsonField)
+    {
+        try
+        {
+            return jsonObject.getJSONArray(jsonField);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public static JSONObject convertJsonFromJson(JSONObject jsonObject , String jsonField)
+    {
+        try
+        {
+            return jsonObject.getJSONObject(jsonField);
+        }
+        catch (Exception e)
+        {
+            return null;
         }
     }
 

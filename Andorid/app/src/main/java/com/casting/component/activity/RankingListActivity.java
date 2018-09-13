@@ -15,7 +15,7 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Ranking;
 import com.casting.model.global.ItemConstant;
-import com.casting.model.request.RequestChartList;
+import com.casting.model.request.RequestRankingList;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.ItemViewAdapter;
 
@@ -41,10 +41,10 @@ public class RankingListActivity extends CommonActivity implements ItemBindStrat
         mListView.setLayoutManager(mListViewManager);
         mListView.setHasFixedSize(true);
 
-        RequestChartList requestChartList = new RequestChartList();
-        requestChartList.setResponseListener(this);
+        RequestRankingList requestRankingList = new RequestRankingList();
+        requestRankingList.setResponseListener(this);
 
-        RequestHandler.getInstance().request(requestChartList);
+        RequestHandler.getInstance().request(requestRankingList);
     }
 
     @Override
