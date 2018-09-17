@@ -36,7 +36,7 @@ public class ActiveMember extends Observable {
 
     public int getUserCap()
     {
-        // return (mMember == null ? 0 : mMember.getUserCap());
+        // return (mMember == null ? 0 : mMember.getUserPoint());
         return 12500;
     }
 }

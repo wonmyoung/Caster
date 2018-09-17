@@ -5,42 +5,44 @@ import com.casting.commonmodule.session.SessionType;
 
 public class Member extends BaseModel {
 
-    private String          mNickName;
-    private String          mEmail;
+    private String          UserName;
+    private String          Email;
     private String          UserId;
     private String          Description;
-    private String          mPassWord;
+    private String          PassWord;
     private String          UserGrade;
     private String          UserPicThumbnail;
+    private String          AuthToken;
     private SessionType     mSessionType;
-    private int     UserCap;
+    private int     UserPoint;
+    private String  UserLevel;
     private int     CorrectCast;
     private double  CorrectRate;
     private int     FollowingNum;
     private int     FollowerNum;
 
-    public String getNickName() {
-        return mNickName;
+    public String getUserName() {
+        return UserName;
     }
 
-    public void setNickName(String nickName) {
-        mNickName = nickName;
+    public void setUserName(String nickName) {
+        UserName = nickName;
     }
 
     public String getEmail() {
-        return mEmail;
+        return Email;
     }
 
     public void setEmail(String email) {
-        mEmail = email;
+        Email = email;
     }
 
     public String getPassWord() {
-        return mPassWord;
+        return PassWord;
     }
 
     public void setPassWord(String passWord) {
-        mPassWord = passWord;
+        PassWord = passWord;
     }
 
     public SessionType getSessionType() {
@@ -51,12 +53,12 @@ public class Member extends BaseModel {
         mSessionType = sessionType;
     }
 
-    public int getUserCap() {
-        return UserCap;
+    public int getUserPoint() {
+        return UserPoint;
     }
 
-    public void setUserCap(int userCap) {
-        UserCap = userCap;
+    public void setUserPoint(int userPoint) {
+        UserPoint = userPoint;
     }
 
     public int getCorrectCast() {
@@ -121,5 +123,21 @@ public class Member extends BaseModel {
 
     public void setUserGrade(String userGrade) {
         UserGrade = userGrade;
+    }
+
+    public String getAuthToken() {
+        return AuthToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        AuthToken = authToken;
+    }
+
+    public String getUserLevel() {
+        return UserLevel;
+    }
+
+    public void setUserLevel(String userLevel) {
+        UserLevel = userLevel;
     }
 }

@@ -151,6 +151,7 @@ public class RegisterActivity extends BaseFCActivity implements TextView.OnEdito
                 CommonPreference commonPreference = CommonPreference.getInstance();
                 commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
                 commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+                commonPreference.setSharedValueByString(AUTH_TOKEN, member.getAuthToken());
 
                 ActiveMember.getInstance().setMember(member);
 

@@ -47,6 +47,7 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
         return contentValues;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public JSONParcelable<Member> getNetworkParcelable()
     {
@@ -61,6 +62,7 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
         ResponseMessage = UtilityData.convertStringFromJSON(jsonObject, "message");
         String error = UtilityData.convertStringFromJSON(jsonObject, "error");
 
+        EasyLog.LogMessage(this, "++ parse jsonObject = " + jsonObject.toString());
         EasyLog.LogMessage(this, "++ parse Response = " + Response);
         EasyLog.LogMessage(this, "++ parse ResponseMessage = " + ResponseMessage);
         EasyLog.LogMessage(this, "++ parse error = " + error);

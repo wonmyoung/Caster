@@ -312,7 +312,6 @@ public class CommonPreference extends Observable {
      */
     public boolean setSharedValueByString(String strShareKey, String strValue)
     {
-
         if (!checkParam(strShareKey))
         {
             return false;
@@ -323,6 +322,8 @@ public class CommonPreference extends Observable {
             SharedPreferences.Editor editor = getSharedPreferencesEditor();
             editor.putString(strShareKey, strValue);
             editor.commit();
+
+            EasyLog.LogMessage(this, "-- setSharedValueByString strShareKey = [" + strShareKey + "] strValue = [" + strValue + "]");
 
             setChanged();
             notifyObservers();

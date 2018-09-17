@@ -168,12 +168,12 @@ public class ProfileActivity extends CommonActivity
         {
             ImageLoader.loadImage(this, mUserPicView, member.getUserPicThumbnail());
 
-            mUserNickNameView.setText(member.getNickName());
+            mUserNickNameView.setText(member.getUserName());
             mUserIdView.setText(member.getUserId());
             mUserGradeView.setText(member.getUserGrade());
             mUserDescription.setText(member.getDescription());
 
-            mInfoView1.setText(buildInfoString("CAP", member.getUserCap()));
+            mInfoView1.setText(buildInfoString("CAP", member.getUserPoint()));
             mInfoView2.setText(buildInfoString("예측수", member.getCorrectCast()));
             mInfoView3.setText(buildInfoString("적중률", member.getCorrectRate()));
             mInfoView4.setText(buildInfoString("팔로잉", member.getFollowingNum()));

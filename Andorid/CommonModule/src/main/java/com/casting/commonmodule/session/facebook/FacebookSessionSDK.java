@@ -106,4 +106,9 @@ public class FacebookSessionSDK implements ISessionSDK<GraphResponse> {
         });
         LoginManager.getInstance().logInWithReadPermissions(compatActivity , Arrays.asList("email"));
     }
+
+
+    public CallbackManager getCallbackManager() {
+        return mCallbackManager;
+    }
 }

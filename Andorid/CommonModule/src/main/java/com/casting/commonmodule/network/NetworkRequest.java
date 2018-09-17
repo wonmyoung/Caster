@@ -6,6 +6,7 @@ import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.network.base.NetworkConstant;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.base.NetworkResponse;
+import com.casting.commonmodule.utility.CommonPreference;
 
 public abstract class NetworkRequest extends BaseRequest<NetworkResponse> implements Runnable, NetworkConstant
 {

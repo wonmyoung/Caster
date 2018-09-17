@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.commonmodule.session.SessionType;
+import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Member;
@@ -21,23 +22,25 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
     private boolean SuccessResponse = false;
 
     @Override
-    public String getHttpMethod() {
-        return HttpGet;
+    public String getHttpMethod()
+    {
+        return HttpPost;
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
+    public ContentValues getHttpRequestHeader()
+    {
+        return null;
+    }
 
+    @Override
+    public ContentValues getHttpRequestParameter()
+    {
         ContentValues contentValues = new ContentValues();
         contentValues.put("email", EmailAddress);
         contentValues.put("password", Password);
 
         return contentValues;
-    }
-
-    @Override
-    public ContentValues getHttpRequestParameter() {
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -51,13 +54,17 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
         SuccessResponse = UtilityData.convertBooleanFromJSON(jsonObject, "success");
 
-        EasyLog.LogMessage(this, "++ SuccessResponse = " + SuccessResponse);
+        EasyLog.LogMessage(this, "++ parse jsonObject = " + jsonObject.toString());
+        EasyLog.LogMessage(this, "++ parse SuccessResponse = " + SuccessResponse);
 
         if (SuccessResponse)
         {
+            String token = UtilityData.convertStringFromJSON(jsonObject, "token");
+
             Member member = new Member();
             member.setEmail(EmailAddress);
             member.setPassWord(Password);
+            member.setAuthToken(token);
 
             return member;
         }

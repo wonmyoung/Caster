@@ -348,7 +348,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 {
                     ImageLoader.loadImage(this, imageView, member.getUserPicThumbnail());
 
-                    textView1.setText(member.getNickName());
+                    textView1.setText(member.getUserName());
                     textView2.setText(member.getUserId());
                 }
 

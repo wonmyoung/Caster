@@ -50,15 +50,17 @@ public class IntroActivity extends BaseFCActivity implements IResponseListener {
     {
         CommonPreference commonPreference = CommonPreference.getInstance();
 
-        String memberId = commonPreference.getSharedValueByString(MEMBER_EMAIL, "");
+        String memberEmail = commonPreference.getSharedValueByString(MEMBER_EMAIL, "");
         String memberPw = commonPreference.getSharedValueByString(MEMBER_PW, "");
 
-        EasyLog.LogMessage(this, "++ load memberId = ", memberId);
+        EasyLog.LogMessage(this, "++ load memberEmail = ", memberEmail);
         EasyLog.LogMessage(this, "++ load memberPw = ", memberPw);
 
-        if (!TextUtils.isEmpty(memberId) && !TextUtils.isEmpty(memberPw))
+        if (!TextUtils.isEmpty(memberEmail) && !TextUtils.isEmpty(memberPw))
         {
             Login login = new Login();
+            login.setEmailAddress(memberEmail);
+            login.setPassword(memberPw);
             login.setResponseListener(this);
 
             RequestHandler.getInstance().request(login);
@@ -78,6 +80,8 @@ public class IntroActivity extends BaseFCActivity implements IResponseListener {
                 Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
 
                 startActivity(intent);
+
+                finish();
             }
         };
         post(runnable, 1000 * 3);
@@ -95,6 +99,11 @@ public class IntroActivity extends BaseFCActivity implements IResponseListener {
             if (login.isSuccessResponse())
             {
                 Member member = (Member) response.getResponseModel();
+
+                CommonPreference commonPreference = CommonPreference.getInstance();
+                commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
+                commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+                commonPreference.setSharedValueByString(AUTH_TOKEN, member.getAuthToken());
 
                 ActiveMember.getInstance().setMember(member);
 

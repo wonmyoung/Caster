@@ -318,8 +318,7 @@ public class MainActivity extends BaseFCActivity implements
             }
 
             mMainSeekBarCover.setClickable(true);
-            mMainSeekBarCover.animate().alpha(1.0f)
-                    .setListener(new AnimatorListenerAdapter()
+            mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
                     {
                         @Override
                         public void onAnimationStart(Animator animator)

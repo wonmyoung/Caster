@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Cast;
@@ -31,9 +32,16 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
+
 
     @Override
     public ContentValues getHttpRequestParameter() {
@@ -48,6 +56,8 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
     @Override
     public CastList parse(JSONObject jsonObject)
     {
+        EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
+
         CastList castList = new CastList();
 
         JSONArray jsonArray = UtilityData.convertJsonArrayFromJson(jsonObject, "surveyInfo");

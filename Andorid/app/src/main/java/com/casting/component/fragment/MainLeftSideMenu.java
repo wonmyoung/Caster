@@ -9,12 +9,15 @@ import android.widget.TextView;
 
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
+import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonFragment;
 import com.casting.component.activity.RankingListActivity;
 import com.casting.component.activity.ProfileActivity;
 import com.casting.component.activity.SettingActivity;
+import com.casting.model.Member;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.RequestMember;
 
@@ -47,6 +50,8 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
 
         RequestMember requestMember = new RequestMember();
         requestMember.setResponseListener(this);
+
+        RequestHandler.getInstance().request(requestMember);
     }
 
     @Override
@@ -99,6 +104,13 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
+        BaseRequest request = response.getSourceRequest();
 
+        if (request.isRight(RequestMember.class))
+        {
+            Member member = (Member) response.getResponseModel();
+
+
+        }
     }
 }

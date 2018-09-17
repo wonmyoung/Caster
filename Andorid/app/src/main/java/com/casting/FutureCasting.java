@@ -9,6 +9,7 @@ import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
 import com.casting.model.request.PutMember;
 import com.casting.model.request.RegisterMember;
+import com.casting.model.request.RequestAlarmList;
 import com.casting.model.request.RequestCastingStatus;
 import com.casting.model.request.RequestDetailedCast;
 import com.casting.model.request.RequestCastList;
@@ -68,6 +69,11 @@ public class FutureCasting extends CommonApplication {
 
             stringBuilder.append("/survey/surveyInfo/detail/");
             stringBuilder.append(requestNews.getSurveyId());
+        }
+        // 3.0.2 알림센터
+        else if (request.isRight(RequestAlarmList.class))
+        {
+            stringBuilder.append("/message/newMessage");
         }
         // 3.0.3 타임라인
         else if (request.isRight(RequestTimeLine.class))

@@ -19,6 +19,7 @@ import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.network.base.NetworkResponse;
+import com.casting.commonmodule.session.facebook.FacebookSessionSDK;
 import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.component.CommonActivity;
@@ -27,6 +28,8 @@ import com.casting.model.global.ActiveMember;
 import com.casting.model.request.Login;
 import com.casting.model.request.RequestFacebookSession;
 import com.casting.view.insert.InsertForm;
+import com.facebook.CallbackManager;
+import com.kakao.auth.Session;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -116,6 +119,33 @@ public class LoginActivity extends BaseFCActivity implements IResponseListener, 
     }
 
     @Override
+    public void onBackPressed()
+    {
+        int visibility = mLoginIDForm.getVisibility();
+        if (visibility == View.VISIBLE)
+        {
+            mRegisterFrame.setVisibility(View.VISIBLE);
+            mBottomTextView.setVisibility(View.VISIBLE);
+
+            mLoginIDForm.setVisibility(View.GONE);
+            mLoginPWForm.setVisibility(View.GONE);
+            mLoginButton.setVisibility(View.GONE);
+        }
+        else
+        {
+            finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        CallbackManager callbackManager = FacebookSessionSDK.getInstance().getCallbackManager();
+        callbackManager.onActivityResult(requestCode , resultCode , data);
+    }
+
+    @Override
     public void onThreadResponseListen(BaseResponse response)
     {
         BaseRequest request = response.getSourceRequest();
@@ -131,6 +161,7 @@ public class LoginActivity extends BaseFCActivity implements IResponseListener, 
                 CommonPreference commonPreference = CommonPreference.getInstance();
                 commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
                 commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+                commonPreference.setSharedValueByString(AUTH_TOKEN, member.getAuthToken());
 
                 ActiveMember.getInstance().setMember(member);
 

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Cast;
@@ -21,7 +22,7 @@ import org.json.JSONObject;
 
 public class RequestDetailedCast extends NetworkRequest implements JSONParcelable<Cast> {
 
-    private Cast mCast;
+    private Cast    mCast;
 
     @Override
     public String getHttpMethod() {
@@ -29,12 +30,19 @@ public class RequestDetailedCast extends NetworkRequest implements JSONParcelabl
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
 
     @Override
-    public ContentValues getHttpRequestParameter() {
+    public ContentValues getHttpRequestParameter()
+    {
         return null;
     }
 

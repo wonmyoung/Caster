@@ -5,30 +5,44 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.model.AlarmList;
 import com.casting.model.Member;
 
-public class RequestAlarmList extends NetworkRequest {
+import org.json.JSONObject;
+
+public class RequestAlarmList extends NetworkRequest implements JSONParcelable<AlarmList> {
 
     private Member  mMember;
 
     @Override
-    public String getHttpMethod() {
-        return null;
+    public String getHttpMethod()
+    {
+        return HttpGet;
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
 
     @Override
-    public ContentValues getHttpRequestParameter() {
+    public ContentValues getHttpRequestParameter()
+    {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public JSONParcelable getNetworkParcelable() {
-        return null;
+    public JSONParcelable<AlarmList> getNetworkParcelable() {
+        return this;
     }
 
     public Member getMember() {
@@ -37,5 +51,13 @@ public class RequestAlarmList extends NetworkRequest {
 
     public void setmMember(Member m) {
         this.mMember = m;
+    }
+
+    @Override
+    public AlarmList parse(JSONObject jsonObject)
+    {
+        EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
+
+        return null;
     }
 }
