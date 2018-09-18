@@ -40,7 +40,6 @@
                 android:id="@+id/user1Image"
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
-                android:background="@color/mainColor0"
                 android:scaleType="centerCrop" />
 
             <TextView
@@ -62,7 +61,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right|top"
                 android:gravity="center_vertical"
-                android:text="1시간전"
+                android:text=""
                 android:textColor="@color/color_adadad"
                 android:textSize="@dimen/dp12" />
 
@@ -79,7 +78,6 @@
                 android:id="@+id/user2Image"
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
-                android:background="@color/mainColor0"
                 android:scaleType="centerCrop" />
 
             <TextView
@@ -100,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right|top"
                 android:gravity="center_vertical"
-                android:text="1시간전"
+                android:text=""
                 android:textColor="@color/color_adadad"
                 android:textSize="@dimen/dp12" />
 
@@ -137,7 +135,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right|top"
                 android:gravity="center_vertical"
-                android:text="1시간전"
+                android:text=""
                 android:textColor="@color/color_adadad"
                 android:textSize="@dimen/dp12" />
 

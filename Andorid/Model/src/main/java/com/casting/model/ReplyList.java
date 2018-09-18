@@ -8,22 +8,24 @@ public class ReplyList extends BaseModel {
 
     private ArrayList<Reply> ReplyArrayList = new ArrayList<>();
 
-    public ArrayList<Reply> getReplyArrayList()
+    public ArrayList<Reply> getReplyList()
     {
         return ReplyArrayList;
     }
 
-    public void setReplyArrayList(ArrayList<Reply> replyArrayList)
+    public void setReplyList(ArrayList<Reply> replyArrayList)
     {
         ReplyArrayList = replyArrayList;
     }
 
     public void addReply(Reply reply)
     {
-        if (ReplyArrayList != null)
+        if (ReplyArrayList == null)
         {
-            ReplyArrayList.add(reply);
+            ReplyArrayList = new ArrayList<>();
         }
+
+        ReplyArrayList.add(reply);
     }
 
     public int getReplyListSize()

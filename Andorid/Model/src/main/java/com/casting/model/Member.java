@@ -94,7 +94,8 @@ public class Member extends BaseModel {
     }
 
     public String getUserPicThumbnail() {
-        return UserPicThumbnail;
+        // return UserPicThumbnail;
+        return "http://mblogthumb4.phinf.naver.net/MjAxODAxMDRfMjM3/MDAxNTE1MDM0NjEwNTA5.9Kdsycndq4ylJ7nZEwguV4OaPsPu8XlPs9AKvuqj-mQg.Cgw_eZpdfCtOl8O1fdClzeq7q7AGv_t-h00-T9V5cU4g.JPEG.seishune/%EC%8D%B8%EB%84%A4%EC%9D%BC_%281%29.jpg?type=w800";
     }
 
     public void setUserPicThumbnail(String userPicThumbnail) {

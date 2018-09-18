@@ -18,26 +18,36 @@ public class RequestMember extends NetworkRequest implements JSONParcelable<Memb
     {
         EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
 
-        String userName = UtilityData.convertStringFromJSON(jsonObject, "username");
-        String userId = UtilityData.convertStringFromJSON(jsonObject, "userId");
-        String email = UtilityData.convertStringFromJSON(jsonObject, "email");
-        String avatar = UtilityData.convertStringFromJSON(jsonObject, "avatar");
-        String level = UtilityData.convertStringFromJSON(jsonObject, "level");
-        int point = UtilityData.convertIntegerFromJSON(jsonObject, "point");
-        int followers = UtilityData.convertIntegerFromJSON(jsonObject, "followers");
-        int following = UtilityData.convertIntegerFromJSON(jsonObject, "following");
+        JSONObject userInfo = UtilityData.convertJsonFromJson(jsonObject, "userInfo");
 
-        Member member = new Member();
-        member.setUserName(userName);
-        member.setUserId(userId);
-        member.setEmail(email);
-        member.setUserPicThumbnail(avatar);
-        member.setUserLevel(level);
-        member.setUserPoint(point);
-        member.setFollowerNum(followers);
-        member.setFollowingNum(following);
+        if (userInfo != null)
+        {
+            String userName = UtilityData.convertStringFromJSON(userInfo, "username");
+            String userId = UtilityData.convertStringFromJSON(userInfo, "userId");
+            String email = UtilityData.convertStringFromJSON(userInfo, "email");
+            String avatar = UtilityData.convertStringFromJSON(userInfo, "avatar");
+            String level = UtilityData.convertStringFromJSON(userInfo, "level");
+            int point = UtilityData.convertIntegerFromJSON(userInfo, "point");
+            int followers = UtilityData.convertIntegerFromJSON(userInfo, "followers");
+            int following = UtilityData.convertIntegerFromJSON(userInfo, "following");
 
-        return member;
+            Member member = new Member();
+            member.setUserName(userName);
+            member.setUserId(userId);
+            member.setEmail(email);
+            member.setUserPicThumbnail(avatar);
+            member.setUserLevel(level);
+            member.setUserPoint(point);
+            member.setFollowerNum(followers);
+            member.setFollowingNum(following);
+
+            return member;
+        }
+        else
+        {
+            return null;
+        }
+
     }
 
     @Override

@@ -25,7 +25,6 @@
             android:id="@+id/userImage"
             android:layout_width="@dimen/dp45"
             android:layout_height="@dimen/dp45"
-            android:background="@color/mainColor0"
             android:scaleType="centerCrop" />
 
         <LinearLayout
@@ -76,7 +75,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="right|top"
                     android:gravity="center_vertical"
-                    android:text="1시간전"
+                    android:text=""
                     android:textColor="@color/color_adadad"
                     android:textSize="@dimen/dp12" />
 

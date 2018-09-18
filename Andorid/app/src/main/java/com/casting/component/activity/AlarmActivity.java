@@ -10,17 +10,11 @@ import com.casting.R;
 import com.casting.model.Alarm;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
-
-    private static final int SECOND = 1000;
-    private static final int MINUTE = SECOND * 60;
-    private static final int HOUR = MINUTE * 60;
-    private static final int DAY = HOUR * 24;
 
     private Handler     mRemainingTimeTickHandler;
     private TextView    mRemainingTimeView;
@@ -96,7 +90,7 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
         {
             String endDateText = mAlarm.getEndDate();
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_24H_FULL_FORMAT, Locale.KOREA);
 
             Date endDate = simpleDateFormat.parse(endDateText);
 

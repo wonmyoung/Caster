@@ -105,7 +105,7 @@ public class MainRightSideMenu extends CommonFragment implements IResponseListen
         {
             Alarm alarm  = new Alarm();
             alarm.setItemType(ItemConstant.ALARM);
-            alarm.setEndDate("2018-09-30 09:00:00");
+            alarm.setEndDate("2018-09-25T15:01:36.460Z");
 
             list.add(alarm);
         }

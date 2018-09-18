@@ -9,4 +9,11 @@ public interface Constants {
     String MEMBER_EMAIL     = "MEMBER_EMAIL";
     String MEMBER_PW        = "MEMBER_PW";
     String AUTH_TOKEN       = "AUTH_TOKEN";
+
+    String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+    int SECOND = 1000;
+    int MINUTE = SECOND * 60;
+    int HOUR = MINUTE * 60;
+    int DAY = HOUR * 24;
 }

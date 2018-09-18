@@ -1,5 +1,6 @@
 package com.casting.component.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonFragment;
 import com.casting.component.activity.RankingListActivity;
@@ -95,22 +98,38 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
     @Override
     public void update(Observable o, Object arg)
     {
+        EasyLog.LogMessage(this, ">> update ");
+
         if (o instanceof ActiveMember)
         {
+            EasyLog.LogMessage(this, ">> update ActiveMember ");
 
+            Member member = (Member) arg;
+
+            String picThumbnail = member.getUserPicThumbnail();
+
+            EasyLog.LogMessage(this, ">> update ActiveMember picThumbnail =" + picThumbnail);
+
+            Context c = getContext();
+
+            UtilityUI.setThumbNailRoundedImageView(c, mProfileUserPic, picThumbnail, R.dimen.dp25);
         }
     }
 
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
+        EasyLog.LogMessage(this, ">> onThreadResponseListen ");
+
         BaseRequest request = response.getSourceRequest();
+
+        EasyLog.LogMessage(this, ">> onThreadResponseListen request = " + request.getClass().getSimpleName());
 
         if (request.isRight(RequestMember.class))
         {
             Member member = (Member) response.getResponseModel();
 
-
+            ActiveMember.getInstance().setMember(member);
         }
     }
 }

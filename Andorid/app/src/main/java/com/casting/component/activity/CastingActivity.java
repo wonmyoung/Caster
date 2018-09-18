@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.casting.FutureCasting;
+import com.casting.FutureCastingUtil;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
@@ -27,6 +28,7 @@ import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
+import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CommonRecyclerView;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
@@ -39,8 +41,10 @@ import com.casting.model.Ranking;
 import com.casting.model.RankingList;
 import com.casting.model.DoublePieChartItem;
 import com.casting.model.PieChartItem;
+import com.casting.model.ReplyList;
 import com.casting.model.TimeLineList;
 import com.casting.model.request.PostCast;
+import com.casting.model.request.PostReply;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
@@ -132,7 +136,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     private TextView     mCastDescription;
     private TextView     mCastTopButton;
     private Button       mCastButton;
-    private EditText     mTextInsertView;
 
     private CommonRecyclerView      mItemListView;
     private ItemViewAdapter         mItemViewAdapter;
@@ -270,6 +273,32 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case TIME_LINE:
             {
+                TimeLine timeLine = (TimeLine) item;
+
+                StringBuilder stringBuilder = new StringBuilder();
+//                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+//                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+//                            stringBuilder.append(FutureCasting.SERVER_PORT);
+//                            stringBuilder.append("/uploads/account/");
+//                            stringBuilder.append(timeLine.getUserId());
+                stringBuilder.append("http://mblogthumb4.phinf.naver.net/MjAxODAxMDRfMjM3/MDAxNTE1MDM0NjEwNTA5.9Kdsycndq4ylJ7nZEwguV4OaPsPu8XlPs9AKvuqj-mQg.Cgw_eZpdfCtOl8O1fdClzeq7q7AGv_t-h00-T9V5cU4g.JPEG.seishune/%EC%8D%B8%EB%84%A4%EC%9D%BC_%281%29.jpg?type=w800");
+
+                CircleImageView circleImageView = holder.find(R.id.userImage);
+
+                UtilityUI.setThumbNailRoundedImageView(this, circleImageView, stringBuilder.toString(), R.dimen.dp25);
+
+                String createdDate = timeLine.getCreated_at();
+                String comments = timeLine.getComments();
+
+                TextView textView1 = holder.find(R.id.userTimeLine);
+                textView1.setText(comments);
+
+                StringBuilder createdDateBuilder = new StringBuilder();
+                createdDateBuilder.append(FutureCastingUtil.getTimeFormattedString(createdDate));
+                createdDateBuilder.append(" 전");
+                TextView textView2 = holder.find(R.id.userTimeLineTime);
+                textView2.setText(createdDateBuilder);
+
                 Button button1 = holder.find(R.id.replyThisTimeLine);
                 button1.setTag(R.id.position, position);
                 button1.setOnClickListener(this);
@@ -296,25 +325,37 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                         View lineView = holder.find(lineId);
 
-                        TimeLine timeLine = timeLineList.getTimeLine(i);
+                        TimeLine timeLine = timeLineList.getTimeLine((i - 1));
 
                         if (timeLine != null)
                         {
-                            lineView.setVisibility(View.VISIBLE);
-
-                            int textId = res.getIdentifier("user"+i+"TimeLine", "id", getPackageName());
-
-                            TextView textView = holder.find(textId);
-                            textView.setText(timeLine.getComments());
-
+                            String comments = timeLine.getComments();
+                            String createdDate = timeLine.getCreated_at();
                             String userId = timeLine.getUserId();
 
+                            lineView.setVisibility(View.VISIBLE);
+
+                            int textId1 = res.getIdentifier("user"+i+"TimeLine", "id", getPackageName());
+                            int textId2 = res.getIdentifier("user"+i+"TimeLineTime", "id", getPackageName());
+
+                            TextView textView1 = holder.find(textId1);
+                            textView1.setText(comments);
+
+                            StringBuilder createdDateBuilder = new StringBuilder();
+                            createdDateBuilder.append(FutureCastingUtil.getTimeFormattedString(createdDate));
+                            createdDateBuilder.append(" 전");
+                            TextView textView2 = holder.find(textId2);
+                            textView2.setText(createdDateBuilder);
+
+
+
                             StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
-                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
-                            stringBuilder.append(FutureCasting.SERVER_PORT);
-                            stringBuilder.append("/uploads/account/");
-                            stringBuilder.append(userId);
+//                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+//                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+//                            stringBuilder.append(FutureCasting.SERVER_PORT);
+//                            stringBuilder.append("/uploads/account/");
+//                            stringBuilder.append(userId);
+                            stringBuilder.append("http://mblogthumb4.phinf.naver.net/MjAxODAxMDRfMjM3/MDAxNTE1MDM0NjEwNTA5.9Kdsycndq4ylJ7nZEwguV4OaPsPu8XlPs9AKvuqj-mQg.Cgw_eZpdfCtOl8O1fdClzeq7q7AGv_t-h00-T9V5cU4g.JPEG.seishune/%EC%8D%B8%EB%84%A4%EC%9D%BC_%281%29.jpg?type=w800");
 
                             EasyLog.LogMessage(this, "++ timeLine Group thumbNail path = ", stringBuilder.toString());
 
@@ -322,9 +363,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                             ImageView imageView = holder.find(imageId);
 
-                            int radius = UtilityUI.getDimension(this, R.dimen.dp25);
-
-                            UtilityUI.setThumbNailRoundedImageView(this, imageView, stringBuilder.toString(), radius);
+                            UtilityUI.setThumbNailRoundedImageView(this, imageView, stringBuilder.toString(), R.dimen.dp25);
                         }
                         else
                         {
@@ -352,13 +391,48 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     textView2.setText(member.getUserId());
                 }
 
-                mTextInsertView = holder.find(R.id.userTimeLineInsert);
+                EditText editText = holder.find(R.id.userTimeLineInsert);
+                break;
+            }
+
+            case TIME_LINE_REPLY:
+            {
+                Reply reply = (Reply) item;
+
+                String createdDate = reply.getCreated_at();
+                String formattedCreatedDate = FutureCastingUtil.getTimeFormattedString(createdDate);
+                formattedCreatedDate += " 전";
+
+                TextView textView1 = holder.find(R.id.userTimeLineTime);
+                textView1.setText(formattedCreatedDate);
+
+                TextView textView2 = holder.find(R.id.userTimeLine);
+                textView2.setText(reply.getContent());
                 break;
             }
 
             case TIME_LINE_REPLY_WRITE:
             {
-                mTextInsertView = holder.find(R.id.userTimeLineInsert);
+                final ItemInsert itemInsert = (ItemInsert) item;
+
+                EditText editText = holder.find(R.id.userTimeLineInsert);
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
+                        itemInsert.setInsertedData(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
 
                 Button button = holder.find(R.id.replyWriteButton);
                 button.setTag(R.id.position, position);
@@ -943,6 +1017,14 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 onClickEventTimeLine(v, timeLine);
                 break;
             }
+
+            case TIME_LINE_REPLY_WRITE:
+            {
+                ItemInsert itemInsert = (ItemInsert) item;
+
+                onClickEventReplyWrite(itemInsert);
+                break;
+            }
         }
     }
 
@@ -1109,6 +1191,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     {
         mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
 
+        EasyLog.LogMessage(this, ">> onClickEventTimeLineGroup size = " + timeLineGroup.getTimeLineList().size());
+
         mItemViewAdapter.setItemList(timeLineGroup.getTimeLineList());
         mItemViewAdapter.notifyDataSetChanged();
     }
@@ -1123,14 +1207,26 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 {
                     mPageCurrentMode.setPageMode(PageMode.TIME_LINE_REPLY_LIST);
 
-                    mItemViewAdapter.clear();
+                    ArrayList<ICommonItem> list = new ArrayList<>();
+
+                    list.add(timeLine);
+
+                    ItemInsert itemInsert = new ItemInsert();
+                    itemInsert.setItemType(TIME_LINE_REPLY_WRITE);
+
+                    list.add(itemInsert);
+
+                    ReplyList replyList = timeLine.getReplyList();
+
+                    if (replyList != null)
+                    {
+                        EasyLog.LogMessage(this, "++ onClickEventTimeLine replyList size = " + replyList.getReplyListSize());
+
+                        list.addAll(replyList.getReplyList());
+                    }
+
+                    mItemViewAdapter.setItemList(list);
                     mItemViewAdapter.notifyDataSetChanged();
-
-                    RequestReplyList requestReplyList = new RequestReplyList();
-                    requestReplyList.setResponseListener(this);
-                    requestReplyList.setTargetTimeLine(timeLine);
-
-                    RequestHandler.getInstance().request(requestReplyList);
                 }
                 break;
             }
@@ -1140,6 +1236,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 break;
             }
         }
+    }
+
+    private void onClickEventReplyWrite(ItemInsert itemInsert)
+    {
+        PostReply postReply = new PostReply();
     }
 
     @Override
@@ -1175,14 +1276,15 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
 
+                TimeLineList timeLineList = mTargetCast.getTimeLineList();
+
                 mItemViewAdapter.clear();
+
+                if (timeLineList != null)
+                {
+                    mItemViewAdapter.setItemList(timeLineList.getTimeLineList());
+                }
                 mItemViewAdapter.notifyDataSetChanged();
-
-                RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
-                requestTimeLineList.setCast(mTargetCast);
-                requestTimeLineList.setResponseListener(this);
-
-                RequestHandler.getInstance().request(requestTimeLineList);
                 break;
             }
 

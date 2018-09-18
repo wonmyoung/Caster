@@ -204,11 +204,15 @@ public class RequestDetailedCast extends NetworkRequest implements JSONParcelabl
 
     private ReplyList parseReplyList(JSONArray jsonArray)
     {
+        EasyLog.LogMessage(this, ">> parseReplyList ");
+
         ReplyList replyList = null;
 
         int repliesSize = (jsonArray == null ? 0 : jsonArray.length());
         if (repliesSize > 0)
         {
+            EasyLog.LogMessage(this, ">> parseReplyList jsonArray = " + jsonArray.toString());
+
             replyList = new ReplyList();
 
             for (int j = 0 ; j < repliesSize; j ++)
@@ -217,11 +221,19 @@ public class RequestDetailedCast extends NetworkRequest implements JSONParcelabl
                 {
                     JSONObject replyJson = jsonArray.getJSONObject(j);
 
+                    EasyLog.LogMessage(this, ">> parseReplyList replyJson = " + replyJson.toString());
+
                     String userName = UtilityData.convertStringFromJSON(replyJson, "userName");
                     String id = UtilityData.convertStringFromJSON(replyJson, "_id");
                     String updated_at = UtilityData.convertStringFromJSON(replyJson, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(replyJson, "created_at");
                     String content = UtilityData.convertStringFromJSON(replyJson, "content");
+
+                    EasyLog.LogMessage(this, ">> parseReplyList userName = " + userName);
+                    EasyLog.LogMessage(this, ">> parseReplyList id = " + id);
+                    EasyLog.LogMessage(this, ">> parseReplyList updated_at = " + updated_at);
+                    EasyLog.LogMessage(this, ">> parseReplyList created_at = " + created_at);
+                    EasyLog.LogMessage(this, ">> parseReplyList content = " + content);
 
                     Reply reply = new Reply();
                     reply.setUserName(userName);
