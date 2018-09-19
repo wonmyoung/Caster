@@ -106,7 +106,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
             int selectedValue = (mItemScrollableOption != null &&
                     mItemScrollableOption.getInsertedData() != null ?
-                    (int) mItemScrollableOption.getInsertedData() : -1);
+                    mItemScrollableOption.getInsertedData() : -1);
             if (selectedValue == -1)
             {
                 lp3.leftMargin += (lineWidth / 2);
@@ -147,7 +147,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
         mMinPointView= layoutInflater.inflate(R.layout.view_item_option, null);
         mMinPointView.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.dp40), LayoutParams.WRAP_CONTENT));
+                (int) getResources().getDimension(R.dimen.dp50), LayoutParams.WRAP_CONTENT));
         mItemLayout.addView(mMinPointView);
 
         TextView textView1 = (TextView) mMinPointView.findViewById(R.id.circlePointMessage);
@@ -155,7 +155,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
         mMaxPointView= layoutInflater.inflate(R.layout.view_item_option, null);
         mMaxPointView.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.dp40), LayoutParams.WRAP_CONTENT));
+                (int) getResources().getDimension(R.dimen.dp50), LayoutParams.WRAP_CONTENT));
         mItemLayout.addView(mMaxPointView);
 
         TextView textView2 = (TextView) mMaxPointView.findViewById(R.id.circlePointMessage);
@@ -163,7 +163,7 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
         mScrollableView = layoutInflater.inflate(R.layout.view_item_option, null);
         mScrollableView.setLayoutParams(new LayoutParams(
-                (int) getResources().getDimension(R.dimen.dp60), LayoutParams.WRAP_CONTENT));
+                (int) getResources().getDimension(R.dimen.dp50), LayoutParams.WRAP_CONTENT));
         mItemLayout.addView(mScrollableView);
 
         TextView textView3 = (TextView) mScrollableView.findViewById(R.id.circlePointMessage);

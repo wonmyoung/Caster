@@ -10,8 +10,9 @@ import com.casting.model.request.PostReply;
 import com.casting.model.request.PutMember;
 import com.casting.model.request.RegisterMember;
 import com.casting.model.request.RequestAlarmList;
+import com.casting.model.request.RequestCastingOption;
 import com.casting.model.request.RequestCastingStatus;
-import com.casting.model.request.RequestDetailedCast;
+import com.casting.model.request.RequestCast;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestFollowerList;
 import com.casting.model.request.RequestFollowingList;
@@ -55,12 +56,12 @@ public class FutureCasting extends CommonApplication {
             stringBuilder.append(createCastListUrl((RequestCastList) request));
         }
         // 3.0.1 캐스트 상세화면 (적용완료)
-        else if (request.isRight(RequestDetailedCast.class))
+        else if (request.isRight(RequestCast.class))
         {
-            RequestDetailedCast requestDetailedCast = (RequestDetailedCast) request;
+            RequestCast requestCast = (RequestCast) request;
 
             stringBuilder.append("/survey/surveyInfo/detail/");
-            stringBuilder.append(requestDetailedCast.getSurveyInfoId());
+            stringBuilder.append(requestCast.getSurveyInfoId());
         }
         // 3.0.2 주요 뉴스 (적용완료)
         else if (request.isRight(RequestNews.class))
@@ -105,6 +106,14 @@ public class FutureCasting extends CommonApplication {
         else if (request.isRight(PostReply.class))
         {
             stringBuilder.append("/comment/reply");
+        }
+        // 3.4 캐스트 하기
+        else if (request.isRight(RequestCastingOption.class))
+        {
+            RequestCastingOption requestCastingOption = (RequestCastingOption) request;
+
+            stringBuilder.append("/survey/apply/");
+            stringBuilder.append(requestCastingOption.getSurveyInfoId());
         }
         // 3.4 캐스트 하기
         else if (request.isRight(PostCast.class))

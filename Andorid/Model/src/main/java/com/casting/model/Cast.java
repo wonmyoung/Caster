@@ -12,14 +12,6 @@ import java.util.ArrayList;
 
 public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
-    public enum Type
-    {
-        CHOICE,
-        TWO_CHOICE,
-        ESSAY;
-    }
-
-
     private String      CastId;
     private String      SurveyId;
 
@@ -44,7 +36,7 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     private boolean Done;
 
-    private Type CastType;
+
 
     public double getRemainingTime() {
         return RemainingTime;
@@ -124,14 +116,6 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setDone(boolean done) {
         Done = done;
-    }
-
-    public Type getCastType() {
-        return CastType;
-    }
-
-    public void setCastType(Type castType) {
-        CastType = castType;
     }
 
     public String getDescription() {

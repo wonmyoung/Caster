@@ -9,10 +9,14 @@ public class Reply extends BaseModel implements ICommonItem, ItemConstant {
     private Member member;
 
     private String UserName;
+    private String UserId;
+    private String UserAvatar;
     private String Id;
     private String Updated_at;
     private String Created_at;
     private String Content;
+
+    private int    ItemType = -1;
 
     public Member getMember() {
         return member;
@@ -65,6 +69,27 @@ public class Reply extends BaseModel implements ICommonItem, ItemConstant {
     @Override
     public int getItemType()
     {
-        return TIME_LINE_REPLY;
+        return (ItemType == -1 ? TIME_LINE_REPLY : ItemType);
+    }
+
+    public void setItemType(int type)
+    {
+        ItemType = type;
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
+
+    public String getUserAvatar() {
+        return UserAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        UserAvatar = userAvatar;
     }
 }

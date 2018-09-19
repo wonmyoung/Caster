@@ -20,7 +20,7 @@ import com.casting.model.TimeLineList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class RequestDetailedCast extends NetworkRequest implements JSONParcelable<Cast> {
+public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> {
 
     private Cast    mCast;
 

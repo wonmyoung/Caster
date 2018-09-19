@@ -45,13 +45,14 @@ public class Login extends NetworkRequest implements JSONParcelable<Member> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public JSONParcelable<Member> getNetworkParcelable() {
+    public JSONParcelable<Member> getNetworkParcelable()
+    {
         return this;
     }
 
     @Override
-    public Member parse(JSONObject jsonObject) {
-
+    public Member parse(JSONObject jsonObject)
+    {
         SuccessResponse = UtilityData.convertBooleanFromJSON(jsonObject, "success");
 
         EasyLog.LogMessage(this, "++ parse jsonObject = " + jsonObject.toString());

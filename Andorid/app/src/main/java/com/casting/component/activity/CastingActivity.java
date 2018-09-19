@@ -35,6 +35,7 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
+import com.casting.model.CastingOption;
 import com.casting.model.CastingStatus;
 import com.casting.model.NewsList;
 import com.casting.model.Ranking;
@@ -45,6 +46,7 @@ import com.casting.model.ReplyList;
 import com.casting.model.TimeLineList;
 import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
+import com.casting.model.request.RequestCastingOption;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
@@ -59,7 +61,7 @@ import com.casting.model.Reply;
 import com.casting.model.TimeLine;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.global.ItemConstant;
-import com.casting.model.request.RequestDetailedCast;
+import com.casting.model.request.RequestCast;
 import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestReplyList;
 import com.casting.model.request.RequestTimeLineList;
@@ -217,11 +219,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             mCastTitle.setText(mTargetCast.getTitle());
             mCastDescription.setText(mTargetCast.getDescription());
 
-            RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
-            requestDetailedCast.setResponseListener(this);
-            requestDetailedCast.setCast(mTargetCast);
+            RequestCast requestCast = new RequestCast();
+            requestCast.setResponseListener(this);
+            requestCast.setCast(mTargetCast);
 
-            RequestHandler.getInstance().request(requestDetailedCast);
+            RequestHandler.getInstance().request(requestCast);
         }
     }
 
@@ -276,13 +278,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 TimeLine timeLine = (TimeLine) item;
 
                 StringBuilder stringBuilder = new StringBuilder();
-//                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
-//                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
-//                            stringBuilder.append(FutureCasting.SERVER_PORT);
-//                            stringBuilder.append("/uploads/account/");
-//                            stringBuilder.append(timeLine.getUserId());
-                stringBuilder.append("http://mblogthumb4.phinf.naver.net/MjAxODAxMDRfMjM3/MDAxNTE1MDM0NjEwNTA5.9Kdsycndq4ylJ7nZEwguV4OaPsPu8XlPs9AKvuqj-mQg.Cgw_eZpdfCtOl8O1fdClzeq7q7AGv_t-h00-T9V5cU4g.JPEG.seishune/%EC%8D%B8%EB%84%A4%EC%9D%BC_%281%29.jpg?type=w800");
-
+                stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                stringBuilder.append(FutureCasting.SERVER_PORT);
+                stringBuilder.append("/uploads/account/");
+                stringBuilder.append(timeLine.getUserId());
                 CircleImageView circleImageView = holder.find(R.id.userImage);
 
                 UtilityUI.setThumbNailRoundedImageView(this, circleImageView, stringBuilder.toString(), R.dimen.dp25);
@@ -350,13 +350,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
 
                             StringBuilder stringBuilder = new StringBuilder();
-//                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
-//                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
-//                            stringBuilder.append(FutureCasting.SERVER_PORT);
-//                            stringBuilder.append("/uploads/account/");
-//                            stringBuilder.append(userId);
-                            stringBuilder.append("http://mblogthumb4.phinf.naver.net/MjAxODAxMDRfMjM3/MDAxNTE1MDM0NjEwNTA5.9Kdsycndq4ylJ7nZEwguV4OaPsPu8XlPs9AKvuqj-mQg.Cgw_eZpdfCtOl8O1fdClzeq7q7AGv_t-h00-T9V5cU4g.JPEG.seishune/%EC%8D%B8%EB%84%A4%EC%9D%BC_%281%29.jpg?type=w800");
-
+                            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                            stringBuilder.append(FutureCasting.SERVER_PORT);
+                            stringBuilder.append("/uploads/account/");
+                            stringBuilder.append(userId);
                             EasyLog.LogMessage(this, "++ timeLine Group thumbNail path = ", stringBuilder.toString());
 
                             int imageId = res.getIdentifier("user"+i+"Image", "id", getPackageName());
@@ -379,19 +377,51 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 Member member = ActiveMember.getInstance().getMember();
 
-                ImageView imageView = holder.find(R.id.userImage);
-                TextView textView1 = holder.find(R.id.userNickName);
-                TextView textView2 = holder.find(R.id.userId);
 
                 if (member != null)
                 {
-                    ImageLoader.loadImage(this, imageView, member.getUserPicThumbnail());
+                    ImageView imageView = holder.find(R.id.userImage);
 
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                    stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                    stringBuilder.append(FutureCasting.SERVER_PORT);
+                    stringBuilder.append("/uploads/account/");
+                    stringBuilder.append(member.getUserId());
+
+                    UtilityUI.setThumbNailRoundedImageView(this, imageView, stringBuilder.toString(), R.dimen.dp25);
+
+
+                    TextView textView1 = holder.find(R.id.userNickName);
                     textView1.setText(member.getUserName());
+
+                    TextView textView2 = holder.find(R.id.userId);
                     textView2.setText(member.getUserId());
                 }
 
+                final ItemInsert itemInsert = (ItemInsert) item;
+
                 EditText editText = holder.find(R.id.userTimeLineInsert);
+                editText.addTextChangedListener(new TextWatcher()
+                {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
+                        itemInsert.setInsertedData(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s)
+                    {
+
+                    }
+                });
                 break;
             }
 
@@ -944,6 +974,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     mCastTopButton.setText("글쓰기");
                     break;
 
+                case TIME_LINE_REPLY_LIST:
+                    mCastButton.setVisibility(View.GONE);
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
                 case TIME_LINE_WRITE:
                     mCastButton.setVisibility(View.GONE);
 
@@ -1006,7 +1042,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 TimeLineList timeLineList = (TimeLineList) item;
 
-                onClickEventTimeLineGroup(v, timeLineList);
+                onClickEventTimeLineGroup(timeLineList);
                 break;
             }
 
@@ -1022,7 +1058,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 ItemInsert itemInsert = (ItemInsert) item;
 
-                onClickEventReplyWrite(itemInsert);
+                onClickEventReplyWrite(v, itemInsert);
                 break;
             }
         }
@@ -1051,95 +1087,18 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
     private void onClickEventCastButton()
     {
-        if (mTargetCast != null)
+        switch (mPageCurrentMode.mPageMode)
         {
-            Cast.Type type = mTargetCast.getCastType();
+            case CAST_INFO:
 
-            if (type != null)
-            {
-                mItemViewAdapter.clear();
-                mItemViewAdapter.notifyDataSetChanged();
+                String id = mTargetCast.getSurveyId();
 
-                if (mPageCurrentMode.isCastingMode())
-                {
-                    // TODO 캐스팅
+                RequestCastingOption requestCastingOption = new RequestCastingOption();
+                requestCastingOption.setResponseListener(this);
+                requestCastingOption.setSurveyInfoId(id);
 
-                    PostCast postCast = new PostCast();
-                    postCast.setResponseListener(this);
-
-                    for (ICommonItem commonItem : mItemViewAdapter.getItemList())
-                    {
-                        if (commonItem instanceof ItemInsert)
-                        {
-                            postCast.addInsertItem((ItemInsert) commonItem);
-                        }
-                    }
-
-                    RequestHandler.getInstance().request(postCast);
-                }
-                else
-                {
-                    switch (type)
-                    {
-                        case CHOICE:
-                            mPageCurrentMode.setPageMode(CAST_AS_CHOICE);
-                            break;
-
-                        case TWO_CHOICE:
-                            mPageCurrentMode.setPageMode(CAST_AS_TWO_CHOICE);
-                            break;
-
-                        case ESSAY:
-                            mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
-
-                            ItemBooleanOption itemBooleanOption = new ItemBooleanOption();
-                            itemBooleanOption.setInsertTitle("내 캐스트는");
-                            mItemViewAdapter.addItem(itemBooleanOption);
-
-                            ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
-                            itemScrollableOption.setInsertTitle("내 캐스트는");
-                            itemScrollableOption.setMinValuePrefix("최소");
-                            itemScrollableOption.setMinValue(0);
-                            itemScrollableOption.setMaxValuePrefix("최대");
-                            itemScrollableOption.setMaxValue(12500);
-                            itemScrollableOption.setScrollPrefix("내 캐스트는");
-                            itemScrollableOption.setBottomPrefix("cap");
-                            mItemViewAdapter.addItem(itemScrollableOption);
-
-                            ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
-                            itemSelectOptions1.setInsertTitle("내 캐스트는");
-                            itemSelectOptions1.setVertical(true);
-                            itemSelectOptions1.addOption("한화 이글스", "한화 이글스");
-                            itemSelectOptions1.addOption("롯데 자이언츠", "롯데 자이언츠");
-                            itemSelectOptions1.addOption("SK 와이번즈", "SK 와이번즈");
-                            itemSelectOptions1.addOption("넥센 히어로즈", "넥센 히어로즈");
-                            itemSelectOptions1.addOption("두산 베어스", "두산 베어스");
-                            mItemViewAdapter.addItem(itemSelectOptions1);
-
-                            ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();
-                            itemSelectOptions2.setInsertTitle("얼마나 확신하나요 ?");
-                            itemSelectOptions2.setHorizontal(true);
-                            itemSelectOptions2.addOption("가망없음", 0);
-                            itemSelectOptions2.addOption("조금 헷갈려요", 25);
-                            itemSelectOptions2.addOption("하프 앤 하프", 50);
-                            itemSelectOptions2.addOption("거의 틀림 없어요", 75);
-                            itemSelectOptions2.addOption("올인", 100);
-                            itemSelectOptions2.setBottomPrefix("%");
-                            mItemViewAdapter.addItem(itemSelectOptions2);
-
-                            ItemInsert<String> itemInsert1 = new ItemInsert<>();
-                            itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
-                            mItemViewAdapter.addItem(itemInsert1);
-
-                            ItemInsert<String> itemInsert2 = new ItemInsert<>();
-                            itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
-                            mItemViewAdapter.addItem(itemInsert2);
-
-                            mItemViewAdapter.notifyDataSetChanged();
-                            break;
-                    }
-                }
-            }
+                RequestHandler.getInstance().request(requestCastingOption);
+                break;
         }
     }
 
@@ -1187,7 +1146,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private void onClickEventTimeLineGroup(View v, TimeLineList timeLineGroup)
+    private void onClickEventTimeLineGroup(TimeLineList timeLineGroup)
     {
         mPageCurrentMode.setPageMode(PageMode.TIME_LINE_LIST);
 
@@ -1238,9 +1197,32 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private void onClickEventReplyWrite(ItemInsert itemInsert)
+    private void onClickEventReplyWrite(View v, ItemInsert itemInsert)
     {
-        PostReply postReply = new PostReply();
+        switch (v.getId())
+        {
+            case R.id.replyWriteButton:
+
+                ICommonItem item = mItemViewAdapter.getItem(0);
+
+                if (item != null && item instanceof TimeLine)
+                {
+                    String insertedContent = (String) itemInsert.getInsertedData();
+
+                    if (!TextUtils.isEmpty(insertedContent))
+                    {
+                        TimeLine timeLine = (TimeLine) item;
+
+                        PostReply postReply = new PostReply();
+                        postReply.setId(timeLine.getId());
+                        postReply.setContent(insertedContent);
+
+                        RequestHandler.getInstance().request(postReply);
+                    }
+                }
+                break;
+        }
+
     }
 
     @Override
@@ -1263,11 +1245,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 mItemViewAdapter.clear();
                 mItemViewAdapter.notifyDataSetChanged();
 
-                RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
-                requestDetailedCast.setResponseListener(this);
-                requestDetailedCast.setCast(mTargetCast);
+                RequestCast requestCast = new RequestCast();
+                requestCast.setResponseListener(this);
+                requestCast.setCast(mTargetCast);
 
-                RequestHandler.getInstance().request(requestDetailedCast);
+                RequestHandler.getInstance().request(requestCast);
                 break;
             }
 
@@ -1296,11 +1278,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 mItemViewAdapter.clear();
                 mItemViewAdapter.notifyDataSetChanged();
 
-                RequestDetailedCast requestDetailedCast = new RequestDetailedCast();
-                requestDetailedCast.setResponseListener(this);
-                requestDetailedCast.setCast(mTargetCast);
+                RequestCast requestCast = new RequestCast();
+                requestCast.setResponseListener(this);
+                requestCast.setCast(mTargetCast);
 
-                RequestHandler.getInstance().request(requestDetailedCast);
+                RequestHandler.getInstance().request(requestCast);
                 break;
         }
     }
@@ -1310,10 +1292,10 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     {
         BaseRequest request = response.getSourceRequest();
 
-        EasyLog.LogMessage(this, ">> onThreadResponseListen");
+        EasyLog.LogMessage(this, ">> onThreadResponseListen ");
         EasyLog.LogMessage(this, ">> onThreadResponseListen " + request.getClass().getSimpleName());
 
-        if (request.isRight(RequestDetailedCast.class))
+        if (request.isRight(RequestCast.class))
         {
             onCastDetailedResponse(response);
         }
@@ -1323,39 +1305,29 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
         else if (request.isRight(RequestTimeLineList.class))
         {
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyTimeLineList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+            onTimeLineResponse(response);
         }
         else if (request.isRight(RequestReplyList.class))
         {
-            RequestReplyList requestReplyList = (RequestReplyList) request;
+            onReplyListResponse(response);
+        }
+        else if (request.isRight(RequestCastingOption.class))
+        {
+            onCastingOptionResponse(response);
+        }
+        else if (request.isRight(PostReply.class))
+        {
+            Reply reply = (Reply) response.getResponseModel();
 
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyReplyList(itemArrayList);
-
-            itemArrayList.add(0, requestReplyList.getTargetTimeLine());
-
-            ItemInsert itemInsert = new ItemInsert();
-            itemInsert.setItemType(TIME_LINE_REPLY_WRITE);
-
-            itemArrayList.add(1, itemInsert);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+            if (reply != null)
+            {
+                mItemViewAdapter.addItem(2, reply);
+                mItemViewAdapter.notifyDataSetChanged();
+            }
         }
         else if (request.isRight(PostCast.class))
         {
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
 
-            loadDummyDoneCastInfoList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1388,6 +1360,105 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         {
             mItemViewAdapter.setItemList(newsList.getNewsArrayList());
             mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onTimeLineResponse(BaseResponse response)
+    {
+        TimeLineList timeLineList = (TimeLineList) response.getResponseModel();
+
+        int size = timeLineList.getTimeLineListSize();
+        if (size > 0)
+        {
+            mItemViewAdapter.setItemList(timeLineList.getTimeLineList());
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onReplyListResponse(BaseResponse response)
+    {
+        ReplyList replyList = (ReplyList) response.getResponseModel();
+
+        int size = replyList.getReplyListSize();
+        if (size > 0)
+        {
+            mItemViewAdapter.setItemList(replyList.getReplyList());
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onCastingOptionResponse(BaseResponse response)
+    {
+        CastingOption castingOption = (CastingOption) response.getResponseModel();
+
+        switch (castingOption.getCastType())
+        {
+            case CHOICE:
+            {
+                mPageCurrentMode.setPageMode(PageMode.CAST_AS_CHOICE);
+
+                mItemViewAdapter.clear();
+
+                ItemSelectOptions itemSelectOptions = new ItemSelectOptions();
+                itemSelectOptions.setInsertTitle("내 캐스트는");
+                itemSelectOptions.setVertical(true);
+                itemSelectOptions.addOption("한화 이글스", "한화 이글스");
+                itemSelectOptions.addOption("롯데 자이언츠", "롯데 자이언츠");
+                itemSelectOptions.addOption("SK 와이번즈", "SK 와이번즈");
+                itemSelectOptions.addOption("넥센 히어로즈", "넥센 히어로즈");
+                itemSelectOptions.addOption("두산 베어스", "두산 베어스");
+                mItemViewAdapter.addItem(itemSelectOptions);
+
+                ItemInsert<String> itemInsert1 = new ItemInsert<>();
+                itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
+                mItemViewAdapter.addItem(itemInsert1);
+
+                ItemInsert<String> itemInsert2 = new ItemInsert<>();
+                itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
+                mItemViewAdapter.addItem(itemInsert2);
+
+                mItemViewAdapter.notifyDataSetChanged();
+                break;
+            }
+
+            case ESSAY:
+            {
+                mPageCurrentMode.setPageMode(PageMode.CAST_AS_ESSAY);
+
+                mItemViewAdapter.clear();
+
+                ItemScrollableOption itemScrollableOption = new ItemScrollableOption();
+                itemScrollableOption.setInsertTitle("내 캐스트는");
+                itemScrollableOption.setMinValuePrefix("최소");
+                itemScrollableOption.setMinValue(0);
+                itemScrollableOption.setMaxValuePrefix("최대");
+                itemScrollableOption.setMaxValue(12500);
+                itemScrollableOption.setScrollPrefix("내 캐스트는");
+                itemScrollableOption.setBottomPrefix("cap");
+                mItemViewAdapter.addItem(itemScrollableOption);
+
+                ItemSelectOptions itemSelectOptions = new ItemSelectOptions();
+                itemSelectOptions.setInsertTitle("얼마나 확신하나요 ?");
+                itemSelectOptions.setHorizontal(true);
+                itemSelectOptions.addOption("가망없음", 0);
+                itemSelectOptions.addOption("조금 헷갈려요", 25);
+                itemSelectOptions.addOption("하프 앤 하프", 50);
+                itemSelectOptions.addOption("거의 틀림 없어요", 75);
+                itemSelectOptions.addOption("올인", 100);
+                itemSelectOptions.setBottomPrefix("%");
+                mItemViewAdapter.addItem(itemSelectOptions);
+
+                ItemInsert<String> itemInsert1 = new ItemInsert<>();
+                itemInsert1.setItemType(ItemConstant.INSERT_BUYING_CAP);
+                mItemViewAdapter.addItem(itemInsert1);
+
+                ItemInsert<String> itemInsert2 = new ItemInsert<>();
+                itemInsert2.setItemType(ItemConstant.INSERT_REASON_MESSAGE);
+                mItemViewAdapter.addItem(itemInsert2);
+
+                mItemViewAdapter.notifyDataSetChanged();
+                break;
+            }
         }
     }
 
