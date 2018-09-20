@@ -17,9 +17,12 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     private double      RemainingTime;
     private String      Title;
+    private String      QuestionType;
     private String[]    Tags;
     private int         TotalReward;
+    private int         Minimum;
     private int         CasterNum;
+    private int         NumOfQuestion;
     private String[]    Thumbnails;
     private String      Link;
     private int         Participants;
@@ -32,11 +35,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
     private NewsList       NewsList;
     private TimeLineList   TimeLineList;
 
+    private CommonGraphItem     MyCastingGraph;
+    private CommonGraphItem     MyCastingResultGraph;
+    private CommonGraphItem     CastResultGraph;
+
     private int   ItemType;
 
     private boolean Done;
-
-
 
     public double getRemainingTime() {
         return RemainingTime;
@@ -81,6 +86,9 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
             stringBuilder.append("http://ec2-13-125-159-59.ap-northeast-2.compute.amazonaws.com");
             stringBuilder.append(":3000");
             stringBuilder.append("/uploads/survey/");
+
+            s = s.replace("\"", "");
+
             stringBuilder.append(s);
         }
 
@@ -224,5 +232,53 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setStatus(String status) {
         Status = status;
+    }
+
+    public CommonGraphItem getMyCastingGraph() {
+        return MyCastingGraph;
+    }
+
+    public void setMyCastingGraph(CommonGraphItem myCastingGraph) {
+        MyCastingGraph = myCastingGraph;
+    }
+
+    public CommonGraphItem getMyCastingResultGraph() {
+        return MyCastingResultGraph;
+    }
+
+    public void setMyCastingResultGraph(CommonGraphItem myCastingResultGraph) {
+        MyCastingResultGraph = myCastingResultGraph;
+    }
+
+    public CommonGraphItem getCastResultGraph() {
+        return CastResultGraph;
+    }
+
+    public void setCastResultGraph(CommonGraphItem castResultGraph) {
+        CastResultGraph = castResultGraph;
+    }
+
+    public int getMinimum() {
+        return Minimum;
+    }
+
+    public void setMinimum(int minimum) {
+        Minimum = minimum;
+    }
+
+    public String getQuestionType() {
+        return QuestionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        QuestionType = questionType;
+    }
+
+    public int getNumOfQuestion() {
+        return NumOfQuestion;
+    }
+
+    public void setNumOfQuestion(int numOfQuestion) {
+        NumOfQuestion = numOfQuestion;
     }
 }

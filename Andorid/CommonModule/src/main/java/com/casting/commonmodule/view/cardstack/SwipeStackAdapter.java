@@ -96,12 +96,31 @@ public abstract class SwipeStackAdapter<T extends ICommonItem> extends BaseAdapt
     @SuppressWarnings("unchecked")
     public void setItemList(ArrayList<T> itemList)
     {
+        tArrayList = itemList;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItemList(ArrayList<T> itemList)
+    {
         if (itemList != null)
         {
             if (tArrayList == null) {
                 tArrayList = new ArrayList<>();
             }
             tArrayList.addAll((Collection<? extends T>) itemList.clone());
+        }
+    }
+
+    public ArrayList<T> getItemList()
+    {
+        return tArrayList;
+    }
+
+    public void setItem(int i, T t)
+    {
+        if (tArrayList != null)
+        {
+            tArrayList.set(i, t);
         }
     }
 

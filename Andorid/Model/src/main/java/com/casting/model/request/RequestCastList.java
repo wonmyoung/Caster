@@ -1,6 +1,7 @@
 package com.casting.model.request;
 
 import android.content.ContentValues;
+import android.text.TextUtils;
 
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
@@ -84,6 +85,8 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                     String updated_at = UtilityData.convertStringFromJSON(o, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(o, "created_at");
                     String startDate = UtilityData.convertStringFromJSON(o, "startDate");
+                    String[] thumbNails = UtilityData.convertStringArrayFromJSON(o, "thumbnail");
+                    String[] tags = UtilityData.convertStringArrayFromJSON(o, "tag");
 
                     EasyLog.LogMessage(this, "++ RequestCastList parse id = " + id);
                     EasyLog.LogMessage(this, "++ RequestCastList parse title = " + title);
@@ -103,7 +106,17 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                     cast.setCastId(id);
                     cast.setTitle(title);
                     cast.setDescription(description);
+                    cast.setStartDate(created_at);
+                    cast.setStatus(status);
+                    cast.setReference(reference);
                     cast.setEndDate(endDate);
+                    cast.setQuestionType(questionType);
+                    cast.setThumbnails(thumbNails);
+                    cast.setTags(tags);
+
+                    if (!TextUtils.isEmpty(numOfQuestion) && TextUtils.isDigitsOnly(numOfQuestion)) cast.setNumOfQuestion(Integer.parseInt(numOfQuestion));
+                    if (!TextUtils.isEmpty(minimum) && TextUtils.isDigitsOnly(minimum)) cast.setMinimum(Integer.parseInt(minimum));
+                    if (!TextUtils.isEmpty(totalReward) && TextUtils.isDigitsOnly(totalReward)) cast.setTotalReward(Integer.parseInt(totalReward));
 
                     castList.addCast(cast);
                 }

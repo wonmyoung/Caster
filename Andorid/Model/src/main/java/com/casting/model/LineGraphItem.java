@@ -1,14 +1,11 @@
 package com.casting.model;
 
-import com.casting.commonmodule.model.BaseModel;
-import com.casting.commonmodule.view.list.ICommonItem;
-import com.casting.model.global.ItemConstant;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineGraphItem extends BaseModel implements ICommonItem, ItemConstant {
+public class LineGraphItem extends CommonGraphItem {
 
     private ArrayList<Entry>    PointEntries;
 

@@ -104,7 +104,11 @@ public class MainActivity extends BaseFCActivity implements
 
             ImageView imageView = viewHolder.find(R.id.castCardBack);
 
+            String title = item.getTitle();
             String thumbNailPath = item.getThumbnail(0);
+
+            EasyLog.LogMessage(this, ">> bindItemDataView title = " + title);
+            EasyLog.LogMessage(this, ">> bindItemDataView thumbNailPath = " + thumbNailPath);
 
             if (!TextUtils.isEmpty(thumbNailPath))
             {
@@ -117,9 +121,8 @@ public class MainActivity extends BaseFCActivity implements
                 UtilityUI.setBackGroundDrawable(imageView, R.drawable.shape_gray_color_alpha80_round10);
             }
 
-
             TextView textView = viewHolder.find(R.id.castCardTitle);
-            textView.setText(item.getTitle());
+            textView.setText(title);
         }
 
 
@@ -135,12 +138,11 @@ public class MainActivity extends BaseFCActivity implements
             {
                 int position = (int) o;
 
-                Cast cast = getItem(position);
-
                 Intent intent = new Intent(MainActivity.this, CastingActivity.class);
-                intent.putExtra(DEFINE_CAST, cast);
+                intent.putExtra(DEFINE_CAST, getItem(position));
+                intent.putExtra(CAST_CARD_POSITION, position);
 
-                startActivity(intent);
+                startActivityForResult(intent, LOAD_CASTING_PAGE);
             }
         }
     }
@@ -231,6 +233,38 @@ public class MainActivity extends BaseFCActivity implements
         else if (v.equals(mTopButton2))
         {
             mBothMenuDrawer.mRMenuDrawer.openMenu();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        EasyLog.LogMessage(this, ">> onActivityResult ");
+        EasyLog.LogMessage(this, ">> onActivityResult requestCode = " + requestCode);
+        EasyLog.LogMessage(this, ">> onActivityResult resultCode = " + resultCode);
+
+        switch (requestCode)
+        {
+            case LOAD_CASTING_PAGE:
+
+                if (resultCode == CASTING_DONE)
+                {
+
+                    Cast cast = (Cast) data.getSerializableExtra(DEFINE_CAST);
+
+                    int position = data.getIntExtra(CAST_CARD_POSITION, -1);
+                    if (position > -1 && cast != null)
+                    {
+                        EasyLog.LogMessage(this, ">> onActivityResult cast is Done ? " + cast.isDone());
+                        EasyLog.LogMessage(this, ">> onActivityResult position = " + position);
+
+                        mSwipeStackAdapter.setItem(position, cast);
+                        mSwipeStackAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
         }
     }
 

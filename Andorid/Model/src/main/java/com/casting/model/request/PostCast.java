@@ -3,21 +3,20 @@ package com.casting.model.request;
 import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
-import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
-import com.casting.commonmodule.view.list.ICommonItem;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.model.Cast;
-import com.casting.model.insert.ItemInsert;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
 
-    private String      CastId;
-
-    private ArrayList<ItemInsert> InsertArrayList = new ArrayList<>();
+    private String      Predict;
+    private String      SurveyId;
+    private String      Comment;
+    private String      Bet;
+    private String      SurveyTitle;
 
     @Override
     public String getHttpMethod() {
@@ -25,13 +24,27 @@ public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
 
     @Override
-    public ContentValues getHttpRequestParameter() {
-        return null;
+    public ContentValues getHttpRequestParameter()
+    {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("predict", Predict);
+        contentValues.put("comment", Comment);
+        contentValues.put("bet", Bet);
+        contentValues.put("id", SurveyId);
+        contentValues.put("title", SurveyTitle);
+
+        return contentValues;
     }
 
     @SuppressWarnings("unchecked")
@@ -41,40 +54,50 @@ public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
     }
 
     @Override
-    public Cast parse(JSONObject jsonObject) {
+    public Cast parse(JSONObject jsonObject)
+    {
+        EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
+
         return null;
     }
 
-    public ArrayList<ItemInsert> getInsertArrayList() {
-        return InsertArrayList;
+    public String getPredict() {
+        return Predict;
     }
 
-    public void setInsertArrayList(ArrayList<ItemInsert> insertArrayList)
-    {
-        InsertArrayList = insertArrayList;
+    public void setPredict(String predict) {
+        Predict = predict;
     }
 
-    public void addInsertItem(ItemInsert itemInsert)
-    {
-        if (InsertArrayList != null)
-        {
-            InsertArrayList.add(itemInsert);
-        }
+    public String getSurveyId() {
+        return SurveyId;
     }
 
-    public void addInsertItemList(ArrayList<ItemInsert> insertArrayList)
-    {
-        if (InsertArrayList != null)
-        {
-            InsertArrayList.addAll(insertArrayList);
-        }
+    public void setSurveyId(String surveyId) {
+        SurveyId = surveyId;
     }
 
-    public String getCastId() {
-        return CastId;
+    public String getComment() {
+        return Comment;
     }
 
-    public void setCastId(String castId) {
-        CastId = castId;
+    public void setComment(String comment) {
+        Comment = comment;
+    }
+
+    public String getBet() {
+        return Bet;
+    }
+
+    public void setBet(String bet) {
+        Bet = bet;
+    }
+
+    public String getSurveyTitle() {
+        return SurveyTitle;
+    }
+
+    public void setSurveyTitle(String surveyTitle) {
+        SurveyTitle = surveyTitle;
     }
 }

@@ -1,5 +1,6 @@
 package com.casting.component.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -34,6 +35,7 @@ import com.casting.commonmodule.view.list.CommonRecyclerView;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
+import com.casting.model.Alarm;
 import com.casting.model.Cast;
 import com.casting.model.CastingOption;
 import com.casting.model.CastingStatus;
@@ -46,6 +48,7 @@ import com.casting.model.ReplyList;
 import com.casting.model.TimeLineList;
 import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
+import com.casting.model.request.RequestCastEnding;
 import com.casting.model.request.RequestCastingOption;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
@@ -144,6 +147,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
     private LinearLayoutManager     mItemLayoutManager;
 
     private Cast        mTargetCast;
+    private int         mCastCardPosition;
 
     private PageCurrentMode     mPageCurrentMode = new PageCurrentMode();
 
@@ -193,31 +197,18 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mItemListView.setAdapter(mItemViewAdapter);
         mItemListView.setLayoutManager(mItemLayoutManager);
 
-        mTargetCast = (Cast) getIntent().getSerializableExtra(DEFINE_CAST);
+        Intent intent = getIntent();
 
-        if (mTargetCast != null)
+        Cast cast = (Cast) intent.getSerializableExtra(DEFINE_CAST);
+
+        mCastCardPosition = intent.getIntExtra(CAST_CARD_POSITION, -1);
+
+        if (cast != null)
         {
             mPageCurrentMode.addObserver(this);
-            mPageCurrentMode.setPageMode((mTargetCast.isDone() ? CAST_DONE : CAST_INFO));
+            mPageCurrentMode.setPageMode((cast.isDone() ? CAST_DONE : CAST_INFO));
 
-            String thumbNailPath = mTargetCast.getThumbnail(0);
-
-            EasyLog.LogMessage(this, "++ confirm getCastId = ", mTargetCast.getCastId());
-            EasyLog.LogMessage(this, "++ confirm thumbNailPath = ", thumbNailPath);
-
-            if (!TextUtils.isEmpty(thumbNailPath))
-            {
-                int radius = (int) getResources().getDimension(R.dimen.dp25);
-
-                ImageLoader.loadRoundImage(this, mCastImage, thumbNailPath, radius);
-            }
-            else
-            {
-                UtilityUI.setBackGroundDrawable(mCastImage, R.drawable.shape_gray_color_alpha80_round10);
-            }
-
-            mCastTitle.setText(mTargetCast.getTitle());
-            mCastDescription.setText(mTargetCast.getDescription());
+            updateCastInfo(cast);
 
             RequestCast requestCast = new RequestCast();
             requestCast.setResponseListener(this);
@@ -1011,6 +1002,31 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
+    private void updateCastInfo(Cast cast)
+    {
+        mTargetCast = cast;
+
+        String thumbNailPath = cast.getThumbnail(0);
+
+        EasyLog.LogMessage(this, "++ updateCastInfo getCastId = ", cast.getCastId());
+        EasyLog.LogMessage(this, "++ updateCastInfo thumbNailPath = ", thumbNailPath);
+        EasyLog.LogMessage(this, "++ updateCastInfo isDone = " + cast.isDone());
+
+        if (!TextUtils.isEmpty(thumbNailPath))
+        {
+            int radius = (int) getResources().getDimension(R.dimen.dp25);
+
+            ImageLoader.loadRoundImage(this, mCastImage, thumbNailPath, radius);
+        }
+        else
+        {
+            UtilityUI.setBackGroundDrawable(mCastImage, R.drawable.shape_gray_color_alpha80_round10);
+        }
+
+        mCastTitle.setText(cast.getTitle());
+        mCastDescription.setText(cast.getDescription());
+    }
+
     @Override
     protected void onClickEvent(View v)
     {
@@ -1098,6 +1114,81 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 requestCastingOption.setSurveyInfoId(id);
 
                 RequestHandler.getInstance().request(requestCastingOption);
+                break;
+
+            case CAST_AS_CHOICE:
+            case CAST_AS_ESSAY:
+            case CAST_AS_TWO_CHOICE:
+
+                PostCast postCast = new PostCast();
+                postCast.setResponseListener(this);
+                postCast.setSurveyId(mTargetCast.getSurveyId());
+                postCast.setSurveyTitle(mTargetCast.getTitle());
+
+                for (ICommonItem item : mItemViewAdapter.getItemList())
+                {
+                    int itemType = item.getItemType();
+
+                    switch (itemType)
+                    {
+                        case SELECT_SCROLLABLE_OPTION:
+                        {
+                            ItemScrollableOption itemScrollableOption = (ItemScrollableOption) item;
+
+                            int insertedData = itemScrollableOption.getInsertedData();
+
+                            postCast.setPredict(Integer.toString(insertedData));
+                            break;
+                        }
+
+                        case SELECT_HORIZONTAL_OPTIONS:
+                        {
+                            ItemSelectOptions itemSelect = (ItemSelectOptions) item;
+
+                            ItemSelectOptions.Option option = (ItemSelectOptions.Option) itemSelect.getInsertedData();
+
+                            // postCast.setPredict(String.valueOf(option.getValue()));
+                            break;
+                        }
+
+                        case SELECT_BOOLEAN_OPTION:
+                        {
+                            ItemBooleanOption itemBooleanOption = (ItemBooleanOption) item;
+
+                            boolean b = itemBooleanOption.getInsertedData();
+
+                            break;
+                        }
+
+                        case SELECT_VERTICAL_OPTIONS:
+                        {
+                            ItemSelectOptions itemSelect = (ItemSelectOptions) item;
+
+                            ItemSelectOptions.Option option = (ItemSelectOptions.Option) itemSelect.getInsertedData();
+
+                            postCast.setPredict(String.valueOf(option.getValue()));
+                            break;
+                        }
+
+                        case INSERT_BUYING_CAP:
+                        {
+                            ItemInsert itemInsert = (ItemInsert) item;
+
+                            postCast.setBet(String.valueOf(itemInsert.getInsertedData()));
+                            break;
+                        }
+
+                        case INSERT_REASON_MESSAGE:
+                        {
+                            ItemInsert itemInsert = (ItemInsert) item;
+
+                            postCast.setComment(String.valueOf(itemInsert.getInsertedData()));
+                            break;
+                        }
+                    }
+                }
+
+                RequestHandler.getInstance().request(postCast);
                 break;
         }
     }
@@ -1214,6 +1305,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         TimeLine timeLine = (TimeLine) item;
 
                         PostReply postReply = new PostReply();
+                        postReply.setResponseListener(this);
                         postReply.setId(timeLine.getId());
                         postReply.setContent(insertedContent);
 
@@ -1317,17 +1409,15 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
         else if (request.isRight(PostReply.class))
         {
-            Reply reply = (Reply) response.getResponseModel();
-
-            if (reply != null)
-            {
-                mItemViewAdapter.addItem(2, reply);
-                mItemViewAdapter.notifyDataSetChanged();
-            }
+            onPostReplyResponse(response);
         }
         else if (request.isRight(PostCast.class))
         {
-
+            onCastResponse(response);
+        }
+        else if (request.isRight(RequestCastEnding.class))
+        {
+            onCastEndingResponse(response);
         }
     }
 
@@ -1336,17 +1426,18 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         int responseCode = response.getResponseCode();
         if (responseCode > 0)
         {
-            mTargetCast = (Cast) response.getResponseModel();
+            Cast cast = (Cast) response.getResponseModel();
+
+            updateCastInfo(cast);
 
             NewsList newsList = mTargetCast.getNewsList();
 
+            if (newsList != null) mItemViewAdapter.addItem(newsList);
+
             TimeLineList timeLineList = mTargetCast.getTimeLineList();
 
-            EasyLog.LogMessage(this, "++ onCastDetailedResponse newsList is null ?" + (newsList == null));
-            EasyLog.LogMessage(this, "++ onCastDetailedResponse timeLineList is null ?" + (timeLineList == null));
+            if (timeLineList != null) mItemViewAdapter.addItem(timeLineList);
 
-            mItemViewAdapter.addItem(newsList);
-            mItemViewAdapter.addItem(timeLineList);
             mItemViewAdapter.notifyDataSetChanged();
         }
     }
@@ -1384,6 +1475,64 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         {
             mItemViewAdapter.setItemList(replyList.getReplyList());
             mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onPostReplyResponse(BaseResponse response)
+    {
+        Reply reply = (Reply) response.getResponseModel();
+
+        if (reply != null)
+        {
+            TimeLine timeLine = (TimeLine) mItemViewAdapter.getItem(0);
+
+            ReplyList replyList = timeLine.getReplyList();
+
+            if (replyList == null) {
+                replyList = new ReplyList();
+
+                timeLine.setReplyList(replyList);
+            }
+
+            replyList.addReply(reply);
+
+            mItemViewAdapter.addItem(2, reply);
+            mItemViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onCastResponse(BaseResponse response)
+    {
+        // TODO API 결함 이슈가 있음 , 일단 바이패스 처리
+        RequestCastEnding requestCastEnding = new RequestCastEnding();
+        requestCastEnding.setResponseListener(this);
+        requestCastEnding.setSurveyId(mTargetCast.getSurveyId());
+
+        RequestHandler.getInstance().request(requestCastEnding);
+    }
+
+    private void onCastEndingResponse(BaseResponse response)
+    {
+        Alarm alarm = (Alarm) response.getResponseModel();
+
+        if (alarm != null)
+        {
+            mTargetCast.setDone(true);
+
+            {
+                Intent intent = new Intent(this, AlarmActivity.class);
+                intent.putExtra(DEFINE_ALARM, alarm);
+
+                startActivity(intent);
+            }
+
+            Intent intent = getIntent();
+            intent.putExtra(DEFINE_CAST, mTargetCast);
+            intent.putExtra(CAST_CARD_POSITION, mCastCardPosition);
+
+            setResult(CASTING_DONE, intent);
+
+            finish();
         }
     }
 
@@ -1459,69 +1608,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 mItemViewAdapter.notifyDataSetChanged();
                 break;
             }
-        }
-    }
-
-    private void loadDummyItemList(ArrayList<ICommonItem> commonItems)
-    {
-        News news = new News();
-        news.setNewsTitle("주요 뉴스");
-        news.setContents("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
-        news.setNewsTime("1시간전");
-        commonItems.add(news);
-
-        TimeLineList timeLineGroup = new TimeLineList();
-        commonItems.add(timeLineGroup);
-
-        LineGraphItem lineGraphItem = new LineGraphItem();
-        lineGraphItem.addPointEntrie("2017-12-20" , 400);
-        lineGraphItem.addPointEntrie("2018-01-15" , 450);
-        lineGraphItem.addPointEntrie("2018-02-10" , 800);
-        lineGraphItem.addPointEntrie("2018-03-12" , 1200);
-        lineGraphItem.addPointEntrie("2018-04-15" , 2500);
-        lineGraphItem.addPointEntrie("2018-05-11" , 1600);
-        lineGraphItem.addPointEntrie("2018-06-11" , 800);
-        commonItems.add(lineGraphItem);
-
-        CastingStatus castingStatus = new CastingStatus();
-        castingStatus.addStatus("한화 이글스", 80);
-        castingStatus.addStatus("SK", 60);
-        castingStatus.addStatus("두산 베어스", 20);
-        castingStatus.addStatus("롯데 자이언츠", 10);
-        castingStatus.addStatus("기아 타이거즈", 5);
-        commonItems.add(castingStatus);
-    }
-
-    private void loadDummyNewsList(ArrayList<ICommonItem> commonItems)
-    {
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            News news = new News();
-            news.setNewsTitle("주요 뉴스");
-            news.setContents("미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다. 미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.미국 코엔페이지는 11일 미국 증권거래위원호이의 비트코인 ETF 승인 결과가 8월 10일 발표될예정이라고 보도했습니다.");
-            news.setNewsTime("1시간전");
-
-            commonItems.add(news);
-        }
-    }
-
-    private void loadDummyTimeLineList(ArrayList<ICommonItem> commonItems)
-    {
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            TimeLine timeLine = new TimeLine();
-
-            commonItems.add(timeLine);
-        }
-    }
-
-    private void loadDummyReplyList(ArrayList<ICommonItem> commonItems)
-    {
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            Reply reply = new Reply();
-
-            commonItems.add(reply);
         }
     }
 

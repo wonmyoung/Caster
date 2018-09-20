@@ -3,6 +3,7 @@ package com.casting;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.session.SessionType;
 import com.casting.commonmodule.view.component.CommonApplication;
+import com.casting.model.Cast;
 import com.casting.model.request.Follow;
 import com.casting.model.request.Login;
 import com.casting.model.request.PostCast;
@@ -10,6 +11,7 @@ import com.casting.model.request.PostReply;
 import com.casting.model.request.PutMember;
 import com.casting.model.request.RegisterMember;
 import com.casting.model.request.RequestAlarmList;
+import com.casting.model.request.RequestCastEnding;
 import com.casting.model.request.RequestCastingOption;
 import com.casting.model.request.RequestCastingStatus;
 import com.casting.model.request.RequestCast;
@@ -60,7 +62,16 @@ public class FutureCasting extends CommonApplication {
         {
             RequestCast requestCast = (RequestCast) request;
 
-            stringBuilder.append("/survey/surveyInfo/detail/");
+            Cast cast = requestCast.getCast();
+
+            if (cast.isDone())
+            {
+                stringBuilder.append("/survey/report/");
+            }
+            else
+            {
+                stringBuilder.append("/survey/surveyInfo/detail/");
+            }
             stringBuilder.append(requestCast.getSurveyInfoId());
         }
         // 3.0.2 주요 뉴스 (적용완료)
@@ -115,13 +126,21 @@ public class FutureCasting extends CommonApplication {
             stringBuilder.append("/survey/apply/");
             stringBuilder.append(requestCastingOption.getSurveyInfoId());
         }
+        // 3.4.3 캐스트 / 캐스트 완료
+        else if (request.isRight(RequestCastEnding.class))
+        {
+            RequestCastEnding requestCastEnding = (RequestCastEnding) request;
+
+            stringBuilder.append("/survey/ending/");
+            stringBuilder.append(requestCastEnding.getSurveyId());
+        }
         // 3.4 캐스트 하기
         else if (request.isRight(PostCast.class))
         {
             PostCast postCast = (PostCast) request;
 
             stringBuilder.append("/survey/apply/");
-            stringBuilder.append(postCast.getCastId());
+            stringBuilder.append(postCast.getSurveyId());
         }
         // 4.메뉴 (메인 화면 좌측 메뉴 정보) = 4.1.1 프로필로 통합 // TODO V0.5 세션 요구에 막혀있음
         else if (request.isRight(RequestMember.class))

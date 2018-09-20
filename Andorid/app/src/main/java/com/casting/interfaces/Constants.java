@@ -4,6 +4,7 @@ public interface Constants {
 
     String DEFINE_CAST      = "DEFINE_CAST";
     String DEFINE_ALARM     = "DEFINE_ALARM";
+    String CAST_CARD_POSITION = "CAST_CARD_POSITION";
 
     String MEMBER_ID        = "MEMBER_ID";
     String MEMBER_EMAIL     = "MEMBER_EMAIL";
@@ -16,4 +17,8 @@ public interface Constants {
     int MINUTE = SECOND * 60;
     int HOUR = MINUTE * 60;
     int DAY = HOUR * 24;
+
+    int LOAD_CASTING_PAGE = 1;
+
+    int CASTING_DONE = 100;
 }

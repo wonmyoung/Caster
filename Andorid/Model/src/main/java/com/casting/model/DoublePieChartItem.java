@@ -1,10 +1,6 @@
 package com.casting.model;
 
-import com.casting.commonmodule.model.BaseModel;
-import com.casting.commonmodule.view.list.ICommonItem;
-import com.casting.model.global.ItemConstant;
-
-public class DoublePieChartItem extends BaseModel implements ICommonItem, ItemConstant {
+public class DoublePieChartItem extends CommonGraphItem {
 
     private PieChartItem    PieChartItem1;
     private PieChartItem    PieChartItem2;
