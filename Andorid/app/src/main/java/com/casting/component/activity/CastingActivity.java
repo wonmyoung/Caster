@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.casting.FutureCasting;
 import com.casting.FutureCastingUtil;
@@ -39,6 +40,7 @@ import com.casting.model.Alarm;
 import com.casting.model.Cast;
 import com.casting.model.CastingOption;
 import com.casting.model.CastingStatus;
+import com.casting.model.CommonGraphItem;
 import com.casting.model.NewsList;
 import com.casting.model.Ranking;
 import com.casting.model.RankingList;
@@ -92,11 +94,12 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import static com.casting.component.activity.CastingActivity.PageMode.CASTING_CLOSED;
+import static com.casting.component.activity.CastingActivity.PageMode.CASTING_DONE;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_CHOICE;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_ESSAY;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_AS_TWO_CHOICE;
 import static com.casting.component.activity.CastingActivity.PageMode.CAST_INFO;
-import static com.casting.component.activity.CastingActivity.PageMode.CAST_DONE;
 
 public class CastingActivity extends BaseFCActivity implements ItemBindStrategy, IResponseListener, Observer {
 
@@ -113,7 +116,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         CAST_AS_ESSAY,
         CAST_AS_CHOICE,
         CAST_AS_TWO_CHOICE,
-        CAST_DONE;
+        CASTING_DONE,
+        CASTING_CLOSED;
     }
 
     private class PageCurrentMode extends Observable
@@ -205,10 +209,25 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         if (cast != null)
         {
-            mPageCurrentMode.addObserver(this);
-            mPageCurrentMode.setPageMode((cast.isDone() ? CAST_DONE : CAST_INFO));
-
             updateCastInfo(cast);
+
+            PageMode pageMode = null;
+
+            if (FutureCastingUtil.isPast(cast.getEndDate()))
+            {
+                pageMode = CASTING_CLOSED;
+            }
+            else if (cast.isCastingDone())
+            {
+                pageMode = CASTING_DONE;
+            }
+            else
+            {
+                pageMode = CAST_INFO;
+            }
+
+            mPageCurrentMode.addObserver(this);
+            mPageCurrentMode.setPageMode(pageMode);
 
             RequestCast requestCast = new RequestCast();
             requestCast.setResponseListener(this);
@@ -998,6 +1017,19 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                     mCastTopButton.setVisibility(View.GONE);
                     break;
+
+                case CASTING_DONE:
+                    mCastButton.setVisibility(View.GONE);
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
+
+                case CASTING_CLOSED:
+                    mCastButton.setVisibility(View.VISIBLE);
+                    mCastButton.setText("다른  캐스트 하러 가기");
+
+                    mCastTopButton.setVisibility(View.GONE);
+                    break;
             }
         }
     }
@@ -1010,7 +1042,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         EasyLog.LogMessage(this, "++ updateCastInfo getCastId = ", cast.getCastId());
         EasyLog.LogMessage(this, "++ updateCastInfo thumbNailPath = ", thumbNailPath);
-        EasyLog.LogMessage(this, "++ updateCastInfo isDone = " + cast.isDone());
+        EasyLog.LogMessage(this, "++ updateCastInfo isCastingDone = " + cast.isCastingDone());
 
         if (!TextUtils.isEmpty(thumbNailPath))
         {
@@ -1376,6 +1408,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 RequestHandler.getInstance().request(requestCast);
                 break;
+
+            case CASTING_DONE:
+            case CASTING_CLOSED:
+                finish();
+                break;
         }
     }
 
@@ -1430,14 +1467,51 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             updateCastInfo(cast);
 
-            NewsList newsList = mTargetCast.getNewsList();
+            if (FutureCastingUtil.isPast(cast.getEndDate()))
+            {
+                mPageCurrentMode.setPageMode(CASTING_CLOSED);
 
-            if (newsList != null) mItemViewAdapter.addItem(newsList);
+                CommonGraphItem commonGraphItem1 = mTargetCast.getMyCastingGraph();
+                CommonGraphItem commonGraphItem2 = mTargetCast.getCastResultGraph();
+                CommonGraphItem commonGraphItem3 = mTargetCast.getMyCastingResultGraph();
 
-            TimeLineList timeLineList = mTargetCast.getTimeLineList();
+                NewsList newsList = mTargetCast.getNewsList();
 
-            if (timeLineList != null) mItemViewAdapter.addItem(timeLineList);
+                RankingList rankingList = mTargetCast.getCastRankingList();
 
+                mItemViewAdapter.clear();
+                mItemViewAdapter.addItem(commonGraphItem1);
+                mItemViewAdapter.addItem(commonGraphItem2);
+                mItemViewAdapter.addItem(newsList);
+                mItemViewAdapter.addItem(commonGraphItem3);
+                mItemViewAdapter.addItem(rankingList);
+                mItemViewAdapter.notifyDataSetChanged();
+            }
+            else
+            {
+                mItemViewAdapter.clear();
+
+                NewsList newsList = mTargetCast.getNewsList();
+
+                TimeLineList timeLineList = mTargetCast.getTimeLineList();
+
+                mItemViewAdapter.addItem(newsList);
+                mItemViewAdapter.addItem(timeLineList);
+                mItemViewAdapter.notifyDataSetChanged();
+            }
+        }
+        else
+        {
+            RequestCast requestCast = (RequestCast) response.getSourceRequest();
+
+            Toast.makeText(this, requestCast.getErrorMessage(), Toast.LENGTH_SHORT).show();
+
+            //TODO API 에러 발생 , 바이패스 처리
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyDoneCastInfoList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
             mItemViewAdapter.notifyDataSetChanged();
         }
     }
@@ -1517,7 +1591,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         if (alarm != null)
         {
-            mTargetCast.setDone(true);
+            mTargetCast.setCastingDone(true);
 
             {
                 Intent intent = new Intent(this, AlarmActivity.class);
@@ -1530,7 +1604,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             intent.putExtra(DEFINE_CAST, mTargetCast);
             intent.putExtra(CAST_CARD_POSITION, mCastCardPosition);
 
-            setResult(CASTING_DONE, intent);
+            setResult(CASTING_DONE_CODE, intent);
 
             finish();
         }

@@ -8,6 +8,30 @@ import java.util.Locale;
 
 public class FutureCastingUtil implements Constants {
 
+    public static boolean isPast(String s)
+    {
+        try
+        {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ISO_8601_24H_FULL_FORMAT, Locale.KOREA);
+
+            Date endDate = simpleDateFormat.parse(s);
+
+            long endDateTime = endDate.getTime();
+            long fromDateTime = (new Date()).getTime();
+
+            long diffDateTime = endDateTime - fromDateTime;
+
+            return !(diffDateTime > 0);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
     public static String getTimeFormattedString(String s)
     {
         try

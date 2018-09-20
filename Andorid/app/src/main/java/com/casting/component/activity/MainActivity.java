@@ -40,7 +40,6 @@ import com.casting.model.request.RequestCastList;
 import com.casting.view.CustomTabLayout;
 import com.nineoldandroids.view.ViewHelper;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -249,7 +248,7 @@ public class MainActivity extends BaseFCActivity implements
         {
             case LOAD_CASTING_PAGE:
 
-                if (resultCode == CASTING_DONE)
+                if (resultCode == CASTING_DONE_CODE)
                 {
 
                     Cast cast = (Cast) data.getSerializableExtra(DEFINE_CAST);
@@ -257,7 +256,7 @@ public class MainActivity extends BaseFCActivity implements
                     int position = data.getIntExtra(CAST_CARD_POSITION, -1);
                     if (position > -1 && cast != null)
                     {
-                        EasyLog.LogMessage(this, ">> onActivityResult cast is Done ? " + cast.isDone());
+                        EasyLog.LogMessage(this, ">> onActivityResult cast is Done ? " + cast.isCastingDone());
                         EasyLog.LogMessage(this, ">> onActivityResult position = " + position);
 
                         mSwipeStackAdapter.setItem(position, cast);

@@ -64,7 +64,9 @@ public class FutureCasting extends CommonApplication {
 
             Cast cast = requestCast.getCast();
 
-            if (cast.isDone())
+            String endDate = cast.getEndDate();
+
+            if (FutureCastingUtil.isPast(endDate))
             {
                 stringBuilder.append("/survey/report/");
             }

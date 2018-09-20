@@ -6,10 +6,6 @@ import com.casting.commonmodule.model.BaseModel;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     private String      CastId;
@@ -39,9 +35,11 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
     private CommonGraphItem     MyCastingResultGraph;
     private CommonGraphItem     CastResultGraph;
 
+    private RankingList         CastRankingList;
+
     private int   ItemType;
 
-    private boolean Done;
+    private boolean CastingDone;
 
     public double getRemainingTime() {
         return RemainingTime;
@@ -118,12 +116,12 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
         CastId = castId;
     }
 
-    public boolean isDone() {
-        return Done;
+    public boolean isCastingDone() {
+        return CastingDone;
     }
 
-    public void setDone(boolean done) {
-        Done = done;
+    public void setCastingDone(boolean castingDone) {
+        CastingDone = castingDone;
     }
 
     public String getDescription() {
@@ -280,5 +278,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setNumOfQuestion(int numOfQuestion) {
         NumOfQuestion = numOfQuestion;
+    }
+
+    public RankingList getCastRankingList() {
+        return CastRankingList;
+    }
+
+    public void setCastRankingList(RankingList castRankingList) {
+        CastRankingList = castRankingList;
     }
 }

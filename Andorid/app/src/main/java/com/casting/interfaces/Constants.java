@@ -20,5 +20,5 @@ public interface Constants {
 
     int LOAD_CASTING_PAGE = 1;
 
-    int CASTING_DONE = 100;
+    int CASTING_DONE_CODE = 100;
 }

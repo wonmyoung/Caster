@@ -248,7 +248,7 @@ public abstract class CommonRecyclerAdapter extends RecyclerView.Adapter<Composi
 
     public void addItem(final ICommonItem d)
     {
-        if (mdArrayList != null) {
+        if (mdArrayList != null && d != null) {
             mdArrayList.add(d);
         }
     }

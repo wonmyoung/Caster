@@ -24,6 +24,8 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
 
     private Cast    mCast;
 
+    private String  ErrorMessage;
+
     @Override
     public String getHttpMethod() {
         return HttpGet;
@@ -60,44 +62,52 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
 
         JSONObject surveyInfo = UtilityData.convertJsonFromJson(jsonObject, "surveyInfo");
 
-        String title = UtilityData.convertStringFromJSON(surveyInfo, "title");
-        String surveyId = UtilityData.convertStringFromJSON(surveyInfo, "surveyId");
-        String[] thumbNails = UtilityData.convertStringArrayFromJSON(surveyInfo, "thumbnail");
-        String[] tag = UtilityData.convertStringArrayFromJSON(surveyInfo, "tag");
-        String description = UtilityData.convertStringFromJSON(surveyInfo, "description");
-        String startData = UtilityData.convertStringFromJSON(surveyInfo, "startData");
-        String endDate = UtilityData.convertStringFromJSON(surveyInfo, "endDate");
-        String reference = UtilityData.convertStringFromJSON(surveyInfo, "reference");
-        String status = UtilityData.convertStringFromJSON(surveyInfo, "status");
-        int totalReward = UtilityData.convertIntegerFromJSON(surveyInfo, "totalReward");
-        int casterNum = UtilityData.convertIntegerFromJSON(surveyInfo, "casterNum");
-        int participants = UtilityData.convertIntegerFromJSON(surveyInfo, "participants");
+        if (surveyInfo != null)
+        {
+            String title = UtilityData.convertStringFromJSON(surveyInfo, "title");
+            String surveyId = UtilityData.convertStringFromJSON(surveyInfo, "surveyId");
+            String[] thumbNails = UtilityData.convertStringArrayFromJSON(surveyInfo, "thumbnail");
+            String[] tag = UtilityData.convertStringArrayFromJSON(surveyInfo, "tag");
+            String description = UtilityData.convertStringFromJSON(surveyInfo, "description");
+            String startData = UtilityData.convertStringFromJSON(surveyInfo, "startData");
+            String endDate = UtilityData.convertStringFromJSON(surveyInfo, "endDate");
+            String reference = UtilityData.convertStringFromJSON(surveyInfo, "reference");
+            String status = UtilityData.convertStringFromJSON(surveyInfo, "status");
+            int totalReward = UtilityData.convertIntegerFromJSON(surveyInfo, "totalReward");
+            int casterNum = UtilityData.convertIntegerFromJSON(surveyInfo, "casterNum");
+            int participants = UtilityData.convertIntegerFromJSON(surveyInfo, "participants");
 
-        NewsList newsList = parseNewsList(
-                UtilityData.convertJsonArrayFromJson(jsonObject, "articleInfo"));
+            NewsList newsList = parseNewsList(
+                    UtilityData.convertJsonArrayFromJson(jsonObject, "articleInfo"));
 
-        TimeLineList timeLineList = parseTimeLineList(
-                UtilityData.convertJsonArrayFromJson(jsonObject, "commentInfo"));
+            TimeLineList timeLineList = parseTimeLineList(
+                    UtilityData.convertJsonArrayFromJson(jsonObject, "commentInfo"));
 
-        EasyLog.LogMessage(this, "++ parse totalReward = " + totalReward);
-        EasyLog.LogMessage(this, "++ parse casterNum = " + casterNum);
-        EasyLog.LogMessage(this, "++ parse title = " + title);
-        EasyLog.LogMessage(this, "++ parse surveyId = " + surveyId);
+            EasyLog.LogMessage(this, "++ parse totalReward = " + totalReward);
+            EasyLog.LogMessage(this, "++ parse casterNum = " + casterNum);
+            EasyLog.LogMessage(this, "++ parse title = " + title);
+            EasyLog.LogMessage(this, "++ parse surveyId = " + surveyId);
 
-        mCast.setSurveyId(surveyId);
-        mCast.setTotalReward(totalReward);
-        mCast.setCasterNum(casterNum);
-        mCast.setTitle(title);
-        mCast.setTags(tag);
-        mCast.setEndDate(endDate);
-        mCast.setReference(reference);
-        mCast.setStartDate(startData);
-        mCast.setStatus(status);
-        mCast.setThumbnails(thumbNails);
-        mCast.setDescription(description);
-        mCast.setParticipants(participants);
-        mCast.setTimeLineList(timeLineList);
-        mCast.setNewsList(newsList);
+            mCast.setSurveyId(surveyId);
+            mCast.setTotalReward(totalReward);
+            mCast.setCasterNum(casterNum);
+            mCast.setTitle(title);
+            mCast.setTags(tag);
+            mCast.setEndDate(endDate);
+            mCast.setReference(reference);
+            mCast.setStartDate(startData);
+            mCast.setStatus(status);
+            mCast.setThumbnails(thumbNails);
+            mCast.setDescription(description);
+            mCast.setParticipants(participants);
+            mCast.setTimeLineList(timeLineList);
+            mCast.setNewsList(newsList);
+
+        }
+        else
+        {
+            ErrorMessage = UtilityData.convertStringFromJSON(jsonObject, "message");
+        }
 
         return mCast;
     }
@@ -269,5 +279,13 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
     public String getSurveyInfoId()
     {
         return (mCast != null ? mCast.getCastId() : null);
+    }
+
+    public String getErrorMessage() {
+        return ErrorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        ErrorMessage = errorMessage;
     }
 }
