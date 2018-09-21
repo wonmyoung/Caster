@@ -9,7 +9,8 @@
     <string name="kakaoLinkApi"></string>
     <string name="kakaoShareText"></string>
 
-    <string name="FacebookApiKey">2242142929363530</string>
+    <string name="facebook_app_id">1091169931042796</string>
+    <string name="fb_login_protocol_scheme">fb1091169931042796</string>
 
     <string name="NaverClientKey"></string>
     <string name="NaverSecretKey"></string>

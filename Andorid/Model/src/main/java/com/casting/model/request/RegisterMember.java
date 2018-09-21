@@ -7,6 +7,7 @@ import com.casting.commonmodule.network.parse.JSONParcelable;
 import com.casting.commonmodule.session.SessionType;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.model.Member;
 
 import org.json.JSONObject;
@@ -60,12 +61,15 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
 
         Response = UtilityData.convertBooleanFromJSON(jsonObject, "success");
         ResponseMessage = UtilityData.convertStringFromJSON(jsonObject, "message");
+
         String error = UtilityData.convertStringFromJSON(jsonObject, "error");
+        String token = UtilityData.convertStringFromJSON(jsonObject, "token");
 
         EasyLog.LogMessage(this, "++ parse jsonObject = " + jsonObject.toString());
         EasyLog.LogMessage(this, "++ parse Response = " + Response);
         EasyLog.LogMessage(this, "++ parse ResponseMessage = " + ResponseMessage);
         EasyLog.LogMessage(this, "++ parse error = " + error);
+        EasyLog.LogMessage(this, "++ parse token = " + token);
 
         Member member = null;
 
@@ -75,6 +79,7 @@ public class RegisterMember extends NetworkRequest implements JSONParcelable<Mem
             member.setUserId(UserId);
             member.setPassWord(Password);
             member.setEmail(EmailAddress);
+            member.setAuthToken(token);
         }
 
         return member;

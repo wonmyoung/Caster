@@ -32,14 +32,6 @@ public class TimeLine extends BaseModel implements ICommonItem, ItemConstant
         return TIME_LINE;
     }
 
-    public Member getmMember() {
-        return mMember;
-    }
-
-    public void setmMember(Member mMember) {
-        this.mMember = mMember;
-    }
-
     public String getId() {
         return Id;
     }

@@ -6,15 +6,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.casting.FutureCasting;
 import com.casting.FutureCastingUtil;
 import com.casting.R;
 import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.model.Alarm;
 import com.casting.model.Cast;
@@ -58,8 +61,10 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
         mTopImageView = find(R.id.castImageBack);
         mTopTagView1 = find(R.id.castTag1);
         mTopTagView2 = find(R.id.castTag2);
+        UtilityUI.addEmptyTextAsGone(mTopTagView1, mTopTagView2);
         mTopCastingNumberView = find(R.id.castTopText1);
         mTopCastingStatusView = find(R.id.castTopText2);
+        UtilityUI.addEmptyTextAsGone(mTopCastingNumberView, mTopCastingStatusView);
         mTopCastTitle = find(R.id.castTopTitle);
         mBottomButton = find(R.id.bottomButton);
         mBottomButton.setOnClickListener(this);
@@ -73,13 +78,21 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
             Cast cast = mAlarm.getTargetCast();
 
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String getchaCap = decimalFormat.format(2500);
-            String castingNumber = Integer.toString(cast.getCasterNum());
+            String gettingCap = decimalFormat.format(2500);
+            String castingNumber = null;
+
+            int casterNumber = cast.getCasterNum();
+            if (casterNumber > 0)
+            {
+                castingNumber = Integer.toString(cast.getCasterNum());
+            }
+
             String title = cast.getTitle();
             String[] tags = cast.getTags();
             String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
             String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
             String endDate = mAlarm.getEndDate();
+            String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
             String totalReward = Integer.toString(cast.getTotalReward());
             String thumbnail = cast.getThumbnail(0);
 
@@ -88,6 +101,7 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
             EasyLog.LogMessage(this, "++ init tag1 = " + tag1);
             EasyLog.LogMessage(this, "++ init tag2 = " + tag2);
             EasyLog.LogMessage(this, "++ init endDate = " + endDate);
+            EasyLog.LogMessage(this, "++ init formattedEndDate = " + formattedEndDate);
             EasyLog.LogMessage(this, "++ init totalReward = " + totalReward);
             EasyLog.LogMessage(this, "++ init thumbnail = " + thumbnail);
 
@@ -97,12 +111,18 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
                 mBottomTextView.setVisibility(View.VISIBLE);
                 mCastInfoLayout.setVisibility(View.VISIBLE);
 
+                mTopTagView1.setText(tag1);
+                mTopTagView2.setText(tag2);
+
+                mTopCastingNumberView.setText(casterNumber);
+                mTopCastingStatusView.setText("종료");
+
                 int radius = (int) getResources().getDimension(R.dimen.dp25);
 
                 ImageLoader.loadRoundImage(this, mTopImageView, thumbnail, radius);
 
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                SpannableString spannableString1 = new SpannableString(getchaCap);
+                SpannableString spannableString1 = new SpannableString(gettingCap);
                 SpannableString spannableString2 = new SpannableString("cap");
                 spannableString2.setSpan(new RelativeSizeSpan(0.2f), 0, 3, 0);
                 spannableStringBuilder.append(spannableString1);

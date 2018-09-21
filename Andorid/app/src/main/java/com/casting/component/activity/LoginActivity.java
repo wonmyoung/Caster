@@ -18,18 +18,17 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
-import com.casting.commonmodule.network.base.NetworkResponse;
 import com.casting.commonmodule.session.facebook.FacebookSessionSDK;
 import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.UtilityUI;
-import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.model.Member;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.Login;
+import com.casting.model.request.LoginFaceBook;
+import com.casting.model.request.RegisterFacebookMember;
 import com.casting.model.request.RequestFacebookSession;
 import com.casting.view.insert.InsertForm;
 import com.facebook.CallbackManager;
-import com.kakao.auth.Session;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -87,13 +86,11 @@ public class LoginActivity extends BaseFCActivity implements IResponseListener, 
         }
         else if (v.equals(mButton1))
         {
-
             RequestFacebookSession requestFacebookSession = new RequestFacebookSession();
             requestFacebookSession.setAppCompatActivity(this);
             requestFacebookSession.setResponseListener(this);
 
             RequestHandler.getInstance().request(requestFacebookSession);
-
         }
         else if (v.equals(mBottomTextView))
         {
@@ -154,27 +151,81 @@ public class LoginActivity extends BaseFCActivity implements IResponseListener, 
         {
             Login login = (Login) request;
 
-            if (login.isSuccessResponse())
-            {
-                Member member = (Member) response.getResponseModel();
+            onEmailLoginResponse(login, response);
+        }
+        else if (request.isRight(RequestFacebookSession.class))
+        {
+            onFacebookSessionResponse(response);
+        }
+        else if (request.isRight(LoginFaceBook.class))
+        {
+            onFacebookLoginResponse(response);
+        }
+        else if (request.isRight(RegisterFacebookMember.class))
+        {
+            onFacebookRegister(response);
+        }
+    }
 
-                CommonPreference commonPreference = CommonPreference.getInstance();
-                commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
-                commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
-                commonPreference.setSharedValueByString(AUTH_TOKEN, member.getAuthToken());
+    private void onEmailLoginResponse(Login login, BaseResponse response)
+    {
+        if (login.isSuccessResponse())
+        {
+            Member member = (Member) response.getResponseModel();
 
-                ActiveMember.getInstance().setMember(member);
+            loadMainPage(member);
+        }
+        else
+        {
+            Toast.makeText(this, "계정 정보를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                Intent intent = new Intent(this, MainActivity.class);
+    private void onFacebookSessionResponse(BaseResponse response)
+    {
+        Member member = (Member) response.getResponseModel();
 
-                startActivity(intent);
+        if (member != null)
+        {
+            LoginFaceBook loginFaceBook = new LoginFaceBook();
+            loginFaceBook.setResponseListener(this);
+            loginFaceBook.setFaceBookMember(member);
 
-                finish();
-            }
-            else
-            {
-                Toast.makeText(this, "계정 정보를 다시 확인해주세요", Toast.LENGTH_SHORT).show();
-            }
+            RequestHandler.getInstance().request(loginFaceBook);
+        }
+    }
+
+    private void onFacebookLoginResponse(BaseResponse response)
+    {
+        LoginFaceBook loginFaceBook = (LoginFaceBook) response.getSourceRequest();
+
+        Member member = loginFaceBook.getFaceBookMember();
+
+        if (loginFaceBook.isSuccessResponse())
+        {
+            loadMainPage(member);
+        }
+        else
+        {
+            RegisterFacebookMember registerFacebookMember = new RegisterFacebookMember();
+            registerFacebookMember.setResponseListener(this);
+            registerFacebookMember.setFacebookMember(member);
+
+            RequestHandler.getInstance().request(registerFacebookMember);
+        }
+    }
+
+    private void onFacebookRegister(BaseResponse response)
+    {
+        BaseRequest request = response.getSourceRequest();
+
+        RegisterFacebookMember registerFacebookMember = (RegisterFacebookMember) request;
+
+        if (registerFacebookMember.isResponse())
+        {
+            Member member = registerFacebookMember.getFacebookMember();
+
+            loadMainPage(member);
         }
     }
 
@@ -206,6 +257,25 @@ public class LoginActivity extends BaseFCActivity implements IResponseListener, 
             {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void loadMainPage(Member member)
+    {
+        if (member != null)
+        {
+            CommonPreference commonPreference = CommonPreference.getInstance();
+            commonPreference.setSharedValueByString(MEMBER_EMAIL, member.getEmail());
+            commonPreference.setSharedValueByString(MEMBER_PW, member.getPassWord());
+            commonPreference.setSharedValueByString(AUTH_TOKEN, member.getAuthToken());
+
+            ActiveMember.getInstance().setMember(member);
+
+            Intent intent = new Intent(this, MainActivity.class);
+
+            startActivity(intent);
+
+            finish();
         }
     }
 }

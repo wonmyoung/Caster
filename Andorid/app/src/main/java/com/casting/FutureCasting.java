@@ -6,9 +6,11 @@ import com.casting.commonmodule.view.component.CommonApplication;
 import com.casting.model.Cast;
 import com.casting.model.request.Follow;
 import com.casting.model.request.Login;
+import com.casting.model.request.LoginFaceBook;
 import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
 import com.casting.model.request.PutMember;
+import com.casting.model.request.RegisterFacebookMember;
 import com.casting.model.request.RegisterMember;
 import com.casting.model.request.RequestAlarmList;
 import com.casting.model.request.RequestCastEnding;
@@ -47,10 +49,20 @@ public class FutureCasting extends CommonApplication {
         {
             stringBuilder.append("/accounts/join");
         }
+        // 1.회원가입(페이스북) (적용완료)
+        if (request.isRight(RegisterFacebookMember.class))
+        {
+            stringBuilder.append("/accounts/join");
+        }
         // 2. 로그인 (적용완료)
         else if (request.isRight(Login.class))
         {
-            stringBuilder.append(createLoginUrl((Login) request));
+            stringBuilder.append("/accounts/login");
+        }
+        // 2. 로그인-페이스북 (적용완료)
+        else if (request.isRight(LoginFaceBook.class))
+        {
+            stringBuilder.append("/accounts/login");
         }
         // 3. 메인화면 (적용완료)
         else if (request.isRight(RequestCastList.class))
@@ -184,28 +196,6 @@ public class FutureCasting extends CommonApplication {
         }
 
         return stringBuilder.toString();
-    }
-
-    private String createLoginUrl(Login login)
-    {
-        SessionType sessionType = login.getSessionType();
-
-        if (sessionType == SessionType.FACEBOOK)
-        {
-            return "/auth/facebook";
-        }
-        else if (sessionType == SessionType.KAKAO)
-        {
-            return null;
-        }
-        else if (sessionType == SessionType.GOOGLE)
-        {
-            return null;
-        }
-        else
-        {
-            return "/accounts/login";
-        }
     }
 
     private String createCastListUrl(RequestCastList requestCastList)

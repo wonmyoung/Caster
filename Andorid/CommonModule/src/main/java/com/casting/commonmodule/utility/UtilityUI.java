@@ -23,11 +23,13 @@ import android.support.v4.view.MarginLayoutParamsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -66,6 +68,52 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class UtilityUI {
+
+    public static void addEmptyTextAsGone(final TextView ... textViews)
+    {
+        for (TextView textView : textViews)
+        {
+            addEmptyTextAsGone(textView);
+        }
+    }
+
+    public static void addEmptyTextAsGone(final TextView editText)
+    {
+        try
+        {
+            if (editText != null)
+            {
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+                        if (TextUtils.isEmpty(charSequence.toString()))
+                        {
+                            editText.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            editText.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public static InputFilter getEnglishFilter()
     {

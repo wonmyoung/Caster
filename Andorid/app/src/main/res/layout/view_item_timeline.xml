@@ -92,20 +92,28 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp25"
+                android:layout_height="@dimen/dp30"
                 android:gravity="center_vertical|right"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/replyThisTimeLine"
-                    android:layout_width="@dimen/dp25"
+                    android:layout_width="@dimen/dp55"
                     android:layout_height="@dimen/dp25"
+                    android:textColor="@color/color_white"
+                    android:text="댓글달기"
+                    android:textSize="@dimen/dp12"
+                    android:background="@drawable/shape_main_color_round5"
                     android:layout_marginRight="@dimen/dp10" />
 
                 <Button
                     android:id="@+id/shareTimeLineButton"
-                    android:layout_width="@dimen/dp25"
-                    android:layout_height="@dimen/dp25" />
+                    android:layout_width="@dimen/dp55"
+                    android:layout_height="@dimen/dp25"
+                    android:textColor="@color/color_white"
+                    android:text="공유하기"
+                    android:textSize="@dimen/dp12"
+                    android:background="@drawable/shape_main_color_round5"/>
 
             </LinearLayout>
 

@@ -69,7 +69,7 @@
             android:layout_marginRight="@dimen/dp15"
             android:layout_marginBottom="@dimen/dp5"
             android:textColor="@color/color_white"
-            android:text="로그인"
+            android:text="회원가입"
             android:textSize="@dimen/dp20"
             android:background="@drawable/shape_main_color_round15"/>
 

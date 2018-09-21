@@ -1,10 +1,13 @@
 package com.casting.component.activity;
 
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +55,7 @@ import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
 import com.casting.model.request.RequestCastEnding;
 import com.casting.model.request.RequestCastingOption;
+import com.casting.model.request.RequestTimeLine;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
@@ -91,6 +95,7 @@ import com.github.mikephil.charting.utils.Utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -140,11 +145,15 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         }
     }
 
-    private ImageView    mCastImage;
-    private TextView     mCastTitle;
-    private TextView     mCastDescription;
-    private TextView     mCastTopButton;
-    private Button       mCastButton;
+    private ImageView       mCastImage;
+    private TextView        mCastTitle;
+    private TextView        mCastDescription;
+    private TextView        mCastTopButton;
+    private TextView        mTopTagView1;
+    private TextView        mTopTagView2;
+    private Button          mCastButton;
+    private TextView        mTopCastingNumberView;
+    private TextView        mTopCastingStatusView;
 
     private CommonRecyclerView      mItemListView;
     private ItemViewAdapter         mItemViewAdapter;
@@ -163,6 +172,13 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
         mCastDescription = find(R.id.castCardDescription);
+
+        mTopTagView1 = find(R.id.castTag1);
+        mTopTagView2 = find(R.id.castTag2);
+        UtilityUI.addEmptyTextAsGone(mTopTagView1, mTopTagView2);
+        mTopCastingNumberView = find(R.id.castTopText1);
+        mTopCastingStatusView = find(R.id.castTopText2);
+        UtilityUI.addEmptyTextAsGone(mTopCastingNumberView, mTopCastingStatusView);
 
         mCastTopButton = find(R.id.castCardTopButton);
         mCastTopButton.setOnClickListener(new View.OnClickListener() {
@@ -1039,10 +1055,27 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mTargetCast = cast;
 
         String thumbNailPath = cast.getThumbnail(0);
+        String[] tags = cast.getTags();
+        String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
+        String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
+        String endDate = cast.getEndDate();
+        String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
+        String castingNumberString = null;
+
+        int castingNumber = cast.getCasterNum();
+        if (castingNumber > 0)
+        {
+            castingNumberString = Integer.toString(cast.getCasterNum());
+            castingNumberString += " 명 참여";
+        }
 
         EasyLog.LogMessage(this, "++ updateCastInfo getCastId = ", cast.getCastId());
         EasyLog.LogMessage(this, "++ updateCastInfo thumbNailPath = ", thumbNailPath);
         EasyLog.LogMessage(this, "++ updateCastInfo isCastingDone = " + cast.isCastingDone());
+        EasyLog.LogMessage(this, "++ updateCastInfo tag1 = " + tag1);
+        EasyLog.LogMessage(this, "++ updateCastInfo tag2 = " + tag2);
+        EasyLog.LogMessage(this, "++ updateCastInfo endDate = " + endDate);
+        EasyLog.LogMessage(this, "++ updateCastInfo formattedEndDate = " + formattedEndDate);
 
         if (!TextUtils.isEmpty(thumbNailPath))
         {
@@ -1055,8 +1088,26 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             UtilityUI.setBackGroundDrawable(mCastImage, R.drawable.shape_gray_color_alpha80_round10);
         }
 
+        mTopTagView1.setText(tag1);
+        mTopTagView2.setText(tag2);
+
+        mTopCastingNumberView.setText(castingNumberString);
+
+        if (FutureCastingUtil.isPast(endDate))
+        {
+            mTopCastingStatusView.setText("종료");
+        }
+        else
+        {
+            formattedEndDate += " 전";
+
+            mTopCastingStatusView.setText(formattedEndDate);
+        }
+
         mCastTitle.setText(cast.getTitle());
         mCastDescription.setText(cast.getDescription());
+
+
     }
 
     @Override
@@ -1119,16 +1170,18 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             case TIME_LINE_LIST:
                 mPageCurrentMode.setPageMode(PageMode.TIME_LINE_WRITE);
 
-                mItemViewAdapter.clear();
-                mItemViewAdapter.notifyDataSetChanged();
+                ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
 
                 ItemInsert itemInsert = new ItemInsert();
                 itemInsert.setItemType(ItemConstant.TIME_LINE_WRITE);
-                mItemViewAdapter.addItem(itemInsert);
+                itemArrayList.add(itemInsert);
+
+                mItemViewAdapter.setItemList(itemArrayList);
                 mItemViewAdapter.notifyDataSetChanged();
                 break;
 
             case TIME_LINE_WRITE:
+                // TODO API 없음
                 break;
         }
     }
@@ -1302,8 +1355,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                     if (replyList != null)
                     {
-                        EasyLog.LogMessage(this, "++ onClickEventTimeLine replyList size = " + replyList.getReplyListSize());
-
                         list.addAll(replyList.getReplyList());
                     }
 
@@ -1315,6 +1366,54 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case R.id.shareTimeLineButton:
             {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/*");
+
+                List<ResolveInfo> resInfo = getPackageManager().queryIntentActivities(intent, 0);
+
+                if (!resInfo.isEmpty())
+                {
+                    List<Intent> shareIntentList = new ArrayList<>();
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("캐스팅 ");
+                    stringBuilder.append("\n");
+
+                    Member member = timeLine.getMember();
+
+                    if (member != null)
+                    {
+                        stringBuilder.append(member.getUserName());
+                    }
+                    stringBuilder.append("\n");
+                    stringBuilder.append(timeLine.getComments());
+
+                    for (ResolveInfo info : resInfo)
+                    {
+                        Intent shareIntent = (Intent) intent.clone();
+
+                        if (info.activityInfo.packageName.toLowerCase().equals("com.facebook.katana"))
+                        {
+                            //facebook
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                            // shareIntent.setType("image/jpg");
+                            // shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///"+mImagePath));
+                        }
+                        else
+                        {
+                            shareIntent.setType("image/*");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "제목");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                        }
+                        shareIntent.setPackage(info.activityInfo.packageName);
+                        shareIntentList.add(shareIntent);
+                    }
+
+                    Intent chooserIntent = Intent.createChooser(shareIntentList.remove(0), "select");
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntentList.toArray(new Parcelable[]{}));
+                    startActivity(chooserIntent);
+                }
                 break;
             }
         }
@@ -1384,12 +1483,10 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 TimeLineList timeLineList = mTargetCast.getTimeLineList();
 
-                mItemViewAdapter.clear();
+                EasyLog.LogMessage(this, "++ onBackPressed timeLineList size = " + timeLineList.getTimeLineListSize());
 
-                if (timeLineList != null)
-                {
-                    mItemViewAdapter.setItemList(timeLineList.getTimeLineList());
-                }
+                mItemViewAdapter.clear();
+                mItemViewAdapter.setItemList(timeLineList.getTimeLineList());
                 mItemViewAdapter.notifyDataSetChanged();
                 break;
             }

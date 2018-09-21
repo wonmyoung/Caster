@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/dp12"
-            android:text="비트코인"
+            android:text=""
             android:paddingLeft="@dimen/dp5"
             android:paddingRight="@dimen/dp5"
             android:paddingTop="@dimen/dp2"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/dp12"
-            android:text="1,0000캡"
+            android:text=""
             android:layout_marginLeft="@dimen/dp10"
             android:paddingLeft="@dimen/dp5"
             android:paddingRight="@dimen/dp5"
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dp11"
-                android:text="종료"
+                android:text=""
                 android:layout_marginRight="@dimen/dp10"
                 android:textColor="@color/color_white"/>
 
@@ -76,7 +76,7 @@
         android:layout_marginBottom="@dimen/dp15"
         android:layout_marginLeft="@dimen/dp10"
         android:layout_marginRight="@dimen/dp10"
-        android:text="비트코인의 7월25일의 자정가격은 얼마일까요 ?"
+        android:text=""
         android:textColor="@color/color_white"
         android:textSize="@dimen/dp24" />
 

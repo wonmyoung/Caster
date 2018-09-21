@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.casting.FutureCastingUtil;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
@@ -101,13 +102,40 @@ public class MainActivity extends BaseFCActivity implements
 
             Context c = getBaseContext();
 
-            ImageView imageView = viewHolder.find(R.id.castCardBack);
-
             String title = item.getTitle();
             String thumbNailPath = item.getThumbnail(0);
+            String[] tags = item.getTags();
+            String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
+            String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
+            String endDate = item.getEndDate();
+            String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
 
             EasyLog.LogMessage(this, ">> bindItemDataView title = " + title);
             EasyLog.LogMessage(this, ">> bindItemDataView thumbNailPath = " + thumbNailPath);
+            EasyLog.LogMessage(this, ">> bindItemDataView tag1 = " + tag1);
+            EasyLog.LogMessage(this, ">> bindItemDataView tag2 = " + tag2);
+
+            ImageView imageView = viewHolder.find(R.id.castCardBack);
+
+            TextView tagView1 = viewHolder.find(R.id.castTag1);
+            TextView tagView2 = viewHolder.find(R.id.castTag2);
+            TextView endTimeView = viewHolder.find(R.id.castTopText2);
+            UtilityUI.addEmptyTextAsGone(tagView1, tagView2, endTimeView);
+
+            tagView1.setText(tag1);
+            tagView2.setText(tag2);
+
+            if (FutureCastingUtil.isPast(endDate))
+            {
+                endTimeView.setText("종료");
+            }
+            else
+            {
+                formattedEndDate += " 전";
+
+                endTimeView.setText(formattedEndDate);
+            }
+
 
             if (!TextUtils.isEmpty(thumbNailPath))
             {
