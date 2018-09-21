@@ -30,7 +30,6 @@
                 android:id="@+id/userImage"
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
-                android:background="@color/mainColor0"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
@@ -177,7 +176,7 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.TabLayout
+    <com.casting.view.CustomTabLayout
         android:id="@+id/userProfileTab"
         style="@style/CustomTabLayoutStyle"
         android:layout_width="match_parent"

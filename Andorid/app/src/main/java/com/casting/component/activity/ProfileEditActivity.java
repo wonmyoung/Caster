@@ -95,7 +95,11 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
         switch (requestCode)
         {
             case REQUEST_GALLERY:
-                updateUserPic(data.getData());
+
+                if (data != null)
+                {
+                    updateUserPic(data.getData());
+                }
                 break;
         }
     }

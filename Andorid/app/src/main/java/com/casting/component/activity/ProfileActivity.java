@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +19,9 @@ import android.widget.TextView;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
+import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonActivity;
@@ -26,12 +30,14 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
+import com.casting.model.CastList;
 import com.casting.model.Member;
 import com.casting.model.TimeLine;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestTimeLineList;
+import com.casting.view.CustomTabLayout;
 import com.casting.view.ItemViewAdapter;
 
 import java.util.ArrayList;
@@ -54,9 +60,9 @@ public class ProfileActivity extends CommonActivity
     private TextView    mInfoView5;
     private TextView    mInfoView6;
 
-    private TabLayout       mTabLayout;
-    private Button          mUserEditButton;
-    private RecyclerView    mListView;
+    private CustomTabLayout     mCustomTabLayout;
+    private Button              mUserEditButton;
+    private RecyclerView        mListView;
     private ItemViewAdapter     mListViewAdapter;
     private LinearLayoutManager mListViewManager;
 
@@ -83,19 +89,11 @@ public class ProfileActivity extends CommonActivity
         mInfoView6 = find(R.id.userInfo6);
         mInfoView6.setVisibility(View.INVISIBLE);
 
-        mTabLayout = find(R.id.userProfileTab);
-        mTabLayout.addOnTabSelectedListener(this);
-        TabLayout.Tab tab1 = mTabLayout.newTab();
-        tab1.setText("타임라인");
-
-        TabLayout.Tab tab2 = mTabLayout.newTab();
-        tab2.setText("참여중인 캐스트");
-
-        TabLayout.Tab tab3 = mTabLayout.newTab();
-        tab3.setText("종료된 캐스트");
-        mTabLayout.addTab(tab1);
-        mTabLayout.addTab(tab2);
-        mTabLayout.addTab(tab3);
+        mCustomTabLayout = find(R.id.userProfileTab);
+        mCustomTabLayout.addOnTabSelectedListener(this);
+        mCustomTabLayout.addTextTab("타임라인");
+        mCustomTabLayout.addTextTab("참여중인 캐스트");
+        mCustomTabLayout.addTextTab("종료된 캐스트");
 
         mListViewAdapter = new ItemViewAdapter(this, this);
         mListView = find(R.id.userProfileListView);
@@ -114,41 +112,16 @@ public class ProfileActivity extends CommonActivity
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        mListViewAdapter.clear();
-        mListViewAdapter.notifyDataSetChanged();
-//
-//        BaseModel m = response.getResponseModel();
-//
-//        if (m instanceof TimeLineList)
-//        {
-//            TimeLineList t = (TimeLineList) m;
-//
-//            mListViewAdapter.setItemList(t.getTimeLineList());
-//            mListViewAdapter.notifyDataSetChanged();
-//        }
-//        else if (m instanceof CastList)
-//        {
-//
-//            CastList c = (CastList) m;
-//
-//            mListViewAdapter.setItemList(c.getCastList());
-//            mListViewAdapter.notifyDataSetChanged();
-//        }
-        Log.d("confirm" , ">> confirm onThreadResponseListen getResponseCode = " + response.getResponseCode());
+        BaseRequest request = response.getSourceRequest();
 
-        ArrayList<ICommonItem> list = new ArrayList<>();
-
-        if (mTabLayout.getSelectedTabPosition() == 0)
+        if (request.isRight(RequestTimeLineList.class))
         {
-            loadDummyTimeLineList(list);
-        }
-        else
-        {
-            loadDummyCastList(list);
-        }
 
-        mListViewAdapter.setItemList(list);
-        mListViewAdapter.notifyDataSetChanged();
+        }
+        else if (request.isRight(CastList.class))
+        {
+
+        }
     }
 
     @Override
@@ -168,10 +141,52 @@ public class ProfileActivity extends CommonActivity
         {
             ImageLoader.loadImage(this, mUserPicView, member.getUserPicThumbnail());
 
-            mUserNickNameView.setText(member.getUserName());
-            mUserIdView.setText(member.getUserId());
-            mUserGradeView.setText(member.getUserLevel());
-            mUserDescription.setText(member.getDescription());
+            String picThumbnail = member.getUserPicThumbnail();
+            String userId = member.getUserId();
+            String userName = member.getUserName();
+            String userLevel = member.getUserLevel();
+            String description = member.getDescription();
+
+            EasyLog.LogMessage(this, "++ update userName =" + userName);
+            EasyLog.LogMessage(this, "++ update userId =" + userId);
+            EasyLog.LogMessage(this, "++ update picThumbnail = " + picThumbnail);
+            EasyLog.LogMessage(this, "++ update userLevel  =" + userLevel);
+
+            if (TextUtils.isEmpty(userId))
+            {
+                SpannableString spannableString = new SpannableString("(확인안됨)");
+                spannableString.setSpan(
+                        new ForegroundColorSpan(Color.parseColor("#a0464646")), 0, spannableString.length(), 0);
+                mUserIdView.setText(spannableString);
+            }
+            else
+            {
+                mUserIdView.setText(userId);
+            }
+
+            if (TextUtils.isEmpty(userName))
+            {
+                SpannableString spannableString = new SpannableString("(이름없음)");
+                spannableString.setSpan(
+                        new ForegroundColorSpan(Color.parseColor("#666666")), 0, spannableString.length(), 0);
+                mUserNickNameView.setText(spannableString);
+            }
+            else
+            {
+                mUserNickNameView.setText(userName);
+            }
+
+            if (TextUtils.isEmpty(userLevel))
+            {
+                mUserGradeView.setVisibility(View.GONE);
+            }
+            else
+            {
+                mUserGradeView.setVisibility(View.VISIBLE);
+                mUserGradeView.setText(userLevel);
+            }
+
+            mUserDescription.setText(description);
 
             mInfoView1.setText(buildInfoString("CAP", member.getUserPoint()));
             mInfoView2.setText(buildInfoString("예측수", member.getCorrectCast()));
@@ -307,7 +322,7 @@ public class ProfileActivity extends CommonActivity
     private SpannableStringBuilder buildInfoString(String prefix, String data)
     {
 
-        int color1 = UtilityUI.getColor(this, R.color.color_f2f2f2);
+        int color1 = Color.parseColor("#a0464646");
         int color2 = Color.BLACK;
 
         SpannableString spannableString1 = UtilityUI.getColorSpannableString(prefix, color1);
@@ -318,40 +333,5 @@ public class ProfileActivity extends CommonActivity
         builder.append(spannableString2);
 
         return builder;
-    }
-
-    private void loadDummyTimeLineList(ArrayList<ICommonItem> list)
-    {
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            TimeLine timeLine = new TimeLine();
-
-            list.add(timeLine);
-        }
-    }
-
-    private void loadDummyCastList(ArrayList<ICommonItem> list)
-    {
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-
-        for (int i = 0 ; i < 100 ; i++)
-        {
-            Cast cast = new Cast();
-            cast.setItemType(ItemConstant.CAST_CARD_WIDE_THIN);
-            cast.setRemainingTime(60 * 60 * 1000);
-            cast.setTotalReward(20000);
-            cast.setTitle("비트코인의 7월 25일 지정가격은 얼마일까요 ?");
-            cast.setTags("비트코인", "더미데이터", "바톤컴퍼니", "가즈아!!");
-            cast.setThumbnails(
-                    "http://1.bp.blogspot.com/-suPZ9GdewYU/WjL2nodqGpI/AAAAAAABlZY/MgopnrYkJyQHGPnjnhp2ynzoz11h0PTHgCK4BGAYYCw/s1600/960x0.jpg");
-
-            list.add(cast);
-        }
     }
 }
