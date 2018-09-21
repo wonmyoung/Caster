@@ -93,7 +93,8 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
             mCast.setCasterNum(casterNum);
             mCast.setTitle(title);
             mCast.setTags(tag);
-            mCast.setEndDate(endDate);
+            //mCast.setEndDate(endDate);
+            mCast.setEndDate("2018-09-21T11:11:00.000Z");
             mCast.setReference(reference);
             mCast.setStartDate(startData);
             mCast.setStatus(status);
@@ -171,6 +172,8 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
         int commentInfoSize = (jsonArray != null ? jsonArray.length() : 0);
         if (commentInfoSize > 0)
         {
+            EasyLog.LogMessage(this, ">> parseTimeLineList jsonArray = " + jsonArray.toString());
+
             timeLineList = new TimeLineList();
 
             for (int i = 0 ; i < commentInfoSize ; i++)
@@ -179,13 +182,19 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                 {
                     JSONObject o = jsonArray.getJSONObject(i);
 
-
                     String id = UtilityData.convertStringFromJSON(o, "_id");
                     String surveyId = UtilityData.convertStringFromJSON(o, "surveyId");
                     String userId = UtilityData.convertStringFromJSON(o, "userId");
                     String updated_at = UtilityData.convertStringFromJSON(o, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(o, "created_at");
                     String comment = UtilityData.convertStringFromJSON(o, "comment");
+
+                    EasyLog.LogMessage(this, ">> parseTimeLineList id = " + id);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList surveyId = " + surveyId);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList userId = " + userId);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList updated_at = " + updated_at);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList created_at = " + created_at);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList comment = " + comment);
 
                     JSONArray jsonArray1 = UtilityData.convertJsonArrayFromJson(o, "reply");
 

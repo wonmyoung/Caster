@@ -109,7 +109,8 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                     cast.setStartDate(created_at);
                     cast.setStatus(status);
                     cast.setReference(reference);
-                    cast.setEndDate(endDate);
+                    //cast.setEndDate(endDate);
+                    cast.setEndDate("2018-09-21T11:11:00.000Z");
                     cast.setQuestionType(questionType);
                     cast.setThumbnails(thumbNails);
                     cast.setTags(tags);

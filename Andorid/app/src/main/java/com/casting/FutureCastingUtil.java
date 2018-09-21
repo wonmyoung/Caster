@@ -1,5 +1,6 @@
 package com.casting;
 
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.interfaces.Constants;
 
 import java.text.SimpleDateFormat;
@@ -16,10 +17,17 @@ public class FutureCastingUtil implements Constants {
 
             Date endDate = simpleDateFormat.parse(s);
 
+            EasyLog.LogMessage("++ FutureCastingUtil isPast s = " + s);
+
             long endDateTime = endDate.getTime();
             long fromDateTime = (new Date()).getTime();
 
+            EasyLog.LogMessage("++ FutureCastingUtil isPast endDateTime = " + endDateTime);
+            EasyLog.LogMessage("++ FutureCastingUtil isPast fromDateTime = " + fromDateTime);
+
             long diffDateTime = endDateTime - fromDateTime;
+
+            EasyLog.LogMessage("++ FutureCastingUtil isPast diffDateTime = " + diffDateTime);
 
             return !(diffDateTime > 0);
         }

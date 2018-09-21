@@ -1397,6 +1397,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             case CAST_AS_CHOICE:
             case CAST_AS_ESSAY:
             case CAST_AS_TWO_CHOICE:
+
                 mPageCurrentMode.setPageMode(CAST_INFO);
 
                 mItemViewAdapter.clear();
@@ -1411,6 +1412,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case CASTING_DONE:
             case CASTING_CLOSED:
+
                 finish();
                 break;
         }
@@ -1592,6 +1594,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         if (alarm != null)
         {
             mTargetCast.setCastingDone(true);
+
+            alarm.setTargetCast(mTargetCast);
 
             {
                 Intent intent = new Intent(this, AlarmActivity.class);

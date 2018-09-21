@@ -18,24 +18,32 @@
 
             <Button
                 android:id="@+id/main_TopMenuButton1"
-                android:layout_width="@dimen/dp30"
+                android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp30"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp10"
+                android:textColor="@color/color_white"
+                android:text="메뉴"
+                android:textSize="@dimen/dp12"
                 android:background="@drawable/shape_main_color_round10" />
 
-            <Button
-                android:layout_width="@dimen/dp30"
-                android:layout_height="@dimen/dp30"
-                android:layout_gravity="center"
-                android:background="@drawable/shape_main_color_round10" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mainColor0"
+                android:text="Future Casting"
+                android:textSize="@dimen/dp14"
+                android:layout_gravity="center"/>
 
             <Button
                 android:id="@+id/main_TopMenuButton2"
-                android:layout_width="@dimen/dp30"
+                android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp30"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="@dimen/dp10"
+                android:textColor="@color/color_white"
+                android:text="알람"
+                android:textSize="@dimen/dp12"
                 android:background="@drawable/shape_main_color_round10" />
 
 
