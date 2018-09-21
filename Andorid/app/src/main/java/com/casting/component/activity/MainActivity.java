@@ -394,7 +394,6 @@ public class MainActivity extends BaseFCActivity implements
     public void onTabSelected(TabLayout.Tab tab)
     {
         RequestCastList requestCastList = new RequestCastList();
-        requestCastList.setEmailAddress(ActiveMember.getInstance().getEmailAddress());
         requestCastList.setResponseListener(this);
 
         switch (tab.getPosition())

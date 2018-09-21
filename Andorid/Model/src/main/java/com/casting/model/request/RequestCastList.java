@@ -21,7 +21,6 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
         Popular, Available, RewardBig, Done, Applied;
     }
 
-    private String  mEmailAddress;
     private int     PageIndex;
     private int     Size = 10;
     private Order   mOrder;
@@ -45,7 +44,8 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
 
 
     @Override
-    public ContentValues getHttpRequestParameter() {
+    public ContentValues getHttpRequestParameter()
+    {
         return null;
     }
 
@@ -109,8 +109,7 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                     cast.setStartDate(created_at);
                     cast.setStatus(status);
                     cast.setReference(reference);
-                    //cast.setEndDate(endDate);
-                    cast.setEndDate("2018-09-21T11:11:00.000Z");
+                    cast.setEndDate(endDate);
                     cast.setQuestionType(questionType);
                     cast.setThumbnails(thumbNails);
                     cast.setTags(tags);
@@ -145,14 +144,6 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
 
     public void setOrder(Order order) {
         this.mOrder = order;
-    }
-
-    public String getEmailAddress() {
-        return mEmailAddress;
-    }
-
-    public void setEmailAddress(String address) {
-        this.mEmailAddress = address;
     }
 
     public int getPageIndex() {

@@ -25,6 +25,7 @@ import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestRankingList;
 import com.casting.model.request.RequestReplyList;
 import com.casting.model.request.RequestTimeLine;
+import com.casting.model.request.RequestTimeLineList;
 import com.casting.model.request.SettingMenu;
 
 public class FutureCasting extends CommonApplication {
@@ -104,6 +105,11 @@ public class FutureCasting extends CommonApplication {
         else if (request.isRight(RequestTimeLine.class))
         {
             // TODO V0.5 규격서에 URL 존재 하지 않음
+        }
+        //
+        else if (request.isRight(RequestTimeLineList.class))
+        {
+            stringBuilder.append("/message/timeline");
         }
         // 3.0.4 캐스트 현황
         else if (request.isRight(RequestCastingStatus.class))
@@ -210,11 +216,11 @@ public class FutureCasting extends CommonApplication {
             case RewardBig:
                 return "/survey/surveyInfo/topReward";
 
-            // 4.1.2 종료된 캐스트 // TODO 세션 요구에 막혀 있음
+            // 4.1.2 종료된 캐스트
             case Done:
                 return "/accounts/accountInfo/ajax/finished";
 
-            // 4.1.3 참여중 캐스트 // TODO 세션 요구에 막혀 있음
+            // 4.1.3 참여중 캐스트
             case Applied:
                 return "/accounts/accountInfo/ajax/progress";
 

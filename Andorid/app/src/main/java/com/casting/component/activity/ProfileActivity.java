@@ -33,6 +33,7 @@ import com.casting.model.Cast;
 import com.casting.model.CastList;
 import com.casting.model.Member;
 import com.casting.model.TimeLine;
+import com.casting.model.TimeLineList;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestCastList;
@@ -116,11 +117,38 @@ public class ProfileActivity extends CommonActivity
 
         if (request.isRight(RequestTimeLineList.class))
         {
-
+            onResponseTimeLineList(response);
         }
         else if (request.isRight(CastList.class))
         {
+            onResponseCastList(response);
+        }
+    }
 
+    private void onResponseTimeLineList(BaseResponse response)
+    {
+        TimeLineList timeLineList = (TimeLineList) response.getResponseModel();
+
+        if (timeLineList != null)
+        {
+            mListViewAdapter.setItemList(timeLineList.getTimeLineList());
+            mListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onResponseCastList(BaseResponse response)
+    {
+        int responseCode = response.getResponseCode();
+        if (responseCode > 0)
+        {
+            CastList castList = (CastList) response.getResponseModel();
+
+            int size = castList.getSize();
+            if (size > 0)
+            {
+                mListViewAdapter.setItemList(castList.getCastList());
+                mListViewAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -239,8 +267,7 @@ public class ProfileActivity extends CommonActivity
             case 1:
             {
                 RequestCastList requestCastList = new RequestCastList();
-                requestCastList.setEmailAddress(ActiveMember.getInstance().getEmailAddress());
-                requestCastList.setOrder(RequestCastList.Order.Available);
+                requestCastList.setOrder(RequestCastList.Order.Applied);
                 requestCastList.setResponseListener(this);
 
                 RequestHandler.getInstance().request(requestCastList);
@@ -250,8 +277,7 @@ public class ProfileActivity extends CommonActivity
             case 2:
             {
                 RequestCastList requestCastList = new RequestCastList();
-                requestCastList.setEmailAddress(ActiveMember.getInstance().getEmailAddress());
-                requestCastList.setOrder(RequestCastList.Order.Available);
+                requestCastList.setOrder(RequestCastList.Order.Done);
                 requestCastList.setResponseListener(this);
 
                 RequestHandler.getInstance().request(requestCastList);

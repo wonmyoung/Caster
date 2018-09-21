@@ -19,7 +19,7 @@ public class RequestTimeLineList extends NetworkRequest implements JSONParcelabl
 
     @Override
     public String getHttpMethod() {
-        return null;
+        return HttpGet;
     }
 
     @Override
