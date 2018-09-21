@@ -4,25 +4,43 @@ import android.content.ContentValues;
 
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
+import com.casting.model.FollowingVectorList;
 import com.casting.model.Member;
 
-public class RequestFollowingList extends NetworkRequest {
+import org.json.JSONObject;
 
-    public enum FollowingVector
-    {FOLLOWING, FOLLOWER}
+public class RequestFollowingList extends NetworkRequest implements JSONParcelable<FollowingVectorList> {
+
+    @Override
+    public FollowingVectorList parse(JSONObject jsonObject)
+    {
+        EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
+
+        FollowingVectorList followingVectorList = null;
+
+        return followingVectorList;
+    }
+
+    public enum FollowingVector{FOLLOWING, FOLLOWER}
 
     private FollowingVector mFollowingVector;
 
-    private Member  mMember;
-
     @Override
     public String getHttpMethod() {
-        return null;
+        return HttpGet;
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
 
     @Override
@@ -30,17 +48,10 @@ public class RequestFollowingList extends NetworkRequest {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public JSONParcelable getNetworkParcelable() {
-        return null;
-    }
-
-    public Member getMember() {
-        return mMember;
-    }
-
-    public void setMember(Member member) {
-        this.mMember = member;
+        return this;
     }
 
     public RequestFollowingList.FollowingVector getFollowingVector() {

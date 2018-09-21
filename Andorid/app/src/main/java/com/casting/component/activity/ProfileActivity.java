@@ -28,6 +28,7 @@ import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
+import com.casting.interfaces.Constants;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Cast;
 import com.casting.model.CastList;
@@ -46,7 +47,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ProfileActivity extends CommonActivity
-        implements Observer, TabLayout.OnTabSelectedListener, ItemBindStrategy, IResponseListener {
+        implements Observer, TabLayout.OnTabSelectedListener, ItemBindStrategy, IResponseListener, Constants {
 
     private CircleImageView mUserPicView;
 
@@ -236,13 +237,13 @@ public class ProfileActivity extends CommonActivity
         else if (v.equals(mInfoView4))
         {
             Intent intent = new Intent(this, FollowingListActivity.class);
-
+            intent.putExtra(FOLLOWING_LIST_MODE, followingList);
             startActivity(intent);
         }
         else if (v.equals(mInfoView5))
         {
             Intent intent = new Intent(this, FollowingListActivity.class);
-
+            intent.putExtra(FOLLOWING_LIST_MODE, followerList);
             startActivity(intent);
         }
     }

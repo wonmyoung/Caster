@@ -28,6 +28,9 @@ import com.casting.model.request.RequestTimeLine;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.model.request.SettingMenu;
 
+import static com.casting.model.request.RequestFollowingList.FollowingVector.FOLLOWER;
+import static com.casting.model.request.RequestFollowingList.FollowingVector.FOLLOWING;
+
 public class FutureCasting extends CommonApplication {
 
     public static final String HTTP_PROTOCOL    = "http://";
@@ -174,7 +177,18 @@ public class FutureCasting extends CommonApplication {
         // 4.1.5 팔로잉 리스트 // TODO V0.5 세션 요구에 막혀있음
         else if (request.isRight(RequestFollowingList.class))
         {
-            stringBuilder.append("/follow/followingList");
+            RequestFollowingList requestFollowingList = (RequestFollowingList) request;
+
+            RequestFollowingList.FollowingVector vector = requestFollowingList.getFollowingVector();
+
+            if (vector == FOLLOWING)
+            {
+                stringBuilder.append("/follow/followingList");
+            }
+            else if (vector == FOLLOWER)
+            {
+                stringBuilder.append("/follow/followerList");
+            }
         }
         // 4.1.5 팔로워 리스트 // TODO V0.5 세션 요구에 막혀있음
         else if (request.isRight(RequestFollowerList.class))

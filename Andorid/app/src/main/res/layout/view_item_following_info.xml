@@ -20,6 +20,7 @@
             android:layout_weight="20">
 
             <com.casting.commonmodule.view.CircleImageView
+                android:id="@+id/userImage"
                 android:layout_width="@dimen/dp40"
                 android:layout_height="@dimen/dp40"
                 android:layout_gravity="start"/>
@@ -33,26 +34,27 @@
             android:layout_weight="50">
 
             <TextView
+                android:id="@+id/userNameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="조감독"
+                android:text=""
                 android:textColor="@color/color_black"
                 android:textStyle="bold"
                 android:textSize="@dimen/dp10"/>
 
             <TextView
+                android:id="@+id/userIdView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Mr_cho"
+                android:text=""
                 android:textColor="@color/color_505050"
                 android:textSize="@dimen/dp10"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Professional MD Professional MDProfessional MDProfessional MDProfessional MDProfessional MDProfessional MD"
                 android:lineSpacingExtra="@dimen/dp2"
                 android:textColor="@color/color_black"
                 android:maxLines="2"
@@ -66,7 +68,7 @@
             android:layout_weight="30"
             android:layout_gravity="start"
             android:textColor="@color/color_white"
-            android:text="팔로우 하기"
+            android:text=""
             android:textSize="@dimen/dp10"
             android:background="@drawable/shape_main_color_round10"/>
 

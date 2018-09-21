@@ -9,6 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp60">
 
+        <TextView
+            android:id="@+id/followingListViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textSize="@dimen/dp12"
+            android:textColor="@color/mainColor0"/>
+
     </FrameLayout>
 
     <com.casting.commonmodule.view.list.CommonRecyclerView

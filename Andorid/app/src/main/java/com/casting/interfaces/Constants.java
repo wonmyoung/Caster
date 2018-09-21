@@ -11,6 +11,8 @@ public interface Constants {
     String MEMBER_PW        = "MEMBER_PW";
     String AUTH_TOKEN       = "AUTH_TOKEN";
 
+    String FOLLOWING_LIST_MODE   = "FOLLOWING_LIST_MODE";
+
     String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     int SECOND = 1000;
@@ -19,6 +21,8 @@ public interface Constants {
     int DAY = HOUR * 24;
 
     int LOAD_CASTING_PAGE = 1;
-
     int CASTING_DONE_CODE = 100;
+
+    int followingList   = 101;
+    int followerList    = 102;
 }
