@@ -1926,7 +1926,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         for (int i = 0 ; i < 10 ; i ++)
         {
             Ranking ranking = new Ranking();
-            ranking.setItemType(ItemConstant.RANKING);
 
             list.add(ranking);
         }

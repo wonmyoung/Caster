@@ -17,10 +17,11 @@
             android:id="@+id/rankingIndex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="99."
+            android:text=""
             android:textColor="@color/color_7c7c7c"/>
 
         <com.casting.commonmodule.view.CircleImageView
+            android:id="@+id/rankingUserImage"
             android:layout_width="@dimen/dp40"
             android:layout_height="@dimen/dp40"
             android:layout_marginLeft="@dimen/dp10"/>
@@ -29,7 +30,7 @@
             android:id="@+id/rankingName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="조감독"
+            android:text=""
             android:layout_marginLeft="@dimen/dp10"
             android:textColor="@color/color_7c7c7c"/>
 
@@ -37,7 +38,7 @@
             android:id="@+id/userGrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="골드"
+            android:text=""
             android:paddingLeft="@dimen/dp10"
             android:paddingRight="@dimen/dp10"
             android:paddingTop="@dimen/dp2"
@@ -63,7 +64,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100%"
+            android:text=""
             android:textSize="@dimen/dp12"
             android:textColor="@color/mainColor0"/>
 
@@ -73,7 +74,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100%"
+            android:text=""
             android:textSize="@dimen/dp12"
             android:textColor="@color/mainColor0"/>
 

@@ -35,11 +35,17 @@ public class RankingList extends BaseModel implements ICommonItem, ItemConstant 
         ChartItemListTitle = chartItemListTitle;
     }
 
-    public void addChartItem(Ranking ranking)
+    public void addRanking(Ranking ranking)
     {
-        if (rankingList != null)
+        if (rankingList == null)
         {
-            rankingList.add(ranking);
+            rankingList = new ArrayList<>();
         }
+        rankingList.add(ranking);
+    }
+
+    public int getListSize()
+    {
+        return (rankingList == null ? 0 : rankingList.size());
     }
 }
