@@ -22,12 +22,7 @@ public class FutureCastingUtil implements Constants {
             long endDateTime = endDate.getTime();
             long fromDateTime = (new Date()).getTime();
 
-            EasyLog.LogMessage("++ FutureCastingUtil isPast endDateTime = " + endDateTime);
-            EasyLog.LogMessage("++ FutureCastingUtil isPast fromDateTime = " + fromDateTime);
-
             long diffDateTime = endDateTime - fromDateTime;
-
-            EasyLog.LogMessage("++ FutureCastingUtil isPast diffDateTime = " + diffDateTime);
 
             return !(diffDateTime > 0);
         }

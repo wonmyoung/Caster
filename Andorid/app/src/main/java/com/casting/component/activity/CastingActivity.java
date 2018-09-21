@@ -96,6 +96,7 @@ import com.github.mikephil.charting.utils.Utils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -315,15 +316,23 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 String createdDate = timeLine.getCreated_at();
                 String comments = timeLine.getComments();
+                String userId = timeLine.getUserId();
+                String userName = timeLine.getUserName();
 
-                TextView textView1 = holder.find(R.id.userTimeLine);
-                textView1.setText(comments);
+                TextView textView1 = holder.find(R.id.userNickName);
+                textView1.setText(userName);
+
+                TextView textView2 = holder.find(R.id.userId);
+                textView2.setText(userId);
+
+                TextView textView3 = holder.find(R.id.userTimeLine);
+                textView3.setText(comments);
 
                 StringBuilder createdDateBuilder = new StringBuilder();
                 createdDateBuilder.append(FutureCastingUtil.getTimeFormattedString(createdDate));
                 createdDateBuilder.append(" 전");
-                TextView textView2 = holder.find(R.id.userTimeLineTime);
-                textView2.setText(createdDateBuilder);
+                TextView textView4 = holder.find(R.id.userTimeLineTime);
+                textView4.setText(createdDateBuilder);
 
                 Button button1 = holder.find(R.id.replyThisTimeLine);
                 button1.setTag(R.id.position, position);
@@ -459,11 +468,20 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 String formattedCreatedDate = FutureCastingUtil.getTimeFormattedString(createdDate);
                 formattedCreatedDate += " 전";
 
-                TextView textView1 = holder.find(R.id.userTimeLineTime);
-                textView1.setText(formattedCreatedDate);
+                String userName = reply.getUserName();
+                String userId = reply.getUserId();
 
-                TextView textView2 = holder.find(R.id.userTimeLine);
-                textView2.setText(reply.getContent());
+                TextView textView1 = holder.find(R.id.userNickName);
+                textView1.setText(userName);
+
+                TextView textView2 = holder.find(R.id.userNickName);
+                textView2.setText(userId);
+
+                TextView textView3 = holder.find(R.id.userTimeLineTime);
+                textView3.setText(formattedCreatedDate);
+
+                TextView textView4 = holder.find(R.id.userTimeLine);
+                textView4.setText(reply.getContent());
                 break;
             }
 
@@ -751,7 +769,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 final TextView textView = holder.find(R.id.remainingCapText);
                 textView.setText(decimalFormat.format(cap));
 
-                EditText editText = holder.find(R.id.insertCap);
+                final EditText editText = holder.find(R.id.insertCap);
 
                 if (itemInsert.getInsertedData() == null)
                 {
@@ -1096,6 +1114,16 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         if (FutureCastingUtil.isPast(endDate))
         {
             mTopCastingStatusView.setText("종료");
+            mTopCastingStatusView.setPadding(20,5,20,5);
+
+            UtilityUI.setBackGroundDrawable(mTopCastingStatusView, R.drawable.shape_pink_color_round5_alpha80);
+        }
+        else if (cast.isCastingDone())
+        {
+            mTopCastingStatusView.setText("참여중");
+            mTopCastingStatusView.setPadding(20,5,20,5);
+
+            UtilityUI.setBackGroundDrawable(mTopCastingStatusView, R.drawable.shape_pink_color_round5_alpha80);
         }
         else
         {
@@ -1232,7 +1260,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                             ItemSelectOptions.Option option = (ItemSelectOptions.Option) itemSelect.getInsertedData();
 
-                            // postCast.setPredict(String.valueOf(option.getValue()));
+                            postCast.setTrustPercent(String.valueOf(option.getValue()));
                             break;
                         }
 
@@ -1242,6 +1270,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                             boolean b = itemBooleanOption.getInsertedData();
 
+                            postCast.setPredict((b ? "YES" : "NO"));
                             break;
                         }
 
@@ -1259,7 +1288,25 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         {
                             ItemInsert itemInsert = (ItemInsert) item;
 
-                            postCast.setBet(String.valueOf(itemInsert.getInsertedData()));
+                            Object o = itemInsert.getInsertedData();
+
+                            int bettingCap = (o == null ? 0 : (int) o);
+                            if (bettingCap <= ActiveMember.getInstance().getUserCap() && bettingCap > 0)
+                            {
+                                postCast.setBet(String.valueOf(bettingCap));
+                            }
+                            else if (bettingCap == 0)
+                            {
+                                Toast.makeText(this, "배팅 금액을 넣어주세요", Toast.LENGTH_SHORT).show();
+
+                                return;
+                            }
+                            else
+                            {
+                                Toast.makeText(this, "배팅 금액이 소지액 보다 많습니다", Toast.LENGTH_SHORT).show();
+
+                                return;
+                            }
                             break;
                         }
 
@@ -1267,13 +1314,29 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                         {
                             ItemInsert itemInsert = (ItemInsert) item;
 
-                            postCast.setComment(String.valueOf(itemInsert.getInsertedData()));
+                            Object o = itemInsert.getInsertedData();
+
+                            if (o != null)
+                            {
+                                postCast.setComment(String.valueOf(o));
+                            }
+                            else
+                            {
+                                Toast.makeText(this, "캐스팅 이유를 적어주세요", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             break;
                         }
                     }
                 }
 
                 RequestHandler.getInstance().request(postCast);
+                break;
+
+            case CASTING_DONE:
+            case CASTING_CLOSED:
+
+                finish();
                 break;
         }
     }
@@ -1606,12 +1669,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             Toast.makeText(this, requestCast.getErrorMessage(), Toast.LENGTH_SHORT).show();
 
             //TODO API 에러 발생 , 바이패스 처리
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyDoneCastInfoList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+//            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+//
+//            loadDummyDoneCastInfoList(itemArrayList);
+//
+//            mItemViewAdapter.setItemList(itemArrayList);
+//            mItemViewAdapter.notifyDataSetChanged();
         }
     }
 

@@ -13,6 +13,7 @@ public class TimeLine extends BaseModel implements ICommonItem, ItemConstant
     private String  Id;
     private String  SurveyId;
     private String  UserId;
+    private String  UserName;
     private String  Updated_at;
     private String  Created_at;
     private String  Comments;
@@ -96,5 +97,13 @@ public class TimeLine extends BaseModel implements ICommonItem, ItemConstant
         }
 
         ReplyList.addReply(reply);
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
     }
 }

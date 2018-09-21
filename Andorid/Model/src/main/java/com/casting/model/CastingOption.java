@@ -10,7 +10,9 @@ public class CastingOption extends BaseModel {
     private static final String     AnswerQuestion  = "answerQuestion";
 
     private String      QuestionType;
-    private String[]    QuestionS;
+
+    private String      SelectMaximum;
+    private String      SelectMinimum;
 
     public enum Type {CHOICE,TWO_CHOICE,ESSAY;}
 
@@ -46,11 +48,19 @@ public class CastingOption extends BaseModel {
         QuestionType = questionType;
     }
 
-    public String[] getQuestionS() {
-        return QuestionS;
+    public String getSelectMaximum() {
+        return SelectMaximum;
     }
 
-    public void setQuestionS(String[] questionS) {
-        QuestionS = questionS;
+    public void setSelectMaximum(String selectMaximum) {
+        SelectMaximum = selectMaximum;
+    }
+
+    public String getSelectMinimum() {
+        return SelectMinimum;
+    }
+
+    public void setSelectMinimum(String selectMinimum) {
+        SelectMinimum = selectMinimum;
     }
 }

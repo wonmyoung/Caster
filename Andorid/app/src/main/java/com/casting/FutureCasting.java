@@ -1,7 +1,6 @@
 package com.casting;
 
 import com.casting.commonmodule.model.BaseRequest;
-import com.casting.commonmodule.session.SessionType;
 import com.casting.commonmodule.view.component.CommonApplication;
 import com.casting.model.Cast;
 import com.casting.model.request.Follow;
@@ -20,7 +19,7 @@ import com.casting.model.request.RequestCast;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestFollowerList;
 import com.casting.model.request.RequestFollowingList;
-import com.casting.model.request.RequestMember;
+import com.casting.model.request.RequestMemberLatest;
 import com.casting.model.request.RequestNews;
 import com.casting.model.request.RequestNewsList;
 import com.casting.model.request.RequestRankingList;
@@ -157,7 +156,7 @@ public class FutureCasting extends CommonApplication {
             stringBuilder.append(postCast.getSurveyId());
         }
         // 4.메뉴 (메인 화면 좌측 메뉴 정보) = 4.1.1 프로필로 통합 // TODO V0.5 세션 요구에 막혀있음
-        else if (request.isRight(RequestMember.class))
+        else if (request.isRight(RequestMemberLatest.class))
         {
             stringBuilder.append("/accounts/accountInfo");
         }

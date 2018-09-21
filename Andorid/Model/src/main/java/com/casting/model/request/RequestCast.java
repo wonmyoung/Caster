@@ -93,8 +93,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
             mCast.setCasterNum(casterNum);
             mCast.setTitle(title);
             mCast.setTags(tag);
-            //mCast.setEndDate(endDate);
-            mCast.setEndDate("2018-09-21T11:11:00.000Z");
+            mCast.setEndDate(endDate);
             mCast.setReference(reference);
             mCast.setStartDate(startData);
             mCast.setStatus(status);
@@ -103,7 +102,6 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
             mCast.setParticipants(participants);
             mCast.setTimeLineList(timeLineList);
             mCast.setNewsList(newsList);
-
         }
         else
         {

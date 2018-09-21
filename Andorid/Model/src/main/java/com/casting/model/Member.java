@@ -10,7 +10,6 @@ public class Member extends BaseModel {
     private String          UserId;
     private String          Description;
     private String          PassWord;
-    private String          UserGrade;
     private String          UserPicThumbnail;
     private String          AuthToken;
     private SessionType     mSessionType;
@@ -115,14 +114,6 @@ public class Member extends BaseModel {
 
     public void setDescription(String description) {
         Description = description;
-    }
-
-    public String getUserGrade() {
-        return UserGrade;
-    }
-
-    public void setUserGrade(String userGrade) {
-        UserGrade = userGrade;
     }
 
     public String getAuthToken() {

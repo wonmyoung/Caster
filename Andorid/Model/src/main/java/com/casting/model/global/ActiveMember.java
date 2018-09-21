@@ -23,9 +23,11 @@ public class ActiveMember extends Observable {
     }
 
     public void setMember(Member member) {
-        this.mMember = mMember;
+
+        this.mMember = member;
 
         setChanged();
+
         notifyObservers(member);
     }
 

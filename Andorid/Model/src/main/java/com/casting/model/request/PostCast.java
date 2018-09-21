@@ -13,6 +13,7 @@ import org.json.JSONObject;
 public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
 
     private String      Predict;
+    private String      TrustPercent;
     private String      SurveyId;
     private String      Comment;
     private String      Bet;
@@ -37,6 +38,12 @@ public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
     @Override
     public ContentValues getHttpRequestParameter()
     {
+        EasyLog.LogMessage(this, "++ Parameter Predict = " + Predict);
+        EasyLog.LogMessage(this, "++ Parameter Comment = " + Comment);
+        EasyLog.LogMessage(this, "++ Parameter Bet = " + Bet);
+        EasyLog.LogMessage(this, "++ Parameter SurveyId = " + SurveyId);
+        EasyLog.LogMessage(this, "++ Parameter SurveyTitle = " + SurveyTitle);
+
         ContentValues contentValues = new ContentValues();
         contentValues.put("predict", Predict);
         contentValues.put("comment", Comment);
@@ -99,5 +106,13 @@ public class PostCast extends NetworkRequest implements JSONParcelable<Cast> {
 
     public void setSurveyTitle(String surveyTitle) {
         SurveyTitle = surveyTitle;
+    }
+
+    public String getTrustPercent() {
+        return TrustPercent;
+    }
+
+    public void setTrustPercent(String trustPercent) {
+        TrustPercent = trustPercent;
     }
 }

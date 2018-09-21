@@ -29,11 +29,9 @@ public class RequestCastingOption extends NetworkRequest implements JSONParcelab
             EasyLog.LogMessage(this, ">> RequestCastingOption surveyInfo = " + surveyInfo.toString());
 
             String questionType = UtilityData.convertStringFromJSON(surveyInfo, "questionType");
-            String[] question = UtilityData.convertStringArrayFromJSON(surveyInfo, "question");
 
             castingOption = new CastingOption();
             castingOption.setQuestionType(questionType);
-            castingOption.setQuestionS(question);
         }
 
         return castingOption;

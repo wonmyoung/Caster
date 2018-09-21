@@ -24,7 +24,7 @@
             android:id="@+id/userNickName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="조감독"
+            android:text=""
             android:textSize="@dimen/dp24"
             android:textStyle="bold"
             android:textColor="@color/color_black"/>
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_white"
-            android:text="골드"
+            android:text=""
             android:layout_marginLeft="@dimen/dp10"
             android:textSize="@dimen/dp16"
             android:paddingLeft="@dimen/dp10"
@@ -52,7 +52,7 @@
         android:layout_marginTop="@dimen/dp15"
         android:textSize="@dimen/dp16"
         android:textColor="@color/color_7c7c7c"
-        android:text="Mr.cho"/>
+        android:text=""/>
 
     <LinearLayout
         android:id="@+id/leftMenuButton1"

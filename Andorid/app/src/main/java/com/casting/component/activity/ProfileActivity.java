@@ -170,7 +170,7 @@ public class ProfileActivity extends CommonActivity
 
             mUserNickNameView.setText(member.getUserName());
             mUserIdView.setText(member.getUserId());
-            mUserGradeView.setText(member.getUserGrade());
+            mUserGradeView.setText(member.getUserLevel());
             mUserDescription.setText(member.getDescription());
 
             mInfoView1.setText(buildInfoString("CAP", member.getUserPoint()));
