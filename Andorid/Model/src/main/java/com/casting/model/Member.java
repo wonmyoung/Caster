@@ -5,20 +5,26 @@ import com.casting.commonmodule.session.SessionType;
 
 public class Member extends BaseModel {
 
+    private String          AuthToken;
+
     private String          UserName;
     private String          Email;
     private String          UserId;
     private String          Description;
     private String          PassWord;
     private String          UserPicThumbnail;
-    private String          AuthToken;
     private SessionType     mSessionType;
-    private int     UserPoint;
-    private String  UserLevel;
-    private int     CorrectCast;
-    private double  CorrectRate;
-    private int     FollowingNum;
-    private int     FollowerNum;
+    private int             UserPoint;
+    private String          UserLevel;
+    private int             CorrectCast;
+    private double          CorrectRate;
+    private int             FollowingNum;
+    private int             FollowerNum;
+
+    private String          UserGender;
+    private String          UserBirthTime;
+    private String          UserOccupation;
+    private String          UserResidence;
 
     public String getUserName() {
         return UserName;
@@ -130,5 +136,37 @@ public class Member extends BaseModel {
 
     public void setUserLevel(String userLevel) {
         UserLevel = userLevel;
+    }
+
+    public String getUserGender() {
+        return UserGender;
+    }
+
+    public void setUserGender(String userGender) {
+        UserGender = userGender;
+    }
+
+    public String getUserBirthTime() {
+        return UserBirthTime;
+    }
+
+    public void setUserBirthTime(String userBirthTime) {
+        UserBirthTime = userBirthTime;
+    }
+
+    public String getUserOccupation() {
+        return UserOccupation;
+    }
+
+    public void setUserOccupation(String userOccupation) {
+        UserOccupation = userOccupation;
+    }
+
+    public String getUserResidence() {
+        return UserResidence;
+    }
+
+    public void setUserResidence(String userResidence) {
+        UserResidence = userResidence;
     }
 }

@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.casting.FutureCasting;
+import com.casting.FutureCastingUtil;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
@@ -42,6 +44,7 @@ import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.ItemViewAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -49,8 +52,9 @@ import java.util.Observer;
 public class ProfileActivity extends CommonActivity
         implements Observer, TabLayout.OnTabSelectedListener, ItemBindStrategy, IResponseListener, Constants {
 
-    private CircleImageView mUserPicView;
+    private Member      TargetMember;
 
+    private CircleImageView mUserPicView;
     private TextView    mUserNickNameView;
     private TextView    mUserGradeView;
     private TextView    mUserDescription;
@@ -104,11 +108,23 @@ public class ProfileActivity extends CommonActivity
         mListView.setLayoutManager(mListViewManager);
         mListView.setHasFixedSize(true);
 
-        ActiveMember activeMember = ActiveMember.getInstance();
+        Serializable s = getIntent().getSerializableExtra(DEFINE_MEMBER);
 
-        updateMemberData(activeMember.getMember());
+        TargetMember = (s == null ? null : (Member) s);
 
-        activeMember.addObserver(this);
+        if (TargetMember == null)
+        {
+            ActiveMember activeMember = ActiveMember.getInstance();
+            activeMember.addObserver(this);
+
+            TargetMember = activeMember.getMember();
+        }
+        else
+        {
+            mUserEditButton.setVisibility(View.GONE);
+        }
+
+        updateMemberData(TargetMember);
     }
 
     @Override
@@ -255,10 +271,8 @@ public class ProfileActivity extends CommonActivity
         {
             case 0:
             {
-                Member member = ActiveMember.getInstance().getMember();
-
                 RequestTimeLineList requestTimeLineList = new RequestTimeLineList();
-                requestTimeLineList.setMember(member);
+                requestTimeLineList.setMember(TargetMember);
                 requestTimeLineList.setResponseListener(this);
 
                 RequestHandler.getInstance().request(requestTimeLineList);
@@ -302,35 +316,144 @@ public class ProfileActivity extends CommonActivity
 
     @Override
     public void bindBodyItemView
-            (CompositeViewHolder viewHolder, int position, int viewType, ICommonItem item) throws Exception
+            (CompositeViewHolder holder, int position, int viewType, ICommonItem item) throws Exception
     {
 
         switch (viewType)
         {
-            case CAST_CARD:
-            {
-                break;
-            }
-
-            case CAST_CARD_WIDE_THIN:
+            case CAST_CARD_WIDE:
             {
                 Cast cast = (Cast) item;
 
-                ImageView imageView = viewHolder.find(R.id.castCardBack);
+                String thumbNailPath = cast.getThumbnail(0);
+                String[] tags = cast.getTags();
+                String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
+                String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
+                String endDate = cast.getEndDate();
+                String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
+                String castingNumberString = null;
 
-                int radius = (int) getResources().getDimension(R.dimen.dp25);
+                int castingNumber = cast.getCasterNum();
+                if (castingNumber > 0)
+                {
+                    castingNumberString = Integer.toString(cast.getCasterNum());
+                    castingNumberString += " 명 참여";
+                }
 
-                ImageLoader.loadRoundImage(this, imageView, cast.getThumbnail(0), radius);
-                break;
-            }
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE getCastId = ", cast.getCastId());
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE thumbNailPath = ", thumbNailPath);
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE isCastingDone = " + cast.isCastingDone());
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE tag1 = " + tag1);
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE tag2 = " + tag2);
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE endDate = " + endDate);
+                EasyLog.LogMessage(this, "++ bindBodyItemView CAST_CARD_WIDE formattedEndDate = " + formattedEndDate);
 
-            case CAST_CARD_WIDE:
-            {
+                TextView tagView1 = holder.find(R.id.castTag1);
+
+                if (TextUtils.isEmpty(tag1))
+                {
+                    tagView1.setVisibility(View.GONE);
+                }
+                else
+                {
+                    tagView1.setText(tag1);
+                    tagView1.setVisibility(View.VISIBLE);
+                }
+
+                TextView tagView2 = holder.find(R.id.castTag2);
+
+                if (TextUtils.isEmpty(tag2))
+                {
+                    tagView2.setVisibility(View.GONE);
+                }
+                else
+                {
+                    tagView2.setText(tag2);
+                    tagView2.setVisibility(View.VISIBLE);
+                }
+
+                CircleImageView circleImageView = holder.find(R.id.castCardBack);
+
+                if (!TextUtils.isEmpty(thumbNailPath))
+                {
+                    int radius = (int) getResources().getDimension(R.dimen.dp25);
+
+                    ImageLoader.loadRoundImage(this, circleImageView, thumbNailPath, radius);
+                }
+                else
+                {
+                    UtilityUI.setBackGroundDrawable(circleImageView, R.drawable.shape_gray_color_alpha50_round10);
+                }
+
+                TextView textView1 = find(R.id.castTopText1);
+                TextView textView2 = find(R.id.castTopText2);
+                TextView textView3 = find(R.id.castCardTitle);
+                TextView textView4 = find(R.id.castCardDescription);
+
+                textView1.setText(castingNumberString);
+
+                if (FutureCastingUtil.isPast(endDate))
+                {
+                    textView2.setText("종료");
+                    textView2.setPadding(20,5,20,5);
+
+                    UtilityUI.setBackGroundDrawable(textView2, R.drawable.shape_pink_color_round5_alpha80);
+                }
+                else if (cast.isCastingDone())
+                {
+                    textView2.setText("참여중");
+                    textView2.setPadding(20,5,20,5);
+
+                    UtilityUI.setBackGroundDrawable(textView2, R.drawable.shape_pink_color_round5_alpha80);
+                }
+                else
+                {
+                    formattedEndDate += " 전";
+
+                    textView2.setText(formattedEndDate);
+                }
+
+                textView3.setText(cast.getTitle());
+                textView4.setVisibility(View.GONE);
                 break;
             }
 
             case TIME_LINE:
             {
+                TimeLine timeLine = (TimeLine) item;
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                stringBuilder.append(FutureCasting.SERVER_PORT);
+                stringBuilder.append("/uploads/account/");
+                stringBuilder.append(timeLine.getUserId());
+                CircleImageView circleImageView = holder.find(R.id.userImage);
+
+                UtilityUI.setThumbNailRoundedImageView(this, circleImageView, stringBuilder.toString(), R.dimen.dp25);
+
+                String createdDate = timeLine.getCreated_at();
+                String comments = timeLine.getComments();
+                String userId = timeLine.getUserId();
+                String userName = timeLine.getUserName();
+
+                TextView textView1 = holder.find(R.id.userNickName);
+                textView1.setText(userName);
+
+                TextView textView2 = holder.find(R.id.userId);
+                textView2.setText(userId);
+
+                TextView textView3 = holder.find(R.id.userTimeLine);
+                textView3.setText(comments);
+
+                StringBuilder createdDateBuilder = new StringBuilder();
+                createdDateBuilder.append(FutureCastingUtil.getTimeFormattedString(createdDate));
+                createdDateBuilder.append(" 전");
+                TextView textView4 = holder.find(R.id.userTimeLineTime);
+                textView4.setText(createdDateBuilder);
+
+                holder.find(R.id.replyThisTimeLine).setVisibility(View.GONE);
+                holder.find(R.id.shareTimeLineButton).setVisibility(View.GONE);
                 break;
             }
         }

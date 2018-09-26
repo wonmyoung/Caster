@@ -82,7 +82,7 @@ public class MainRightSideMenu extends CommonFragment implements IResponseListen
     @Override
     protected boolean onBackPressed()
     {
-        return false;
+        return true;
     }
 
     @Override

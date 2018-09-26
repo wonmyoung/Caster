@@ -63,6 +63,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/followingButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp20"
             android:layout_weight="30"

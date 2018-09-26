@@ -173,6 +173,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         mCastImage = find(R.id.castCardBack);
         mCastTitle = find(R.id.castCardTitle);
         mCastDescription = find(R.id.castCardDescription);
+        UtilityUI.addEmptyTextAsGone(mCastDescription);
 
         mTopTagView1 = find(R.id.castTag1);
         mTopTagView2 = find(R.id.castTag2);
@@ -310,6 +311,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 stringBuilder.append(FutureCasting.SERVER_PORT);
                 stringBuilder.append("/uploads/account/");
                 stringBuilder.append(timeLine.getUserId());
+
                 CircleImageView circleImageView = holder.find(R.id.userImage);
 
                 UtilityUI.setThumbNailRoundedImageView(this, circleImageView, stringBuilder.toString(), R.dimen.dp25);
@@ -411,7 +413,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             case TIME_LINE_WRITE:
             {
                 Member member = ActiveMember.getInstance().getMember();
-
 
                 if (member != null)
                 {
@@ -1134,8 +1135,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
         mCastTitle.setText(cast.getTitle());
         mCastDescription.setText(cast.getDescription());
-
-
     }
 
     @Override
@@ -1666,7 +1665,13 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
         {
             RequestCast requestCast = (RequestCast) response.getSourceRequest();
 
-            Toast.makeText(this, requestCast.getErrorMessage(), Toast.LENGTH_SHORT).show();
+            String errorMessage = requestCast.getErrorMessage();
+
+            if (!TextUtils.isEmpty(errorMessage))
+            {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+
 
             //TODO API 에러 발생 , 바이패스 처리
 //            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();

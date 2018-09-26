@@ -3,6 +3,7 @@ package com.casting;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.view.component.CommonApplication;
 import com.casting.model.Cast;
+import com.casting.model.global.ItemConstant;
 import com.casting.model.request.Follow;
 import com.casting.model.request.Login;
 import com.casting.model.request.LoginFaceBook;
@@ -11,13 +12,13 @@ import com.casting.model.request.PostReply;
 import com.casting.model.request.PutMember;
 import com.casting.model.request.RegisterFacebookMember;
 import com.casting.model.request.RegisterMember;
+import com.casting.model.request.RequestAccountsModify;
 import com.casting.model.request.RequestAlarmList;
+import com.casting.model.request.RequestCast;
 import com.casting.model.request.RequestCastEnding;
+import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestCastingOption;
 import com.casting.model.request.RequestCastingStatus;
-import com.casting.model.request.RequestCast;
-import com.casting.model.request.RequestCastList;
-import com.casting.model.request.RequestFollowerList;
 import com.casting.model.request.RequestFollowingList;
 import com.casting.model.request.RequestMemberLatest;
 import com.casting.model.request.RequestNews;
@@ -28,10 +29,7 @@ import com.casting.model.request.RequestTimeLine;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.model.request.SettingMenu;
 
-import static com.casting.model.request.RequestFollowingList.FollowingVector.FOLLOWER;
-import static com.casting.model.request.RequestFollowingList.FollowingVector.FOLLOWING;
-
-public class FutureCasting extends CommonApplication {
+public class FutureCasting extends CommonApplication implements ItemConstant {
 
     public static final String HTTP_PROTOCOL    = "http://";
     public static final String SERVER_DOMAIN    = "ec2-13-125-159-59.ap-northeast-2.compute.amazonaws.com";
@@ -174,26 +172,20 @@ public class FutureCasting extends CommonApplication {
         {
             stringBuilder.append("/accounts/accountsModify");
         }
-        // 4.1.5 팔로잉 리스트 // TODO V0.5 세션 요구에 막혀있음
+        // 4.1.5 팔로우 / 팔로잉 리스트 // TODO V0.5 세션 요구에 막혀있음
         else if (request.isRight(RequestFollowingList.class))
         {
             RequestFollowingList requestFollowingList = (RequestFollowingList) request;
 
-            RequestFollowingList.FollowingVector vector = requestFollowingList.getFollowingVector();
-
-            if (vector == FOLLOWING)
+            int requestItemType = requestFollowingList.getRequestItemType();
+            if (requestItemType == FOLLOWING_INFO_ITEM)
             {
                 stringBuilder.append("/follow/followingList");
             }
-            else if (vector == FOLLOWER)
+            else if (requestItemType == FOLLOWER_INFO_ITEM)
             {
                 stringBuilder.append("/follow/followerList");
             }
-        }
-        // 4.1.5 팔로워 리스트 // TODO V0.5 세션 요구에 막혀있음
-        else if (request.isRight(RequestFollowerList.class))
-        {
-            stringBuilder.append("/follow/followerList");
         }
         // 4.1.5 팔로우 / 언팔로우
         else if (request.isRight(Follow.class))
@@ -212,6 +204,10 @@ public class FutureCasting extends CommonApplication {
         else if (request.isRight(SettingMenu.class))
         {
             stringBuilder.append("/accounts/set/premit");
+        }
+        else if (request.isRight(RequestAccountsModify.class))
+        {
+            stringBuilder.append("/accounts/accountsModify");
         }
 
         return stringBuilder.toString();

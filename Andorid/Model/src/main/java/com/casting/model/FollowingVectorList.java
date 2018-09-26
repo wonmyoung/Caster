@@ -23,4 +23,10 @@ public class FollowingVectorList extends BaseModel {
             vectorArrayList.add(followingVector);
         }
     }
+
+    public int size()
+    {
+        return (vectorArrayList == null ? 0 : vectorArrayList.size());
+    }
+
 }

@@ -4,6 +4,7 @@ public interface Constants {
 
     String DEFINE_CAST      = "DEFINE_CAST";
     String DEFINE_ALARM     = "DEFINE_ALARM";
+    String DEFINE_MEMBER     = "DEFINE_MEMBER";
     String CAST_CARD_POSITION = "CAST_CARD_POSITION";
 
     String MEMBER_ID        = "MEMBER_ID";

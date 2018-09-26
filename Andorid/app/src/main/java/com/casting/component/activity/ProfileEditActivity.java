@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,12 +24,15 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseRequest;
 import com.casting.commonmodule.model.BaseResponse;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonActivity;
+import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.model.Member;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.PostMember;
+import com.casting.model.request.RequestAccountsModify;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -39,8 +46,12 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
     private TextView        ProfileEditButton;
     private EditText        UserNickName;
     private EditText        UserIntroduction;
+    private EditText        UserGender;
+    private EditText        UserBirthTime;
+    private EditText        UserAddress;
+    private EditText        UserOccupation;
 
-    private String      mProfilePicPath;
+    private String          mProfilePicPath;
 
     @Override
     protected void init(Bundle savedInstanceState) throws Exception
@@ -56,6 +67,26 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
         UserNickName.setOnEditorActionListener(this);
         UserIntroduction = find(R.id.userMemberIntroduction);
         UserIntroduction.setOnEditorActionListener(this);
+        UserGender = find(R.id.userGender);
+        UserGender.setOnEditorActionListener(this);
+        UserBirthTime = find(R.id.userBirthTime);
+        UserBirthTime.setOnEditorActionListener(this);
+        UserAddress = find(R.id.userMemberAddress);
+        UserAddress.setOnEditorActionListener(this);
+        UserOccupation = find(R.id.userMemberOccupation);
+        UserOccupation.setOnEditorActionListener(this);
+
+        ActiveMember activeMember = ActiveMember.getInstance();
+
+        updateMemberData(activeMember.getMember());
+
+        activeMember.addObserver(this);
+
+        RequestAccountsModify requestAccountsModify = new RequestAccountsModify();
+        requestAccountsModify.setResponseListener(this);
+        requestAccountsModify.setTargetMember(activeMember.getMember());
+
+        RequestHandler.getInstance().request(requestAccountsModify);
     }
 
     @Override
@@ -127,11 +158,44 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
     @Override
     public void onThreadResponseListen(BaseResponse response)
     {
-        BaseRequest baseRequest = response.getSourceRequest();
+        BaseRequest request = response.getSourceRequest();
 
-        if (baseRequest instanceof PostMember)
+        if (request.isRight(RequestAccountsModify.class))
         {
+            Member member = (Member) response.getResponseModel();
+            updateMemberData(member);
+        }
+    }
 
+    private void updateMemberData(Member member)
+    {
+        if (member != null)
+        {
+            String picThumbnail = member.getUserPicThumbnail();
+            String userId = member.getUserId();
+            String userName = member.getUserName();
+            String userLevel = member.getUserLevel();
+            String description = member.getDescription();
+            String userGender = member.getUserGender();
+            String userBirthTime = member.getUserBirthTime();
+            String userAddress = member.getUserResidence();
+            String userOccupation = member.getUserOccupation();
+
+            EasyLog.LogMessage(this, "++ updateMemberData userId = " + userId);
+            EasyLog.LogMessage(this, "++ updateMemberData userName = " + userName);
+            EasyLog.LogMessage(this, "++ updateMemberData userLevel = " + userLevel);
+            EasyLog.LogMessage(this, "++ updateMemberData description = " + description);
+            EasyLog.LogMessage(this, "++ updateMemberData userGender = " + userGender);
+            EasyLog.LogMessage(this, "++ updateMemberData userBirthTime = " + userBirthTime);
+            EasyLog.LogMessage(this, "++ updateMemberData userAddress = " + userAddress);
+            EasyLog.LogMessage(this, "++ updateMemberData userOccupation = " + userOccupation);
+
+            UserNickName.setText(userName);
+            UserIntroduction.setText(description);
+            UserGender.setText(userGender);
+            UserBirthTime.setText(userBirthTime);
+            UserAddress.setText(userAddress);
+            UserOccupation.setText(userOccupation);
         }
     }
 

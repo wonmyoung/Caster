@@ -101,7 +101,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
     @Override
     protected boolean onBackPressed()
     {
-        return false;
+        return true;
     }
 
     @Override

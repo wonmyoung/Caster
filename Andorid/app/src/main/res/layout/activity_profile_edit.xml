@@ -8,13 +8,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp40">
+        android:layout_height="@dimen/dp60">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="프로필 수정"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp16"
             android:textColor="@color/mainColor0"
             android:layout_gravity="center"/>
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="완료"
             android:layout_marginRight="@dimen/dp15"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp16"
             android:textColor="@color/mainColor0"
             android:layout_gravity="center_vertical|right"/>
 
@@ -71,7 +71,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp14"
             android:textColor="@color/color_black"
             android:textStyle="bold"
             android:text="이름"/>
@@ -80,11 +80,11 @@
             android:id="@+id/userMemberName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp14"
             android:imeOptions="actionNext"
             android:textColor="@color/color_505050"
             android:layout_marginLeft="@dimen/dp15"
-            android:hint="조감독"/>
+            android:hint="이름을 입력 해주세요"/>
 
     </LinearLayout>
 
@@ -108,7 +108,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp14"
             android:textColor="@color/color_black"
             android:textStyle="bold"
             android:text="자기소개"/>
@@ -117,7 +117,7 @@
             android:id="@+id/userMemberIntroduction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dp12"
+            android:textSize="@dimen/dp14"
             android:imeOptions="actionDone"
             android:textColor="@color/color_505050"
             android:layout_marginLeft="@dimen/dp15"
@@ -132,5 +132,154 @@
         android:layout_marginLeft="@dimen/dp15"
         android:layout_marginRight="@dimen/dp15"
         android:background="@color/color_7c7c7c"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp5"
+        android:paddingBottom="@dimen/dp5"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:textColor="@color/color_black"
+            android:textStyle="bold"
+            android:text="성별"/>
+
+        <EditText
+            android:id="@+id/userGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:imeOptions="actionDone"
+            android:textColor="@color/color_505050"
+            android:layout_marginLeft="@dimen/dp15"
+            android:hint="성별을 입력해주세요"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"
+        android:background="@color/color_7c7c7c"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp5"
+        android:paddingBottom="@dimen/dp5"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:textColor="@color/color_black"
+            android:textStyle="bold"
+            android:text="생년월일"/>
+
+        <EditText
+            android:id="@+id/userBirthTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:imeOptions="actionDone"
+            android:textColor="@color/color_505050"
+            android:layout_marginLeft="@dimen/dp15"
+            android:hint="생년월일을 입력해주세요"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"
+        android:background="@color/color_7c7c7c"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp5"
+        android:paddingBottom="@dimen/dp5"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:textColor="@color/color_black"
+            android:textStyle="bold"
+            android:text="거주지역"/>
+
+        <EditText
+            android:id="@+id/userMemberAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:imeOptions="actionDone"
+            android:textColor="@color/color_505050"
+            android:layout_marginLeft="@dimen/dp15"
+            android:hint="거주지역을 입력해주세요"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"
+        android:background="@color/color_7c7c7c"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp5"
+        android:paddingBottom="@dimen/dp5"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:textColor="@color/color_black"
+            android:textStyle="bold"
+            android:text="직업"/>
+
+        <EditText
+            android:id="@+id/userMemberOccupation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dp14"
+            android:imeOptions="actionDone"
+            android:textColor="@color/color_505050"
+            android:layout_marginLeft="@dimen/dp15"
+            android:hint="직업을 입력해주세요"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"
+        android:background="@color/color_7c7c7c"/>
+
 
 </LinearLayout>

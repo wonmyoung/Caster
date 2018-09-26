@@ -295,6 +295,17 @@ public class MainActivity extends BaseFCActivity implements
         }
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        if (!isFinishing())
+        {
+            finish();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onThreadResponseListen(BaseResponse response)

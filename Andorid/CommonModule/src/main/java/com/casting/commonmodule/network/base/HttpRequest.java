@@ -61,15 +61,12 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
             StringBuilder strUrlBuilder = new StringBuilder();
             strUrlBuilder.append(mUrlData);
 
-            if (HttpGet.equalsIgnoreCase(mHttpMethod))
-            {
-                EasyLog.LogMessage(this, "++ Http Get network execute ");
+            EasyLog.LogMessage(this, "++ Http Method = " + mHttpMethod);
+            EasyLog.LogMessage(this, "++ Http URL = " + mUrlData);
 
-                strUrlBuilder.append(buildParameter());
-            }
+            if (HttpGet.equalsIgnoreCase(mHttpMethod)) strUrlBuilder.append(buildParameter());
 
             URL url = new URL(strUrlBuilder.toString());
-            EasyLog.LogMessage(this, "++ Http method = " + mHttpMethod);
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(DEFAULT_TIMEOUT);
             connection.setRequestMethod(mHttpMethod);
@@ -91,8 +88,6 @@ public class HttpRequest<M extends BaseModel> implements NetworkConstant {
 
             if (HttpPost.equalsIgnoreCase(mHttpMethod))
             {
-                EasyLog.LogMessage(this, "++ Http Post network execute ");
-
                 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
 
                 if (mNetworkRequest instanceof IFileUpLoader)

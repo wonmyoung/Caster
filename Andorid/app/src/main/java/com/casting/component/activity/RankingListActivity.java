@@ -3,6 +3,10 @@ package com.casting.component.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +15,7 @@ import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
 import com.casting.commonmodule.model.BaseResponse;
 import com.casting.commonmodule.utility.EasyLog;
+import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonActivity;
 import com.casting.commonmodule.view.image.ImageLoader;
@@ -65,6 +70,8 @@ public class RankingListActivity extends CommonActivity implements ItemBindStrat
                 Ranking ranking = (Ranking) item;
 
                 String level = ranking.getLevel();
+                level = (!TextUtils.isEmpty(level) ? level.trim() : null);
+
                 String userName = ranking.getUserName();
                 String avatar = ranking.getAvatar();
                 int hitRatio = ranking.getHitRatio();
@@ -85,16 +92,68 @@ public class RankingListActivity extends CommonActivity implements ItemBindStrat
                 textView1.setText(String.format(Locale.KOREA, "%d", (position + 1)));
 
                 TextView textView2 = holder.find(R.id.rankingName);
-                textView2.setText(userName);
+
+                if (TextUtils.isEmpty(userName))
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("이름 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,5,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,5,0);
+                    textView2.setText(spannableString);
+                }
+                else
+                {
+                    textView2.setText(userName);
+                }
+
 
                 TextView textView3 = holder.find(R.id.userGrade);
-                textView3.setText(level);
+
+                if (TextUtils.isEmpty(level))
+                {
+                    textView3.setVisibility(View.GONE);
+                }
+                else if (TextUtils.isDigitsOnly(level))
+                {
+                    textView3.setVisibility(View.GONE);
+                }
+                else
+                {
+                    textView3.setText(level);
+                }
 
                 TextView textView4 = holder.find(R.id.userCastCorrectRate);
-                textView4.setText(String.format(Locale.KOREA, "%d", hitRatio));
+
+                if (hitRatio > -1)
+                {
+                    textView4.setText(String.format(Locale.KOREA, "%d", hitRatio));
+                }
+                else
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("값 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,4,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,4,0);
+                    textView4.setText(spannableString);
+                }
 
                 TextView textView5 = holder.find(R.id.userCash);
-                textView5.setText(String.format(Locale.KOREA, "%d", reward));
+
+                if (reward > -1)
+                {
+                    textView5.setText(String.format(Locale.KOREA, "%d", reward));
+                }
+                else
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("값 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,4,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,4,0);
+                    textView5.setText(spannableString);
+                }
                 break;
         }
     }

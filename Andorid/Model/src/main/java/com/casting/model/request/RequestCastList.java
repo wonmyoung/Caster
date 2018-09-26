@@ -22,6 +22,7 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
     }
 
     private int     PageIndex;
+    private int     RequestCastType = -1;
     private int     Size = 10;
     private Order   mOrder;
 
@@ -117,6 +118,7 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                     if (!TextUtils.isEmpty(numOfQuestion) && TextUtils.isDigitsOnly(numOfQuestion)) cast.setNumOfQuestion(Integer.parseInt(numOfQuestion));
                     if (!TextUtils.isEmpty(minimum) && TextUtils.isDigitsOnly(minimum)) cast.setMinimum(Integer.parseInt(minimum));
                     if (!TextUtils.isEmpty(totalReward) && TextUtils.isDigitsOnly(totalReward)) cast.setTotalReward(Integer.parseInt(totalReward));
+                    if (RequestCastType > -1) cast.setItemType(RequestCastType);
 
                     castList.addCast(cast);
                 }
@@ -152,5 +154,13 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
 
     public void setPageIndex(int pageIndex) {
         PageIndex = pageIndex;
+    }
+
+    public int getRequestCastType() {
+        return RequestCastType;
+    }
+
+    public void setRequestCastType(int requestCastType) {
+        RequestCastType = requestCastType;
     }
 }

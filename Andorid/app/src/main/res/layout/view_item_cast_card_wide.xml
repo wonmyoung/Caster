@@ -15,7 +15,7 @@
     <ImageView
         android:id="@+id/castCardBack"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp200" />
+        android:layout_height="@dimen/dp220"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +104,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp10"
             android:text="디스크립션 가이드 입니다 .디스크립션 가이드 입니다 .디스크립션 가이드 입니다 .디스크립션 가이드 입니다 .디스크립션 가이드 입니다 .디스크립션 가이드 입니다 .디스크립션 가이드 입니다 ."
-            android:visibility="gone"
             android:textColor="@color/color_white"
             android:textSize="@dimen/dp14" />
 

@@ -62,9 +62,11 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
         mTopTagView1 = find(R.id.castTag1);
         mTopTagView2 = find(R.id.castTag2);
         UtilityUI.addEmptyTextAsGone(mTopTagView1, mTopTagView2);
+
         mTopCastingNumberView = find(R.id.castTopText1);
         mTopCastingStatusView = find(R.id.castTopText2);
         UtilityUI.addEmptyTextAsGone(mTopCastingNumberView, mTopCastingStatusView);
+
         mTopCastTitle = find(R.id.castTopTitle);
         mBottomButton = find(R.id.bottomButton);
         mBottomButton.setOnClickListener(this);
@@ -91,7 +93,7 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
             String[] tags = cast.getTags();
             String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
             String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
-            String endDate = mAlarm.getEndDate();
+            String endDate = cast.getEndDate();
             String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
             String totalReward = Integer.toString(cast.getTotalReward());
             String thumbnail = cast.getThumbnail(0);
