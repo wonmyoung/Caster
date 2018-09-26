@@ -1801,12 +1801,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
 
             //TODO API 에러 발생 , 바이패스 처리
-            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-
-            loadDummyDoneCastInfoList(itemArrayList);
-
-            mItemViewAdapter.setItemList(itemArrayList);
-            mItemViewAdapter.notifyDataSetChanged();
+//            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+//
+//            loadDummyDoneCastInfoList(itemArrayList);
+//
+//            mItemViewAdapter.setItemList(itemArrayList);
+//            mItemViewAdapter.notifyDataSetChanged();
         }
     }
 
