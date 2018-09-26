@@ -5,7 +5,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -14,8 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ import com.casting.commonmodule.view.list.CompositeViewHolder;
 import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.interfaces.ItemBindStrategy;
 import com.casting.model.Alarm;
+import com.casting.model.BarChartItem;
 import com.casting.model.Cast;
 import com.casting.model.CastingOption;
 import com.casting.model.CastingStatus;
@@ -55,7 +58,6 @@ import com.casting.model.request.PostCast;
 import com.casting.model.request.PostReply;
 import com.casting.model.request.RequestCastEnding;
 import com.casting.model.request.RequestCastingOption;
-import com.casting.model.request.RequestTimeLine;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.insert.InsertOptionsBoolean;
 import com.casting.view.insert.InsertOptionsScrollable;
@@ -79,12 +81,16 @@ import com.casting.view.ObserverView;
 import com.casting.view.insert.InsertOptionsHorizontal;
 import com.casting.model.insert.ItemInsert;
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
@@ -384,8 +390,6 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                             TextView textView2 = holder.find(textId2);
                             textView2.setText(createdDateBuilder);
 
-
-
                             StringBuilder stringBuilder = new StringBuilder();
                             stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                             stringBuilder.append(FutureCasting.SERVER_DOMAIN);
@@ -573,6 +577,48 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 lineChart.setDescription(description);
                 lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
                 lineChart.invalidate();
+                break;
+            }
+
+            case BAR_CHART:
+            {
+                BarChartItem barChartItem = (BarChartItem) item;
+
+                String title = barChartItem.getItemTitle();
+                String bottomTitle = barChartItem.getItemBottomTitle();
+
+                List<BarEntry> entryList = barChartItem.getPointEntries();
+
+                TextView textView1 = holder.find(R.id.insertItemTitle);
+                textView1.setText(title);
+
+                TextView textView2 = holder.find(R.id.insertItemBottomTitle);
+                textView2.setText(bottomTitle);
+
+                BarDataSet barDataSet = new BarDataSet(entryList, "");
+                barDataSet.setColors(
+                        UtilityUI.getColor(this, R.color.mainColor0),
+                        UtilityUI.getColor(this, R.color.color_999999));
+
+                BarData barData = new BarData(barDataSet);
+                barData.setDrawValues(false);
+
+                BarChart barChart = holder.find(R.id.barChart);
+                barChart.setData(barData);
+                barChart.setFitBars(false);
+                barChart.getAxisLeft().setDrawGridLines(false);
+                barChart.getAxisLeft().setDrawAxisLine(false);
+                barChart.getAxisLeft().setDrawLabels(false);
+                barChart.getAxisRight().setDrawGridLines(false);
+                barChart.getAxisRight().setDrawAxisLine(false);
+                barChart.getAxisRight().setDrawLabels(false);
+                barChart.getXAxis().setDrawGridLines(false);
+                barChart.getXAxis().setDrawAxisLine(false);
+                barChart.getXAxis().setDrawLabels(false);
+                barChart.getDescription().setEnabled(false);
+                barChart.getLegend().setEnabled(false);
+                barChart.setDragDecelerationFrictionCoef(0.95f);
+                barChart.animateXY(1000,1000);
                 break;
             }
 
@@ -980,13 +1026,94 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             case RANKING:
             {
-                DecimalFormat decimalFormat = new DecimalFormat("#.");
-
-                TextView textView1 = holder.find(R.id.rankingIndex);
-                textView1.setText(decimalFormat.format((position + 1)));
-
                 Ranking ranking = (Ranking) item;
 
+                DecimalFormat decimalFormat = new DecimalFormat("#.");
+                String index = decimalFormat.format((position + 1));
+                String level = ranking.getLevel();
+                level = (!TextUtils.isEmpty(level) ? level.trim() : null);
+
+                String userName = ranking.getUserName();
+                String avatar = ranking.getAvatar();
+                int hitRatio = ranking.getHitRatio();
+                int reward = ranking.getReward();
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(" ");
+                stringBuilder.append(avatar);
+
+                CircleImageView circleImageView = holder.find(R.id.rankingUserImage);
+
+                int radius = (int) getResources().getDimension(R.dimen.dp25);
+
+                ImageLoader.loadRoundImage(this, circleImageView, stringBuilder.toString(), radius);
+
+                TextView textView1 = holder.find(R.id.rankingIndex);
+                textView1.setText(String.format(Locale.KOREA, "%d", (position + 1)));
+
+                TextView textView2 = holder.find(R.id.rankingName);
+
+                if (TextUtils.isEmpty(userName))
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("이름 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,5,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,5,0);
+                    textView2.setText(spannableString);
+                }
+                else
+                {
+                    textView2.setText(userName);
+                }
+
+
+                TextView textView3 = holder.find(R.id.userGrade);
+
+                if (TextUtils.isEmpty(level))
+                {
+                    textView3.setVisibility(View.GONE);
+                }
+                else if (TextUtils.isDigitsOnly(level))
+                {
+                    textView3.setVisibility(View.GONE);
+                }
+                else
+                {
+                    textView3.setText(level);
+                }
+
+                TextView textView4 = holder.find(R.id.userCastCorrectRate);
+
+                if (hitRatio > -1)
+                {
+                    textView4.setText(String.format(Locale.KOREA, "%d", hitRatio));
+                }
+                else
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("값 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,4,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,4,0);
+                    textView4.setText(spannableString);
+                }
+
+                TextView textView5 = holder.find(R.id.userCash);
+
+                if (reward > -1)
+                {
+                    textView5.setText(String.format(Locale.KOREA, "%d", reward));
+                }
+                else
+                {
+                    int color = UtilityUI.getColor(this, R.color.color_999999);
+
+                    SpannableString spannableString = new SpannableString("값 없음");
+                    spannableString.setSpan(new ForegroundColorSpan(color),0,4,0);
+                    spannableString.setSpan(new RelativeSizeSpan(0.8f),0,4,0);
+                    textView5.setText(spannableString);
+                }
                 break;
             }
         }
@@ -1674,12 +1801,12 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
 
             //TODO API 에러 발생 , 바이패스 처리
-//            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-//
-//            loadDummyDoneCastInfoList(itemArrayList);
-//
-//            mItemViewAdapter.setItemList(itemArrayList);
-//            mItemViewAdapter.notifyDataSetChanged();
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyDoneCastInfoList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1888,6 +2015,19 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             doublePieChartItem.setItemTitle("캐스트 결과");
             doublePieChartItem.setItemBottomTitle("8,500");
             commonItems.add(doublePieChartItem);
+        }
+
+        {
+            BarChartItem barChartItem = new BarChartItem();
+            barChartItem.setItemTitle("캐스트 결과");
+            barChartItem.setItemBottomTitle("7,500");
+            barChartItem.addPointEntry("샘플", 120);
+            barChartItem.addPointEntry("샘플", 80);
+            barChartItem.addPointEntry("샘플", 20);
+            barChartItem.addPointEntry("샘플", 90);
+            barChartItem.addPointEntry("샘플", 150);
+
+            commonItems.add(barChartItem);
         }
 
         News news = new News();

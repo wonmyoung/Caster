@@ -28,5 +28,5 @@ public interface ItemConstant {
     int GRAPH_LINE                  = 1023;
     int BAR_CHART                   = 1024;
     int PIE_CHART                   = 1025;
-    int DOUBLE_PIE_CHART            = 1026;
+    int DOUBLE_PIE_CHART            = 1027;
 }

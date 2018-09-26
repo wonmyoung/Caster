@@ -367,38 +367,38 @@ public class MainActivity extends BaseFCActivity implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar)
     {
-        int translationY = (int) ViewHelper.getTranslationY(seekBar);
-        if (translationY == 0)
+        int progress = seekBar.getProgress();
+
+        int cardCount = (mSwipeStackAdapter.getCount() - 1);
+        int selectedCard = (cardCount * progress) / 100;
+
+        EasyLog.LogMessage(this, "++ onStopTrackingTouch progress = " + progress);
+        EasyLog.LogMessage(this, "++ onStopTrackingTouch cardCount = " + cardCount);
+        EasyLog.LogMessage(this, "++ onStopTrackingTouch selectedCard = " + selectedCard);
+
+        int currentPosition = mSwipeStack.getCurrentPosition();
+        if (currentPosition < selectedCard)
         {
-            int progress = seekBar.getProgress();
+            int swipeCount = (selectedCard - currentPosition);
 
-            int cardCount = (mSwipeStackAdapter.getCount() - 1);
-            final int selectedCard = (cardCount * progress) / 100;
-
-            int currentPosition = mSwipeStack.getCurrentPosition();
-            if (currentPosition < selectedCard)
-            {
-                int swipeCount = (selectedCard - currentPosition);
-
-                swipeCardStack(swipeCount);
-            }
-            else
-            {
-                int rollBackCount = (currentPosition - selectedCard);
-
-                swipeRollBackCardStack(rollBackCount);
-            }
-
-            mMainSeekBarCover.setClickable(true);
-            mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
-                    {
-                        @Override
-                        public void onAnimationStart(Animator animator)
-                        {
-                            mMainSeekBarCover.setVisibility(View.VISIBLE);
-                        }
-                    });
+            swipeCardStack(swipeCount);
         }
+        else
+        {
+            int rollBackCount = (currentPosition - selectedCard);
+
+            swipeRollBackCardStack(rollBackCount);
+        }
+
+        mMainSeekBarCover.setClickable(true);
+        mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+                mMainSeekBarCover.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
