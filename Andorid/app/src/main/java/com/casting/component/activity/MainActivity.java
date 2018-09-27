@@ -383,22 +383,12 @@ public class MainActivity extends BaseFCActivity implements
 
             swipeCardStack(swipeCount);
         }
-        else
+        else if (currentPosition > selectedCard)
         {
             int rollBackCount = (currentPosition - selectedCard);
 
             swipeRollBackCardStack(rollBackCount);
         }
-
-        mMainSeekBarCover.setClickable(true);
-        mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
-        {
-            @Override
-            public void onAnimationStart(Animator animator)
-            {
-                mMainSeekBarCover.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     @Override
@@ -503,22 +493,6 @@ public class MainActivity extends BaseFCActivity implements
             CardSwipe cardSwipe = mSwipeExecutionQueue.poll();
 
             mSwipeStack.post(cardSwipe);
-
-            int queueSize = mSwipeExecutionQueue.size();
-            if (queueSize == 0)
-            {
-                mMainSeekBarCover.setClickable(false);
-                mMainSeekBarCover.animate().alpha(0.0f)
-                        .setListener(new AnimatorListenerAdapter()
-                        {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-
-                                mMainSeekBarCover.setVisibility(View.GONE);
-                            }
-                        });
-            }
         }
         else
         {
@@ -533,6 +507,22 @@ public class MainActivity extends BaseFCActivity implements
             {
                 mMainSeekBar.setProgress(100);
             }
+        }
+
+        int queueSize = mSwipeExecutionQueue.size();
+        if (queueSize == 0)
+        {
+            mMainSeekBarCover.setClickable(false);
+            mMainSeekBarCover.animate().alpha(0.0f)
+                    .setListener(new AnimatorListenerAdapter()
+                    {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+
+                            mMainSeekBarCover.setVisibility(View.GONE);
+                        }
+                    });
         }
     }
 
@@ -567,6 +557,16 @@ public class MainActivity extends BaseFCActivity implements
             {
                 mSwipeExecutionQueue.poll().run();
             }
+
+            mMainSeekBarCover.setClickable(true);
+            mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
+            {
+                @Override
+                public void onAnimationStart(Animator animator)
+                {
+                    mMainSeekBarCover.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 
@@ -595,6 +595,16 @@ public class MainActivity extends BaseFCActivity implements
             {
                 mSwipeExecutionQueue.poll().run();
             }
+
+            mMainSeekBarCover.setClickable(true);
+            mMainSeekBarCover.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter()
+            {
+                @Override
+                public void onAnimationStart(Animator animator)
+                {
+                    mMainSeekBarCover.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 }
