@@ -5,6 +5,8 @@
       <root url="file://$USER_HOME$/.android/build-cache/7da2a490ed104cb603863f52b8d3d9c54d6592c5/output/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-core/4.36.1/76bb90b00636bbd07e9ce51e2a799f276a6e4c24/facebook-core-4.36.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

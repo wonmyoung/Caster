@@ -5,6 +5,8 @@
       <root url="jar://$USER_HOME$/.android/build-cache/085d1d9a3f2c8385e75ef0cdd6f216dfe4d9ad88/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-android-sdk/4.36.1/8f8248b524147ad03113c9310d608cd2f1b1b9a8/facebook-android-sdk-4.36.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

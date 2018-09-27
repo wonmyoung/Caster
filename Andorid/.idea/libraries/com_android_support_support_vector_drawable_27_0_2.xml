@@ -5,6 +5,8 @@
       <root url="jar://$USER_HOME$/.android/build-cache/2cf00e7f1082723d0e91a10f736283dab3756ef4/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-vector-drawable/27.0.2/710838de66b0cc3faf839415bfac47f47be2e55/support-vector-drawable-27.0.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
