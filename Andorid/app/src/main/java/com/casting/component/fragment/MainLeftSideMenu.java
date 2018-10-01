@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.casting.FutureCasting;
 import com.casting.R;
 import com.casting.commonmodule.IResponseListener;
 import com.casting.commonmodule.RequestHandler;
@@ -51,6 +52,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
         find(R.id.leftMenuButton3).setOnClickListener(this);
 
         mProfileUserPic = find(R.id.userImage);
+        mProfileUserPic.setOnClickListener(this);
         mProfileUserGrade = find(R.id.userGrade);
         mProfileUserName = find(R.id.userNickName);
         mProfileUserId = find(R.id.userIdView);
@@ -71,6 +73,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
     {
         switch (v.getId())
         {
+            case R.id.userImage:
             case R.id.leftMenuButton1:
             {
                 Intent intent = new Intent(getContext(), ProfileActivity.class);
@@ -115,14 +118,14 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
 
             if (member != null)
             {
-                String picThumbnail = member.getUserPicThumbnail();
+                String avatar = member.getUserAvatar();
                 String userId = member.getUserId();
                 String userName = member.getUserName();
                 String userLevel = member.getUserLevel();
 
                 EasyLog.LogMessage(this, "++ update userName =" + userName);
                 EasyLog.LogMessage(this, "++ update userId =" + userId);
-                EasyLog.LogMessage(this, "++ update picThumbnail = " + picThumbnail);
+                EasyLog.LogMessage(this, "++ update avatar = " + avatar);
                 EasyLog.LogMessage(this, "++ update userLevel  =" + userLevel);
 
                 if (TextUtils.isEmpty(userId))
@@ -161,7 +164,14 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
 
                 Context c = getContext();
 
-                UtilityUI.setThumbNailRoundedImageView(c, mProfileUserPic, picThumbnail, R.dimen.dp25);
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+                stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+                stringBuilder.append(FutureCasting.SERVER_PORT);
+                stringBuilder.append("/uploads/account/");
+                stringBuilder.append(avatar);
+
+                UtilityUI.setThumbNailRoundedImageView(c, mProfileUserPic, stringBuilder.toString(), R.dimen.dp25);
             }
         }
     }

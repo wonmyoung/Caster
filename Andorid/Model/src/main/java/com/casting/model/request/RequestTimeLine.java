@@ -46,6 +46,7 @@ public class RequestTimeLine extends NetworkRequest implements JSONParcelable<Ti
         String id = UtilityData.convertStringFromJSON(jsonObject, "_id");
         String surveyId = UtilityData.convertStringFromJSON(jsonObject, "surveyId");
         String userId = UtilityData.convertStringFromJSON(jsonObject, "userId");
+        String userName = UtilityData.convertStringFromJSON(jsonObject, "username");
         String updated_at = UtilityData.convertStringFromJSON(jsonObject, "updated_at");
         String created_at = UtilityData.convertStringFromJSON(jsonObject, "created_at");
         String comment = UtilityData.convertStringFromJSON(jsonObject, "comment");
@@ -55,6 +56,7 @@ public class RequestTimeLine extends NetworkRequest implements JSONParcelable<Ti
         timeLine.setId(id);
         timeLine.setSurveyId(surveyId);
         timeLine.setUserId(userId);
+        timeLine.setUserName(userName);
         timeLine.setUpdated_at(updated_at);
         timeLine.setCreated_at(created_at);
         timeLine.setComments(comment);

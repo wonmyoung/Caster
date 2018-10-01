@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -28,7 +24,6 @@ import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityUI;
 import com.casting.commonmodule.view.CircleImageView;
 import com.casting.commonmodule.view.component.CommonActivity;
-import com.casting.commonmodule.view.image.ImageLoader;
 import com.casting.model.Member;
 import com.casting.model.global.ActiveMember;
 import com.casting.model.request.PostMember;
@@ -171,7 +166,7 @@ public class ProfileEditActivity extends CommonActivity implements Observer, Tex
     {
         if (member != null)
         {
-            String picThumbnail = member.getUserPicThumbnail();
+            String picThumbnail = member.getUserAvatar();
             String userId = member.getUserId();
             String userName = member.getUserName();
             String userLevel = member.getUserLevel();

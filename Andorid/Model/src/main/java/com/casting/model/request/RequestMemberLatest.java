@@ -46,7 +46,7 @@ public class RequestMemberLatest extends NetworkRequest implements JSONParcelabl
             if (!TextUtils.isEmpty(userName)) CurrentMember.setUserName(userName);
             if (!TextUtils.isEmpty(userId)) CurrentMember.setUserId(userId);
             if (!TextUtils.isEmpty(email)) CurrentMember.setEmail(email);
-            if (!TextUtils.isEmpty(avatar)) CurrentMember.setUserPicThumbnail(avatar);
+            if (!TextUtils.isEmpty(avatar)) CurrentMember.setUserAvatar(avatar);
             if (!TextUtils.isEmpty(level)) CurrentMember.setUserLevel(level);
             if (point > -1) CurrentMember.setUserPoint(point);
             if (followers > -1) CurrentMember.setFollowerNum(followers);

@@ -10,10 +10,8 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.casting.FutureCasting;
@@ -38,14 +36,13 @@ import com.casting.model.Member;
 import com.casting.model.TimeLine;
 import com.casting.model.TimeLineList;
 import com.casting.model.global.ActiveMember;
-import com.casting.model.global.ItemConstant;
 import com.casting.model.request.RequestCastList;
 import com.casting.model.request.RequestTimeLineList;
 import com.casting.view.CustomTabLayout;
 import com.casting.view.ItemViewAdapter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -76,6 +73,14 @@ public class ProfileActivity extends CommonActivity
     protected void init(Bundle savedInstanceState) throws Exception
     {
         setContentView(R.layout.activity_profile);
+
+        find(R.id.topLogo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                finish();
+            }
+        });
 
         mUserPicView = find(R.id.userImage);
         mUserNickNameView = find(R.id.userNickName);
@@ -184,9 +189,9 @@ public class ProfileActivity extends CommonActivity
     {
         if (member != null)
         {
-            ImageLoader.loadImage(this, mUserPicView, member.getUserPicThumbnail());
+            ImageLoader.loadImage(this, mUserPicView, member.getUserAvatar());
 
-            String picThumbnail = member.getUserPicThumbnail();
+            String picThumbnail = member.getUserAvatar();
             String userId = member.getUserId();
             String userName = member.getUserName();
             String userLevel = member.getUserLevel();
@@ -330,6 +335,7 @@ public class ProfileActivity extends CommonActivity
                 String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
                 String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
                 String endDate = cast.getEndDate();
+                String totalReward = String.format(Locale.KOREA, "%d 캡", cast.getTotalReward());
                 String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
                 String castingNumberString = null;
 
@@ -368,7 +374,7 @@ public class ProfileActivity extends CommonActivity
                 }
                 else
                 {
-                    tagView2.setText(tag2);
+                    tagView2.setText(totalReward);
                     tagView2.setVisibility(View.VISIBLE);
                 }
 
@@ -406,7 +412,7 @@ public class ProfileActivity extends CommonActivity
 
                     UtilityUI.setBackGroundDrawable(textView2, R.drawable.shape_pink_color_round5_alpha80);
                 }
-                else
+                else if (!TextUtils.isEmpty(formattedEndDate))
                 {
                     formattedEndDate += " 전";
 
@@ -427,7 +433,8 @@ public class ProfileActivity extends CommonActivity
                 stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                 stringBuilder.append(FutureCasting.SERVER_PORT);
                 stringBuilder.append("/uploads/account/");
-                stringBuilder.append(timeLine.getUserId());
+                stringBuilder.append(timeLine.getUserAvatar());
+
                 CircleImageView circleImageView = holder.find(R.id.userImage);
 
                 UtilityUI.setThumbNailRoundedImageView(this, circleImageView, stringBuilder.toString(), R.dimen.dp25);

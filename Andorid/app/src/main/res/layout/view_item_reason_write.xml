@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp45"
         android:textSize="@dimen/dp13"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:hint="위와 같이 캐스트한 이유는 무엇인가요?"
         android:paddingLeft="@dimen/dp5"
         android:paddingRight="@dimen/dp5"/>

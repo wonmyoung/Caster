@@ -180,9 +180,13 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                 {
                     JSONObject o = jsonArray.getJSONObject(i);
 
+                    EasyLog.LogMessage(this, ">> parseTimeLineList o = " + o.toString());
+
                     String id = UtilityData.convertStringFromJSON(o, "_id");
                     String surveyId = UtilityData.convertStringFromJSON(o, "surveyId");
                     String userId = UtilityData.convertStringFromJSON(o, "userId");
+                    String userName = UtilityData.convertStringFromJSON(o, "username");
+                    String avatar = UtilityData.convertStringFromJSON(o, "avatar");
                     String updated_at = UtilityData.convertStringFromJSON(o, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(o, "created_at");
                     String comment = UtilityData.convertStringFromJSON(o, "comment");
@@ -190,6 +194,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                     EasyLog.LogMessage(this, ">> parseTimeLineList id = " + id);
                     EasyLog.LogMessage(this, ">> parseTimeLineList surveyId = " + surveyId);
                     EasyLog.LogMessage(this, ">> parseTimeLineList userId = " + userId);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList userName = " + userName);
                     EasyLog.LogMessage(this, ">> parseTimeLineList updated_at = " + updated_at);
                     EasyLog.LogMessage(this, ">> parseTimeLineList created_at = " + created_at);
                     EasyLog.LogMessage(this, ">> parseTimeLineList comment = " + comment);
@@ -202,6 +207,8 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                     timeLine.setId(id);
                     timeLine.setSurveyId(surveyId);
                     timeLine.setUserId(userId);
+                    timeLine.setUserName(userName);
+                    timeLine.setUserAvatar(avatar);
                     timeLine.setUpdated_at(updated_at);
                     timeLine.setCreated_at(created_at);
                     timeLine.setComments(comment);
@@ -241,12 +248,14 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                     EasyLog.LogMessage(this, ">> parseReplyList replyJson = " + replyJson.toString());
 
                     String userName = UtilityData.convertStringFromJSON(replyJson, "userName");
+                    String avatar = UtilityData.convertStringFromJSON(replyJson, "avatar");
                     String id = UtilityData.convertStringFromJSON(replyJson, "_id");
                     String updated_at = UtilityData.convertStringFromJSON(replyJson, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(replyJson, "created_at");
                     String content = UtilityData.convertStringFromJSON(replyJson, "content");
 
                     EasyLog.LogMessage(this, ">> parseReplyList userName = " + userName);
+                    EasyLog.LogMessage(this, ">> parseReplyList avatar = " + avatar);
                     EasyLog.LogMessage(this, ">> parseReplyList id = " + id);
                     EasyLog.LogMessage(this, ">> parseReplyList updated_at = " + updated_at);
                     EasyLog.LogMessage(this, ">> parseReplyList created_at = " + created_at);
@@ -254,6 +263,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
 
                     Reply reply = new Reply();
                     reply.setUserName(userName);
+                    reply.setUserAvatar(avatar);
                     reply.setId(id);
                     reply.setUpdated_at(updated_at);
                     reply.setCreated_at(created_at);

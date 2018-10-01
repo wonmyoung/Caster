@@ -28,6 +28,16 @@ public class ReplyList extends BaseModel {
         ReplyArrayList.add(reply);
     }
 
+    public void addReply(int i, Reply reply)
+    {
+        if (ReplyArrayList == null)
+        {
+            ReplyArrayList = new ArrayList<>();
+        }
+
+        ReplyArrayList.add(i, reply);
+    }
+
     public int getReplyListSize()
     {
         return (ReplyArrayList != null ? ReplyArrayList.size() : 0);

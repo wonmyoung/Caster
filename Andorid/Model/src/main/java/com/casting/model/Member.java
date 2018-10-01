@@ -12,7 +12,7 @@ public class Member extends BaseModel {
     private String          UserId;
     private String          Description;
     private String          PassWord;
-    private String          UserPicThumbnail;
+    private String          UserAvatar;
     private SessionType     mSessionType;
     private int             UserPoint;
     private String          UserLevel;
@@ -98,12 +98,12 @@ public class Member extends BaseModel {
         FollowerNum = followerNum;
     }
 
-    public String getUserPicThumbnail() {
-        return UserPicThumbnail;
+    public String getUserAvatar() {
+        return UserAvatar;
     }
 
-    public void setUserPicThumbnail(String userPicThumbnail) {
-        UserPicThumbnail = userPicThumbnail;
+    public void setUserAvatar(String userAvatar) {
+        UserAvatar = userAvatar;
     }
 
     public String getUserId() {

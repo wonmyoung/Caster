@@ -42,6 +42,7 @@ import com.casting.view.CustomTabLayout;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Queue;
 
 public class MainActivity extends BaseFCActivity implements
@@ -108,6 +109,7 @@ public class MainActivity extends BaseFCActivity implements
             String tag1 = (tags != null && tags.length > 0 ? tags[0] : null);
             String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
             String endDate = item.getEndDate();
+            String totalReward = String.format(Locale.KOREA, "%d 캡", item.getTotalReward());
             String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
 
             EasyLog.LogMessage(this, ">> bindItemDataView title = " + title);
@@ -123,13 +125,13 @@ public class MainActivity extends BaseFCActivity implements
             UtilityUI.addEmptyTextAsGone(tagView1, tagView2, endTimeView);
 
             tagView1.setText(tag1);
-            tagView2.setText(tag2);
+            tagView2.setText(totalReward);
 
             if (FutureCastingUtil.isPast(endDate))
             {
                 endTimeView.setText("종료");
             }
-            else
+            else if (!TextUtils.isEmpty(formattedEndDate))
             {
                 formattedEndDate += " 전";
 

@@ -76,7 +76,7 @@ public class MainRightSideMenu extends CommonFragment implements IResponseListen
         Intent intent = new Intent(getActivity(), AlarmActivity.class);
         intent.putExtra(DEFINE_ALARM, alarm);
 
-        startActivity(intent);
+        // startActivity(intent);
     }
 
     @Override

@@ -12,6 +12,15 @@
         android:layout_height="0dp"
         android:layout_weight="8">
 
+        <TextView
+            android:id="@+id/topLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mainColor0"
+            android:text="Future Casting"
+            android:textSize="@dimen/dp14"
+            android:layout_gravity="center"/>
+
     </FrameLayout>
 
     <FrameLayout

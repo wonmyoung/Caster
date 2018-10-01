@@ -145,6 +145,8 @@ public class InsertOptionsScrollable extends FrameLayout implements View.OnTouch
 
         LayoutInflater layoutInflater = LayoutInflater.from(c);
 
+        if (mItemLayout != null) mItemLayout.removeAllViews();
+
         mMinPointView= layoutInflater.inflate(R.layout.view_item_option, null);
         mMinPointView.setLayoutParams(new LayoutParams(
                 (int) getResources().getDimension(R.dimen.dp50), LayoutParams.WRAP_CONTENT));

@@ -59,7 +59,7 @@ public class RequestFacebookSession extends SessionLogin<GraphResponse> {
                     member.setEmail(memberEmail);
                     member.setPassWord(memberFacebookPw);
                     member.setUserName(memberName);
-                    member.setUserPicThumbnail(thumbNailPath);
+                    member.setUserAvatar(thumbNailPath);
 
                     SessionResponse<Member> sessionResponse = new SessionResponse<>();
                     sessionResponse.setSourceRequest(RequestFacebookSession.this);

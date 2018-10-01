@@ -14,6 +14,7 @@ public class TimeLine extends BaseModel implements ICommonItem, ItemConstant
     private String  SurveyId;
     private String  UserId;
     private String  UserName;
+    private String  UserAvatar;
     private String  Updated_at;
     private String  Created_at;
     private String  Comments;
@@ -106,4 +107,18 @@ public class TimeLine extends BaseModel implements ICommonItem, ItemConstant
     public void setUserName(String userName) {
         UserName = userName;
     }
+
+    public String getUserAvatar() {
+        return UserAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        UserAvatar = userAvatar;
+    }
+
+    public int getReplyListSize()
+    {
+        return (ReplyList == null ? 0 : ReplyList.getReplyListSize());
+    }
+
 }

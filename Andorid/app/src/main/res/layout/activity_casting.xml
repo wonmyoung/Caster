@@ -16,6 +16,15 @@
         android:layout_height="@dimen/dp55">
 
         <TextView
+            android:id="@+id/topLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mainColor0"
+            android:text="Future Casting"
+            android:textSize="@dimen/dp14"
+            android:layout_gravity="center"/>
+
+        <TextView
             android:id="@+id/castCardTopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -11,8 +11,6 @@ import com.casting.model.Member;
 
 import org.json.JSONObject;
 
-import java.lang.annotation.Target;
-
 
 public class RequestAccountsModify extends NetworkRequest implements JSONParcelable<Member> {
 
@@ -75,7 +73,7 @@ public class RequestAccountsModify extends NetworkRequest implements JSONParcela
 
             TargetMember.setEmail(email);
             TargetMember.setUserName(userName);
-            TargetMember.setUserPicThumbnail(avatar);
+            TargetMember.setUserAvatar(avatar);
             TargetMember.setUserGender(gender);
             TargetMember.setUserBirthTime(birth);
             TargetMember.setUserResidence(residence);

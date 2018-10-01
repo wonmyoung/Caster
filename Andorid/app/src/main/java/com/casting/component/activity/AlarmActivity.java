@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.view.View;
@@ -95,7 +96,7 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
             String tag2 = (tags != null && tags.length > 1 ? tags[1] : null);
             String endDate = cast.getEndDate();
             String formattedEndDate = FutureCastingUtil.getTimeFormattedString(endDate);
-            String totalReward = Integer.toString(cast.getTotalReward());
+            String totalReward = String.format(Locale.KOREA, "%d 캡", cast.getTotalReward());
             String thumbnail = cast.getThumbnail(0);
 
             EasyLog.LogMessage(this, "++ init title = " + title);
@@ -114,7 +115,7 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
                 mCastInfoLayout.setVisibility(View.VISIBLE);
 
                 mTopTagView1.setText(tag1);
-                mTopTagView2.setText(tag2);
+                mTopTagView2.setText(totalReward);
 
                 mTopCastingNumberView.setText(casterNumber);
                 mTopCastingStatusView.setText("종료");
@@ -167,15 +168,18 @@ public class AlarmActivity extends BaseFCActivity implements Handler.Callback {
             {
                 String endDate = mAlarm.getEndDate();
 
-                if (FutureCastingUtil.isPast(endDate))
+                if (!TextUtils.isEmpty(endDate))
                 {
-                    Intent intent = new Intent(this, CastingActivity.class);
-                    intent.putExtra(DEFINE_CAST, mAlarm.getTargetCast());
+                    if (FutureCastingUtil.isPast(endDate))
+                    {
+                        Intent intent = new Intent(this, CastingActivity.class);
+                        intent.putExtra(DEFINE_CAST, mAlarm.getTargetCast());
 
-                    startActivity(intent);
+                        startActivity(intent);
+                    }
+
+                    finish();
                 }
-
-                finish();
                 break;
             }
         }
