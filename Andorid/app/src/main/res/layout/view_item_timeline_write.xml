@@ -27,7 +27,6 @@
             android:id="@+id/userImage"
             android:layout_width="@dimen/dp45"
             android:layout_height="@dimen/dp45"
-            android:background="@color/mainColor0"
             android:scaleType="centerCrop" />
 
         <LinearLayout
