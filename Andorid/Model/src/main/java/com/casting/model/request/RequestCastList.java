@@ -60,6 +60,27 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
     {
         EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
 
+        if (mOrder != null)
+        {
+            switch (mOrder)
+            {
+                case Available:
+                case Popular:
+                case RewardBig:
+                    return parseCastList(jsonObject);
+
+                case Applied:
+                    return parseMyAppliedCastList(jsonObject);
+                case Done:
+                    return parseMyDoneCastList(jsonObject);
+            }
+        }
+
+        return null;
+    }
+
+    private CastList parseCastList(JSONObject jsonObject)
+    {
         CastList castList = new CastList();
 
         JSONArray jsonArray = UtilityData.convertJsonArrayFromJson(jsonObject, "surveyInfo");
@@ -128,6 +149,91 @@ public class RequestCastList extends NetworkRequest implements JSONParcelable<Ca
                 }
             }
         }
+
+        return castList;
+    }
+
+    private CastList parseMyAppliedCastList(JSONObject jsonObject)
+    {
+        CastList castList = new CastList();
+
+        JSONArray userAnswers = UtilityData.convertJsonArrayFromJson(jsonObject, "userAnswers");
+
+        int len = (userAnswers != null ? userAnswers.length() : 0);
+        if (len > 0)
+        {
+            for (int i = 0 ; i < len ; i++)
+            {
+                try
+                {
+                    JSONObject o = userAnswers.getJSONObject(i);
+
+                    String title = UtilityData.convertStringFromJSON(o, "title");
+                    String predict = UtilityData.convertStringFromJSON(o, "predict");
+                    String commentId = UtilityData.convertStringFromJSON(o, "commentId");
+                    String id = UtilityData.convertStringFromJSON(o, "_id");
+                    String created_at = UtilityData.convertStringFromJSON(o, "created_at");
+                    String upVote = UtilityData.convertStringFromJSON(o, "upVote");
+                    String bet = UtilityData.convertStringFromJSON(o, "bet");
+                    int reward = UtilityData.convertIntegerFromJSON(o, "reward");
+                    boolean result = UtilityData.convertBooleanFromJSON(o, "success");
+
+                    Cast cast = new Cast();
+                    cast.setTitle(title);
+                    cast.setCastId(id);
+                    cast.setCastingDone(true);
+
+                    castList.addCast(cast);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return castList;
+    }
+
+    private CastList parseMyDoneCastList(JSONObject jsonObject)
+    {
+        CastList castList = new CastList();
+
+        JSONArray userAnswers = UtilityData.convertJsonArrayFromJson(jsonObject, "userAnswers");
+
+        int len = (userAnswers != null ? userAnswers.length() : 0);
+        if (len > 0)
+        {
+            for (int i = 0 ; i < len ; i++)
+            {
+                try
+                {
+                    JSONObject o = userAnswers.getJSONObject(i);
+
+                    String title = UtilityData.convertStringFromJSON(o, "title");
+                    String predict = UtilityData.convertStringFromJSON(o, "predict");
+                    String commentId = UtilityData.convertStringFromJSON(o, "commentId");
+                    String id = UtilityData.convertStringFromJSON(o, "_id");
+                    String created_at = UtilityData.convertStringFromJSON(o, "created_at");
+                    String upVote = UtilityData.convertStringFromJSON(o, "upVote");
+                    String bet = UtilityData.convertStringFromJSON(o, "bet");
+                    int reward = UtilityData.convertIntegerFromJSON(o, "reward");
+                    boolean result = UtilityData.convertBooleanFromJSON(o, "success");
+
+                    Cast cast = new Cast();
+                    cast.setTitle(title);
+                    cast.setCastId(id);
+                    cast.setCastingDone(true);
+
+                    castList.addCast(cast);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
         return castList;
     }

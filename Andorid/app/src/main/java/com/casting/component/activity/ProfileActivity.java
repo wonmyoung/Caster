@@ -141,7 +141,7 @@ public class ProfileActivity extends CommonActivity
         {
             onResponseTimeLineList(response);
         }
-        else if (request.isRight(CastList.class))
+        else if (request.isRight(RequestCastList.class))
         {
             onResponseCastList(response);
         }
@@ -161,11 +161,17 @@ public class ProfileActivity extends CommonActivity
     private void onResponseCastList(BaseResponse response)
     {
         int responseCode = response.getResponseCode();
+
+        EasyLog.LogMessage(this,">> onResponseCastList responseCode = " + responseCode);
+
         if (responseCode > 0)
         {
             CastList castList = (CastList) response.getResponseModel();
 
             int size = castList.getSize();
+
+            EasyLog.LogMessage(this,">> onResponseCastList size = " + size);
+
             if (size > 0)
             {
                 mListViewAdapter.setItemList(castList.getCastList());
@@ -432,7 +438,7 @@ public class ProfileActivity extends CommonActivity
                 stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                 stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                 stringBuilder.append(FutureCasting.SERVER_PORT);
-                stringBuilder.append("/uploads/account/");
+                stringBuilder.append("/");
                 stringBuilder.append(timeLine.getUserAvatar());
 
                 CircleImageView circleImageView = holder.find(R.id.userImage);

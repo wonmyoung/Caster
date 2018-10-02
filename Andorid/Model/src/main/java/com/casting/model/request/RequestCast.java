@@ -10,6 +10,7 @@ import com.casting.commonmodule.utility.CommonPreference;
 import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.Cast;
+import com.casting.model.CastingStatus;
 import com.casting.model.News;
 import com.casting.model.NewsList;
 import com.casting.model.Reply;
@@ -19,6 +20,8 @@ import com.casting.model.TimeLineList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> {
 
@@ -83,6 +86,10 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
             TimeLineList timeLineList = parseTimeLineList(
                     UtilityData.convertJsonArrayFromJson(jsonObject, "commentInfo"));
 
+            CastingStatus castingStatus = parseCastingStatus(
+                    UtilityData.convertJsonFromJson(jsonObject, "userPredictInfo"),
+                    UtilityData.convertIntegerFromJSON(jsonObject,"countPredict"));
+
             EasyLog.LogMessage(this, "++ parse totalReward = " + totalReward);
             EasyLog.LogMessage(this, "++ parse casterNum = " + casterNum);
             EasyLog.LogMessage(this, "++ parse title = " + title);
@@ -102,6 +109,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
             mCast.setParticipants(participants);
             mCast.setTimeLineList(timeLineList);
             mCast.setNewsList(newsList);
+            mCast.setCurrentCastingStatus(castingStatus);
         }
         else
         {
@@ -163,6 +171,38 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
         return newsList;
     }
 
+    private CastingStatus parseCastingStatus(JSONObject userPredictInfo, int countPredict)
+    {
+        CastingStatus castingStatus = null;
+
+        if (userPredictInfo != null)
+        {
+            EasyLog.LogMessage(this, ">> parseCastingStatus userPredictInfo = " + userPredictInfo.toString());
+            EasyLog.LogMessage(this, ">> parseCastingStatus countPredict = " + countPredict);
+
+            castingStatus = new CastingStatus();
+
+            Iterator<String> iterator = userPredictInfo.keys();
+
+            while (iterator.hasNext())
+            {
+                String key = iterator.next();
+
+                int value = UtilityData.convertIntegerFromJSON(userPredictInfo, key);
+                if (value > 0 && countPredict > 0)
+                {
+                    int percentage = (value * 100) / countPredict;
+
+                    castingStatus.addStatus(key, percentage);
+                }
+            }
+
+            castingStatus.sort();
+        }
+
+        return castingStatus;
+    }
+
     private TimeLineList parseTimeLineList(JSONArray jsonArray)
     {
         TimeLineList timeLineList = null;
@@ -184,9 +224,10 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
 
                     String id = UtilityData.convertStringFromJSON(o, "_id");
                     String surveyId = UtilityData.convertStringFromJSON(o, "surveyId");
-                    String userId = UtilityData.convertStringFromJSON(o, "userId");
-                    String userName = UtilityData.convertStringFromJSON(o, "username");
-                    String avatar = UtilityData.convertStringFromJSON(o, "avatar");
+                    JSONObject userObject = UtilityData.convertJsonFromJson(o, "userId");
+                    String userId = UtilityData.convertStringFromJSON(userObject, "_id");
+                    String userName = UtilityData.convertStringFromJSON(userObject, "username");
+                    String avatar = UtilityData.convertStringFromJSON(userObject, "avatar");
                     String updated_at = UtilityData.convertStringFromJSON(o, "updated_at");
                     String created_at = UtilityData.convertStringFromJSON(o, "created_at");
                     String comment = UtilityData.convertStringFromJSON(o, "comment");
@@ -195,6 +236,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                     EasyLog.LogMessage(this, ">> parseTimeLineList surveyId = " + surveyId);
                     EasyLog.LogMessage(this, ">> parseTimeLineList userId = " + userId);
                     EasyLog.LogMessage(this, ">> parseTimeLineList userName = " + userName);
+                    EasyLog.LogMessage(this, ">> parseTimeLineList avatar = " + avatar);
                     EasyLog.LogMessage(this, ">> parseTimeLineList updated_at = " + updated_at);
                     EasyLog.LogMessage(this, ">> parseTimeLineList created_at = " + created_at);
                     EasyLog.LogMessage(this, ">> parseTimeLineList comment = " + comment);

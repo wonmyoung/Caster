@@ -16,7 +16,7 @@ public class RequestTimeLine extends NetworkRequest implements JSONParcelable<Ti
     @Override
     public String getHttpMethod()
     {
-        return null;
+        return HttpGet;
     }
 
     @Override

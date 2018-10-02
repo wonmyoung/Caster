@@ -10,6 +10,7 @@ public class CastingOption extends BaseModel {
     private static final String     AnswerQuestion  = "answerQuestion";
 
     private String      QuestionType;
+    private String[]    Questions;
 
     private String      SelectMaximum;
     private String      SelectMinimum;
@@ -62,5 +63,13 @@ public class CastingOption extends BaseModel {
 
     public void setSelectMinimum(String selectMinimum) {
         SelectMinimum = selectMinimum;
+    }
+
+    public String[] getQuestions() {
+        return Questions;
+    }
+
+    public void setQuestions(String[] questions) {
+        Questions = questions;
     }
 }

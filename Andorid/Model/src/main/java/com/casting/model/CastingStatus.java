@@ -5,6 +5,8 @@ import com.casting.commonmodule.view.list.ICommonItem;
 import com.casting.model.global.ItemConstant;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class CastingStatus extends BaseModel implements ICommonItem, ItemConstant {
 
@@ -73,5 +75,19 @@ public class CastingStatus extends BaseModel implements ICommonItem, ItemConstan
     @Override
     public int getItemType() {
         return CURRENT_CASTING_STATUS;
+    }
+
+    public void sort()
+    {
+        if (OptionArrayList != null)
+        {
+            Collections.sort(OptionArrayList, new Comparator<CastingOption>() {
+                @Override
+                public int compare(CastingOption left, CastingOption right)
+                {
+                    return (right.Percentage > left.Percentage ? 1 : -1);
+                }
+            });
+        }
     }
 }

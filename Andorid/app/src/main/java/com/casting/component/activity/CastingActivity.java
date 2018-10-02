@@ -369,7 +369,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                 stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                 stringBuilder.append(FutureCasting.SERVER_PORT);
-                stringBuilder.append("/uploads/account/");
+                stringBuilder.append("/");
                 stringBuilder.append(timeLine.getUserAvatar());
 
                 CircleImageView circleImageView = holder.find(R.id.userImage);
@@ -465,7 +465,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                             stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                             stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                             stringBuilder.append(FutureCasting.SERVER_PORT);
-                            stringBuilder.append("/uploads/account/");
+                            stringBuilder.append("/");
                             stringBuilder.append(userAvatar);
 
                             EasyLog.LogMessage(this, "++ TIME_LINE_GROUP thumbNail path = ", stringBuilder.toString());
@@ -498,7 +498,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                     stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                     stringBuilder.append(FutureCasting.SERVER_PORT);
-                    stringBuilder.append("/uploads/account/");
+                    stringBuilder.append("/");
                     stringBuilder.append(member.getUserAvatar());
 
                     EasyLog.LogMessage(this, "++ TIME_LINE_WRITE thumbNail path = ", stringBuilder.toString());
@@ -568,7 +568,7 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                 stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                 stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                 stringBuilder.append(FutureCasting.SERVER_PORT);
-                stringBuilder.append("/uploads/account/");
+                stringBuilder.append("/");
                 stringBuilder.append(userAvatar);
 
                 EasyLog.LogMessage(this, "++ TIME_LINE_REPLY thumbNail path = ", stringBuilder.toString());
@@ -1932,8 +1932,11 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 TimeLineList timeLineList = mTargetCast.getTimeLineList();
 
-                mItemViewAdapter.addItem(newsList);
-                mItemViewAdapter.addItem(timeLineList);
+                CastingStatus castingStatus = mTargetCast.getCurrentCastingStatus();
+
+                if(newsList != null) mItemViewAdapter.addItem(newsList);
+                if(timeLineList != null) mItemViewAdapter.addItem(timeLineList);
+                if(castingStatus != null) mItemViewAdapter.addItem(castingStatus);
                 mItemViewAdapter.notifyDataSetChanged();
             }
         }
@@ -2079,14 +2082,22 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
                 mItemViewAdapter.clear();
 
+                String[] questions = castingOption.getQuestions();
+                String question1 = (questions != null && questions.length > 0 ? questions[0].replace("\"","") : null);
+                String question2 = (questions != null && questions.length > 1 ? questions[1].replace("\"","") : null);
+                String question3 = (questions != null && questions.length > 2 ? questions[2].replace("\"","") : null);
+                String question4 = (questions != null && questions.length > 3 ? questions[3].replace("\"","") : null);
+                String question5 = (questions != null && questions.length > 4 ? questions[4].replace("\"","") : null);
+
                 ItemSelectOptions itemSelectOptions1 = new ItemSelectOptions();
                 itemSelectOptions1.setInsertTitle("내 캐스트는");
                 itemSelectOptions1.setVertical(true);
-                itemSelectOptions1.addOption("한화 이글스", "한화 이글스");
-                itemSelectOptions1.addOption("롯데 자이언츠", "롯데 자이언츠");
-                itemSelectOptions1.addOption("SK 와이번즈", "SK 와이번즈");
-                itemSelectOptions1.addOption("넥센 히어로즈", "넥센 히어로즈");
-                itemSelectOptions1.addOption("두산 베어스", "두산 베어스");
+                if (!TextUtils.isEmpty(question1)) itemSelectOptions1.addOption(question1, question1);
+                if (!TextUtils.isEmpty(question2)) itemSelectOptions1.addOption(question2, question2);
+                if (!TextUtils.isEmpty(question3)) itemSelectOptions1.addOption(question3, question3);
+                if (!TextUtils.isEmpty(question4)) itemSelectOptions1.addOption(question4, question4);
+                if (!TextUtils.isEmpty(question5)) itemSelectOptions1.addOption(question5, question5);
+
                 mItemViewAdapter.addItem(itemSelectOptions1);
 
                 ItemSelectOptions itemSelectOptions2 = new ItemSelectOptions();

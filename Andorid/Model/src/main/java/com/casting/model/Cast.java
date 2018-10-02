@@ -30,6 +30,7 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     private NewsList       NewsList;
     private TimeLineList   TimeLineList;
+    private CastingStatus  CurrentCastingStatus;
 
     private CommonGraphItem     MyCastingGraph;
     private CommonGraphItem     MyCastingResultGraph;
@@ -286,5 +287,13 @@ public class Cast extends BaseModel implements ICommonItem, ItemConstant {
 
     public void setCastRankingList(RankingList castRankingList) {
         CastRankingList = castRankingList;
+    }
+
+    public CastingStatus getCurrentCastingStatus() {
+        return CurrentCastingStatus;
+    }
+
+    public void setCurrentCastingStatus(CastingStatus currentCastingStatus) {
+        CurrentCastingStatus = currentCastingStatus;
     }
 }

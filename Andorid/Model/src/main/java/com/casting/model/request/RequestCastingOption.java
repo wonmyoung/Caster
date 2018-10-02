@@ -9,6 +9,7 @@ import com.casting.commonmodule.utility.EasyLog;
 import com.casting.commonmodule.utility.UtilityData;
 import com.casting.model.CastingOption;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RequestCastingOption extends NetworkRequest implements JSONParcelable<CastingOption> {
@@ -24,14 +25,30 @@ public class RequestCastingOption extends NetworkRequest implements JSONParcelab
 
         JSONObject surveyInfo = UtilityData.convertJsonFromJson(jsonObject, "surveyInfo");
 
-        if (surveyInfo != null)
+        JSONArray questionInfos = UtilityData.convertJsonArrayFromJson(surveyInfo, "question");
+
+        if (questionInfos != null && questionInfos.length() > 0)
         {
-            EasyLog.LogMessage(this, ">> RequestCastingOption surveyInfo = " + surveyInfo.toString());
+            try
+            {
+                JSONObject questionInfo = questionInfos.getJSONObject(0);
 
-            String questionType = UtilityData.convertStringFromJSON(surveyInfo, "questionType");
+                EasyLog.LogMessage(this, ">> RequestCastingOption surveyInfo = " + questionInfo.toString());
 
-            castingOption = new CastingOption();
-            castingOption.setQuestionType(questionType);
+                String questionType = UtilityData.convertStringFromJSON(questionInfo, "questionType");
+                String[] questions = UtilityData.convertStringArrayFromJSON(questionInfo, "question");
+
+                EasyLog.LogMessage(this, ">> RequestCastingOption questionType = " + questionType);
+                EasyLog.LogMessage(this, ">> RequestCastingOption questions len = " + (questions != null ? questions.length : 0));
+
+                castingOption = new CastingOption();
+                castingOption.setQuestionType(questionType);
+                castingOption.setQuestions(questions);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return castingOption;

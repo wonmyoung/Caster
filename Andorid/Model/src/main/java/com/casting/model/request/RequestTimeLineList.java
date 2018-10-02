@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import com.casting.commonmodule.network.NetworkRequest;
 import com.casting.commonmodule.network.base.NetworkParcelable;
 import com.casting.commonmodule.network.parse.JSONParcelable;
+import com.casting.commonmodule.utility.CommonPreference;
+import com.casting.commonmodule.utility.EasyLog;
 import com.casting.model.Cast;
 import com.casting.model.Member;
 import com.casting.model.TimeLineList;
@@ -23,19 +25,27 @@ public class RequestTimeLineList extends NetworkRequest implements JSONParcelabl
     }
 
     @Override
-    public ContentValues getHttpRequestHeader() {
-        return null;
+    public ContentValues getHttpRequestHeader()
+    {
+        String token = CommonPreference.getInstance().getSharedValueByString("AUTH_TOKEN", "");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("authorization", token);
+
+        return contentValues;
     }
 
     @Override
-    public ContentValues getHttpRequestParameter() {
+    public ContentValues getHttpRequestParameter()
+    {
         return null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public JSONParcelable getNetworkParcelable() {
-        return null;
+    public JSONParcelable getNetworkParcelable()
+    {
+        return this;
     }
 
     public Member getMember() {
@@ -47,8 +57,14 @@ public class RequestTimeLineList extends NetworkRequest implements JSONParcelabl
     }
 
     @Override
-    public TimeLineList parse(JSONObject jsonObject) {
-        return null;
+    public TimeLineList parse(JSONObject jsonObject)
+    {
+        EasyLog.LogMessage(this, ">> parse jsonObject = " + jsonObject.toString());
+
+        TimeLineList timeLineList = new TimeLineList();
+
+
+        return timeLineList;
     }
 
     public Cast getCast() {

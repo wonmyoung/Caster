@@ -168,7 +168,7 @@ public class MainLeftSideMenu extends CommonFragment implements Observer, IRespo
                 stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
                 stringBuilder.append(FutureCasting.SERVER_DOMAIN);
                 stringBuilder.append(FutureCasting.SERVER_PORT);
-                stringBuilder.append("/uploads/account/");
+                stringBuilder.append("/");
                 stringBuilder.append(avatar);
 
                 UtilityUI.setThumbNailRoundedImageView(c, mProfileUserPic, stringBuilder.toString(), R.dimen.dp25);
