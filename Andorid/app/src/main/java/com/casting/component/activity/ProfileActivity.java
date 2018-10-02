@@ -195,7 +195,14 @@ public class ProfileActivity extends CommonActivity
     {
         if (member != null)
         {
-            ImageLoader.loadImage(this, mUserPicView, member.getUserAvatar());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(FutureCasting.HTTP_PROTOCOL);
+            stringBuilder.append(FutureCasting.SERVER_DOMAIN);
+            stringBuilder.append(FutureCasting.SERVER_PORT);
+            stringBuilder.append("/");
+            stringBuilder.append(member.getUserAvatar());
+
+            ImageLoader.loadImage(this, mUserPicView, stringBuilder.toString());
 
             String picThumbnail = member.getUserAvatar();
             String userId = member.getUserId();

@@ -134,6 +134,8 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                 {
                     JSONObject o = jsonArray.getJSONObject(i);
 
+                    EasyLog.LogMessage(this, "++ parseNewsList o = " + o.toString());
+
                     String id = UtilityData.convertStringFromJSON(o, "_id");
                     String surveyId = UtilityData.convertStringFromJSON(o, "surveyId");
                     String title = UtilityData.convertStringFromJSON(o, "title");
@@ -148,6 +150,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                     EasyLog.LogMessage(this, "++ parseNewsList surveyId = " + surveyId);
                     EasyLog.LogMessage(this, "++ parseNewsList title = " + title);
                     EasyLog.LogMessage(this, "++ parseNewsList contents = " + contents);
+
                     News news = new News();
                     news.setId(id);
                     news.setSurveyId(surveyId);
