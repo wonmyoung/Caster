@@ -33,6 +33,7 @@ public class RequestMemberLatest extends NetworkRequest implements JSONParcelabl
             int point = UtilityData.convertIntegerFromJSON(userInfo, "point");
             int followers = UtilityData.convertIntegerFromJSON(userInfo, "followers");
             int following = UtilityData.convertIntegerFromJSON(userInfo, "following");
+            int numOfPredict = UtilityData.convertIntegerFromJSON(jsonObject, "numOfPredict");
 
             EasyLog.LogMessage(this, "++ parse userName = " + userName);
             EasyLog.LogMessage(this, "++ parse userId = " + userId);
@@ -42,6 +43,7 @@ public class RequestMemberLatest extends NetworkRequest implements JSONParcelabl
             EasyLog.LogMessage(this, "++ parse point = " + point);
             EasyLog.LogMessage(this, "++ parse followers = " + followers);
             EasyLog.LogMessage(this, "++ parse following = " + following);
+            EasyLog.LogMessage(this, "++ parse numOfPredict = " + numOfPredict);
 
             if (!TextUtils.isEmpty(userName)) CurrentMember.setUserName(userName);
             if (!TextUtils.isEmpty(userId)) CurrentMember.setUserId(userId);
@@ -51,6 +53,7 @@ public class RequestMemberLatest extends NetworkRequest implements JSONParcelabl
             if (point > -1) CurrentMember.setUserPoint(point);
             if (followers > -1) CurrentMember.setFollowerNum(followers);
             if (following > -1) CurrentMember.setFollowingNum(following);
+            if (numOfPredict > -1) CurrentMember.setCorrectCast(numOfPredict);
         }
 
         return CurrentMember;
