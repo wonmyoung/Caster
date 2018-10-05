@@ -20,16 +20,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.database.DataSetObserver;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Adapter;
 
+import com.casting.commonmodule.utility.EasyLog;
+
 public class SwipeStackController extends DataSetObserver implements View.OnTouchListener {
 
-    private static final float CLICK_EVENT_MINIMUM_AREA = 25;
-    private static final float CLICK_EVENT_TIME_AREA = 100;
+    private static final float CLICK_EVENT_MINIMUM_AREA = 5;
+    private static final float CLICK_EVENT_TIME_AREA = 150;
 
     private final SwipeStack mSwipeStack;
 
@@ -63,6 +66,7 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
             switch (event.getAction())
             {
                 case MotionEvent.ACTION_DOWN:
+
                     if (!mListenForTouchEvents || !mSwipeStack.isEnabled())
                     {
                         return false;
@@ -118,6 +122,10 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                     float differenceY = (mEventDownY == 0 || event.getY() == 0 ?
                             0 : Math.abs(mEventDownY - event.getY()));
 
+                    EasyLog.LogMessage(this,">> ACTION_UP diffTime =" + diffTime);
+                    EasyLog.LogMessage(this,">> ACTION_UP differenceX =" + differenceX);
+                    EasyLog.LogMessage(this,">> ACTION_UP differenceY =" + differenceY);
+
                     if (differenceX < CLICK_EVENT_MINIMUM_AREA &&
                         differenceY < CLICK_EVENT_MINIMUM_AREA &&
                         diffTime < CLICK_EVENT_TIME_AREA)
@@ -128,6 +136,8 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                         {
                             SwipeViewClickListener clickListener = (SwipeViewClickListener) adapter;
 
+                            EasyLog.LogMessage(this,"++ ACTION_UP onViewClick !! ");
+
                             clickListener.onViewClick(v);
                         }
                     }
@@ -137,6 +147,8 @@ public class SwipeStackController extends DataSetObserver implements View.OnTouc
                     mSwipeStack.onSwipeEnd();
 
                     checkViewPosition();
+
+                    EasyLog.LogMessage(this,"========================================");
                     return true;
 
             }

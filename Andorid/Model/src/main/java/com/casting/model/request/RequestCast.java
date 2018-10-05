@@ -200,7 +200,7 @@ public class RequestCast extends NetworkRequest implements JSONParcelable<Cast> 
                 }
             }
 
-            castingStatus.sort();
+            // castingStatus.sort();
         }
 
         return castingStatus;

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -719,7 +720,9 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
             {
                 CastingStatus currentStatus = (CastingStatus) item;
 
-                for (int i = 1 ; i <= 5 ; i++)
+                LinearLayout linearLayout = holder.find(R.id.castingSelectionList);
+
+                for (int i = 1 ; i <= 10 ; i++)
                 {
                     CastingStatus.CastingOption castingOption = currentStatus.getCastingOption((i - 1));
 
@@ -766,9 +769,8 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
                     }
                     else
                     {
-                        textView.setVisibility(View.GONE);
-
-                        percentageView.setVisibility(View.GONE);
+                        View view = linearLayout.getChildAt((i-1));
+                        view.setVisibility(View.GONE);
                     }
                 }
                 break;
@@ -1946,19 +1948,19 @@ public class CastingActivity extends BaseFCActivity implements ItemBindStrategy,
 
             String errorMessage = requestCast.getErrorMessage();
 
-            if (!TextUtils.isEmpty(errorMessage))
+            if (TextUtils.isEmpty(errorMessage))
             {
-                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+                errorMessage = "(Bypass) 더미 데이터 노출";
             }
-
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
 
             //TODO API 에러 발생 , 바이패스 처리
-//            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
-//
-//            loadDummyDoneCastInfoList(itemArrayList);
-//
-//            mItemViewAdapter.setItemList(itemArrayList);
-//            mItemViewAdapter.notifyDataSetChanged();
+            ArrayList<ICommonItem> itemArrayList = new ArrayList<>();
+
+            loadDummyDoneCastInfoList(itemArrayList);
+
+            mItemViewAdapter.setItemList(itemArrayList);
+            mItemViewAdapter.notifyDataSetChanged();
         }
     }
 
